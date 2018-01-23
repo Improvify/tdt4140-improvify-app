@@ -1,7 +1,4 @@
-image: kaiwinter/docker-java8-maven
-# image: maven:3.3.9-jdk-8
-
-# most of this taken from https://stackoverflow.com/questions/37785154/how-to-enable-maven-artifact-caching-for-gitlab-ci-runner
+image: krissrex/docker-java8-maven-testfxmonocle
 
 cache:
   paths:
@@ -10,7 +7,7 @@ cache:
   key: "$CI_BUILD_REF_NAME"
 
 variables:
-  MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository -Djava.awt.headless=true -Dtestfx.robot=glass -Dtestfx.headless=true -Dprism.order=sw -Dprism.text=t2k -Dtestfx.setup.timeout=2500 -Dprism.verbose=true"
+  MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository -Djava.awt.headless=true -Dtestfx.robot=glass -Dtestfx.headless=true -Dglass.platform=Monocle -Dmonocle.platform=Headless -Dprism.order=sw -Dprism.text=t2k -Dtestfx.setup.timeout=2500 -Dprism.verbose=true"
   MAVEN_CLI_OPTS: "--batch-mode --errors --fail-at-end --show-version"
 
 build-job:
