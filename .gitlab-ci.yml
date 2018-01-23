@@ -1,4 +1,4 @@
-image: krissrex/docker-java8-maven-testfxmonocle:1.1
+image: krissrex/docker-java8-maven-testfxmonocle:1.0
 
 cache:
   paths:
@@ -28,5 +28,4 @@ integrationtest-job:
   dependencies:
     - build-job
   script:
-    - export
     - "mvn verify -f tdt4140-gr1817/pom.xml $MAVEN_CLI_OPTS"
