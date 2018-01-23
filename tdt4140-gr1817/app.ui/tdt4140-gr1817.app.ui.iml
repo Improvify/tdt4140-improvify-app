@@ -21,5 +21,6 @@
     <orderEntry type="library" scope="TEST" name="Maven: org.testfx:testfx-core:4.0.10-alpha" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.testfx:testfx-internal-java8:4.0.10-alpha" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.testfx:testfx-junit:4.0.10-alpha" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: org.testfx:openjfx-monocle:8u76-b04" level="project" />
   </component>
 </module>
