@@ -10,8 +10,7 @@ cache:
   key: "$CI_BUILD_REF_NAME"
 
 variables:
-  HEADLESS_TESTFX: "-Dtestfx.robot=glass -Dtestfx.headless=true -Dprism.order=sw -Dprism.text=t2k -Dtestfx.setup.timeout=2500"
-  MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository -Djava.awt.headless=true $${HEADLESS_TESTFX}"
+  MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository -Djava.awt.headless=true -Dtestfx.robot=glass -Dtestfx.headless=true -Dprism.order=sw -Dprism.text=t2k -Dtestfx.setup.timeout=2500"
   MAVEN_CLI_OPTS: "--batch-mode --errors --fail-at-end --show-version"
 
 build-job:
