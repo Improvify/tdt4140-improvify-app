@@ -21,7 +21,7 @@ unittest-job:
   dependencies:
     - build-job
   script:
-    - "mvn package -f tdt4140-gr1817/pom.xml $MAVEN_CLI_OPTS"
+    - "mvn package -f tdt4140-gr1817/pom.xml $MAVEN_CLI_OPTS -DargLine=\"$HEADLESS_TESTFX\""
     #- "cat tdt4140-gr1817/app.core/target/site/jacoco/index.html 2>/dev/null"
 
 integrationtest-job:
