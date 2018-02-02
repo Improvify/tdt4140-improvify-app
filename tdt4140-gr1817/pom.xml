@@ -1,10 +1,33 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <groupId>tdt4140-gr1817</groupId>
     <artifactId>tdt4140-gr1817</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
+
+    <name>TDT4140 2018 Gruppe 17</name>
+    <inceptionYear>2018</inceptionYear>
+    <organization>
+        <name>Gruppe 17</name>
+        <url>https://ntnu.blackboard.com/webapps/blackboard/execute/modulepage/viewGroup?course_id=_5950_1&amp;group_id=_56959_1</url>
+    </organization>
+
+    <developers>
+        <developer><name>Henrik Fauskanger</name></developer>
+        <developer><name>Pål fossnes</name></developer>
+        <developer><name>Fredrik Jenssen</name></developer>
+        <developer><name>Dennis Jianbin Liang</name></developer>
+        <developer><name>Claus Wilhelm Ring Martinsen</name></developer>
+        <developer><name>Kristian Rekstad</name></developer>
+        <developer><name>Ask Åslaugson Sommervoll</name></developer>
+    </developers>
+
+    <issueManagement>
+        <system>Gitlab</system>
+        <url>https://gitlab.stud.iie.ntnu.no/tdt4140-2018/17/issues</url>
+    </issueManagement>
 
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
