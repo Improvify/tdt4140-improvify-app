@@ -4,6 +4,7 @@
     <artifactId>tdt4140-gr1817.app.ui</artifactId>
     <packaging>jar</packaging>
     <name>App UI</name>
+    <description>User interface over app.core</description>
 
     <parent>
         <groupId>tdt4140-gr1817</groupId>
@@ -13,34 +14,44 @@
 
     <dependencies>
         <dependency>
-            <groupId>tdt4140-gr1817</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>tdt4140-gr1817.app.core</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.inject</groupId>
+            <artifactId>guice</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.2.3</version>
         </dependency>
 
+        <!-- Test dependencies -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.12</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.testfx</groupId>
             <artifactId>testfx-core</artifactId>
-            <version>4.0.10-alpha</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.testfx</groupId>
             <artifactId>testfx-junit</artifactId>
-            <version>4.0.10-alpha</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.testfx</groupId>
             <artifactId>openjfx-monocle</artifactId>
-            <version>8u76-b04</version> <!-- jdk-9+181 for Java 9 -->
-            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-all</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
         </dependency>
     </dependencies>
 
