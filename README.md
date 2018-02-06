@@ -63,7 +63,7 @@ TestFX | JUnit extension for JavaFX UI tests
 Hamcrest | Matchers for use in test assertions
 Mockito | Mocking for use in tests
 SLF4J | Logging facade (Combined with Logback for actual implementation of logging)
-Lombok | Generate **get**ers, **set**ers, static SLF4J **log** field, Builder pattern
+[Lombok](/docs/Lombok.png) | Generate **get**ers, **set**ers, static SLF4J **log** field, Builder pattern
 
 
 #### Build dependencies / plugins
