@@ -143,7 +143,7 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.7.5.201505241946</version>
+                <version>0.8.0</version>
                 <executions>
                     <execution>
                         <id>pre-unit-test</id>
@@ -273,7 +273,7 @@
         <profile>
             <id>monocle-jdk9-when-jdk9</id>
             <activation>
-                <jdk>1.9</jdk>
+                <jdk>9</jdk>
             </activation>
             <properties>
                 <monocle.version>${monocle-jdk9.version}</monocle.version>
