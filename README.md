@@ -1,8 +1,8 @@
 # Gruppe 17
 
-## Vi vet ikke hva prosjektet er enda
+## Project Improvify
 
-Kom tilbake senere :)
+Goal oriented training application
 
 [x] Oppgave for 5. februar: Update templates fra Trætteberg  
 [ ] Oppgave for 15. februar: Releaseplan
