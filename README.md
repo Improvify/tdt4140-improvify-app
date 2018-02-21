@@ -5,7 +5,7 @@
 Goal oriented training application
 
 [x] Oppgave for 5. februar: Update templates fra Trætteberg  
-[ ] Oppgave for 15. februar: Releaseplan
+[x] Oppgave for 15. februar: Releaseplan
 
 > Hei studass, ingen på gruppa vår bruker Eclipse.  
 > Kjipern hvis du ikke får satt opp plugins for Eclipse.  
