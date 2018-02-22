@@ -6,11 +6,13 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="reporting" />
         <module name="tdt4140-gr1817.app.core" />
         <module name="tdt4140-gr1817.app.ui" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="reporting" target="1.8" />
       <module name="tdt4140-gr1817" target="1.8" />
       <module name="tdt4140-gr1817.app.core" target="1.8" />
       <module name="tdt4140-gr1817.app.ui" target="1.8" />

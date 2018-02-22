@@ -55,6 +55,7 @@
     <modules>
         <module>app.core</module>
         <module>app.ui</module>
+        <module>reporting</module>
     </modules>
 
 
@@ -227,6 +228,17 @@
                             <goal>report</goal>
                         </goals>
                     </execution>
+                    <execution>
+                        <id>aggregate</id>
+                        <inherited>false</inherited>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>report-aggregate</goal>
+                        </goals>
+                        <configuration>
+                            <dataFileIncludes>**/target/jacoco.exec</dataFileIncludes>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
             <!-- End: Jacoco coverage -->
@@ -330,6 +342,7 @@
     </build>
 
     <reporting>
+        <!-- Reports are generated at mvn site -->
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
