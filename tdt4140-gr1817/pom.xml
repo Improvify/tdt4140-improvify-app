@@ -46,11 +46,16 @@
         <!-- Test -->
         <monocle-jdk8.version>8u76-b04</monocle-jdk8.version>
         <monocle-jdk9.version>jdk-9+181</monocle-jdk9.version>
+        
+        <!-- Enabled tests. Overridden by profiles -->
+        <skip.unit.tests>true</skip.unit.tests>
+        <skip.integration.tests>true</skip.integration.tests>
     </properties>
 
     <modules>
         <module>app.core</module>
         <module>app.ui</module>
+        <module>reporting</module>
     </modules>
 
 
@@ -137,6 +142,71 @@
 
 
     <build>
+        <pluginManagement>
+            <plugins>
+                <!-- Begin: Build helper -->
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>build-helper-maven-plugin</artifactId>
+                    <version>3.0.0</version>
+                    <executions>
+                        <!-- Add a new source directory to our build -->
+                        <execution>
+                            <id>add-integration-test-sources</id>
+                            <phase>generate-test-sources</phase>
+                            <goals>
+                                <goal>add-test-source</goal>
+                            </goals>
+                            <configuration>
+                                <!-- Configures the source directory of our integration tests -->
+                                <sources>
+                                    <source>${project.basedir}/src/it/java</source>
+                                </sources>
+                            </configuration>
+                        </execution>
+                        <!-- Add a new resource directory to our build -->
+                        <execution>
+                            <id>add-integration-test-resources</id>
+                            <phase>generate-resources</phase>
+                            <goals>
+                                <goal>add-test-resource</goal>
+                            </goals>
+                            <configuration>
+                                <!-- Configures the resource directory of our integration tests -->
+                                <resources>
+                                    <resource>
+                                        <directory>${project.basedir}/src/it/resources</directory>
+                                    </resource>
+                                </resources>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+                <!-- End: Build helper -->
+
+                <!-- Begin: Failsafe -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-failsafe-plugin</artifactId>
+                    <version>2.20.1</version>
+                    <configuration>
+                        <skipTests>${skip.integration.tests}</skipTests>
+                        <testSourceDirectory>${project.basedir}/src/it/java</testSourceDirectory>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>integration-test</id>
+                            <goals>
+                                <goal>integration-test</goal>
+                                <goal>verify</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <!-- End: Failsafe -->
+            </plugins>
+        </pluginManagement>
+
         <plugins>
 
             <!-- Begin: Jacoco code test coverage -->
@@ -157,6 +227,17 @@
                         <goals>
                             <goal>report</goal>
                         </goals>
+                    </execution>
+                    <execution>
+                        <id>aggregate</id>
+                        <inherited>false</inherited>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>report-aggregate</goal>
+                        </goals>
+                        <configuration>
+                            <dataFileIncludes>**/target/jacoco.exec</dataFileIncludes>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
@@ -223,23 +304,22 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>2.17</version>
+                <version>3.0.0</version>
                 <dependencies>
                     <dependency>
                         <groupId>com.puppycrawl.tools</groupId>
                         <artifactId>checkstyle</artifactId>
-                        <version>7.7</version>
+                        <version>8.8</version>
                     </dependency>
                 </dependencies>
                 <configuration>
                     <failsOnError>true</failsOnError>
                     <configLocation>checkstyle.xml</configLocation>
                     <consoleOutput>true</consoleOutput>
-                    <excludes>**/CipherSuite.java</excludes>
                 </configuration>
                 <executions>
                     <execution>
-                        <phase>verify</phase>
+                        <phase>validate</phase>
                         <goals>
                             <goal>checkstyle</goal>
                         </goals>
@@ -248,10 +328,21 @@
             </plugin>
             <!-- End: Checkstyle -->
 
+            <!-- Begin: Surefire -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.20.1</version>
+                <configuration>
+                    <skipTests>${skip.unit.tests}</skipTests>
+                </configuration>
+            </plugin>
+            <!-- End: Surefire -->
         </plugins>
     </build>
 
     <reporting>
+        <!-- Reports are generated at mvn site -->
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -270,6 +361,7 @@
 
 
     <profiles>
+        <!-- Begin: Monocle -->
         <profile>
             <id>monocle-jdk9-when-jdk9</id>
             <activation>
@@ -288,5 +380,33 @@
                 <monocle.version>${monocle-jdk8.version}</monocle.version>
             </properties>
         </profile>
+        <!-- End: Monocle -->
+        
+        <!-- Begin: Test profiles -->
+        <profile>
+            <!-- Default profile for developers -->
+            <id>dev</id>
+            <activation>
+                <property>
+                    <name>!skipDev</name>
+                </property>
+            </activation>
+            <properties>
+                <skip.unit.tests>false</skip.unit.tests>
+            </properties>
+        </profile>
+        <profile>
+            <id>unit-test</id>
+            <properties>
+                <skip.unit.tests>false</skip.unit.tests>
+            </properties>
+        </profile>
+        <profile>
+            <id>integration-test</id>
+            <properties>
+                <skip.integration.tests>false</skip.integration.tests>
+            </properties>
+        </profile>
+        <!-- End: Test profiles -->
     </profiles>
 </project>
