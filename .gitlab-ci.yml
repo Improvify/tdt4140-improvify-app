@@ -21,8 +21,8 @@ unittest-job:
   dependencies:
     - build-job
   script:
-    - "mvn package -f tdt4140-gr1817/pom.xml $MAVEN_CLI_OPTS -DargLine=\"$HEADLESS_TESTFX\""
-    #- "cat tdt4140-gr1817/app.core/target/site/jacoco/index.html 2>/dev/null"
+    - "mvn verify -f tdt4140-gr1817/pom.xml $MAVEN_CLI_OPTS -P unit-test -DskipDev=true -DargLine=\"$HEADLESS_TESTFX\""
+    - "cat tdt4140-gr1817/reporting/target/site/jacoco-aggregate/index.html 2>/dev/null"
 
 integrationtest-job:
   stage: test
@@ -30,4 +30,4 @@ integrationtest-job:
     - build-job
   script:
     # surefire blocks propagation of properties that are not set inside argLine
-    - "mvn verify -f tdt4140-gr1817/pom.xml $MAVEN_CLI_OPTS -DargLine=\"$HEADLESS_TESTFX\""
+    - "mvn verify -f tdt4140-gr1817/pom.xml $MAVEN_CLI_OPTS -P integration-test -DskipDev=true -DargLine=\"$HEADLESS_TESTFX\""
