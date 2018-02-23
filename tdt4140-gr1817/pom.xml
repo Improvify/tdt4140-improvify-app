@@ -57,6 +57,7 @@
         <module>app.ui</module>
         <module>reporting</module>
         <module>ecosystem.persistence</module>
+        <module>serviceproviderwebserver</module>
     </modules>
 
 
