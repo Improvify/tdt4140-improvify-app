@@ -1,28 +1,31 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<diagram height="600" made_with_version="1.6" name="Default" width="800">
-    <entity id="0" is_weak="false" name="User" x="112" y="158">
+<diagram height="680" made_with_version="1.5" name="Default" width="1100">
+    <entity id="0" is_weak="false" name="User" x="329" y="166">
         <attributes>
             <attribute is_hidden="false" is_key="true" name="UserID" type=""/>
             <attribute is_hidden="false" is_key="false" name="First Name" type=""/>
             <attribute is_hidden="false" is_key="false" name="Last Name" type=""/>
             <attribute is_hidden="false" is_key="false" name="Height" type=""/>
             <attribute is_hidden="true" is_key="false" name="Weight" type=""/>
-            <attribute is_hidden="false" is_key="false" name="Fødselsår" type=""/>
+            <attribute is_hidden="false" is_key="false" name="Date of birth" type=""/>
+            <attribute is_hidden="false" is_key="false" name="Username" type=""/>
+            <attribute is_hidden="false" is_key="false" name="Password" type=""/>
+            <attribute is_hidden="false" is_key="false" name="email" type=""/>
         </attributes>
     </entity>
-    <entity id="1" is_weak="true" name="Weight" x="422" y="39">
+    <entity id="1" is_weak="true" name="Weight" x="516" y="70">
         <attributes>
             <attribute is_hidden="false" is_key="true" name="WeightID" type=""/>
             <attribute is_hidden="false" is_key="false" name="CurrentWeight" type=""/>
             <attribute is_hidden="false" is_key="false" name="Date" type=""/>
         </attributes>
     </entity>
-    <entity id="5" is_weak="false" name="Service Provider" x="595" y="69">
+    <entity id="5" is_weak="false" name="Service Provider" x="802" y="84">
         <attributes>
             <attribute is_hidden="false" is_key="false" name="id" type=""/>
         </attributes>
     </entity>
-    <entity id="6" is_weak="true" name="Workout Session" x="317" y="269">
+    <entity id="6" is_weak="true" name="Workout Session" x="516" y="280">
         <attributes>
             <attribute is_hidden="false" is_key="true" name="SessionID" type=""/>
             <attribute is_hidden="false" is_key="false" name="Time" type=""/>
@@ -33,14 +36,14 @@
             <attribute is_hidden="false" is_key="false" name="Distance run" type=""/>
         </attributes>
     </entity>
-    <entity id="10" is_weak="true" name="Resting Pulse" x="418" y="138">
+    <entity id="10" is_weak="true" name="Resting Pulse" x="645" y="104">
         <attributes>
             <attribute is_hidden="false" is_key="true" name="PulseID" type=""/>
             <attribute is_hidden="false" is_key="false" name="Date" type=""/>
             <attribute is_hidden="false" is_key="false" name="Pulse Value" type=""/>
         </attributes>
     </entity>
-    <entity id="13" is_weak="false" name="Period plan" x="560" y="454">
+    <entity id="13" is_weak="false" name="Period plan" x="768" y="541">
         <attributes>
             <attribute is_hidden="false" is_key="true" name="id" type=""/>
             <attribute is_hidden="false" is_key="false" name="createdAt" type=""/>
@@ -48,16 +51,27 @@
             <attribute is_hidden="false" is_key="false" name="endDato" type=""/>
         </attributes>
     </entity>
-    <entity id="24" is_weak="false" name="Improvify" x="591" y="211">
-        <attributes/>
+    <entity id="24" is_weak="false" name="Improvify" x="830" y="235">
+        <attributes>
+            <attribute is_hidden="false" is_key="true" name="ID" type=""/>
+        </attributes>
     </entity>
-    <entity id="29" is_weak="false" name="Trainer" x="568" y="325">
-        <attributes/>
+    <entity id="29" is_weak="false" name="Trainer" x="713" y="335">
+        <attributes>
+            <attribute is_hidden="false" is_key="true" name="ID" type=""/>
+            <attribute is_hidden="false" is_key="false" name="Name" type=""/>
+            <attribute is_hidden="false" is_key="false" name="Expierience" type=""/>
+            <attribute is_hidden="false" is_key="false" name="Education" type=""/>
+        </attributes>
     </entity>
-    <entity id="35" is_weak="false" name="Workout Plan" x="321" y="518">
-        <attributes/>
+    <entity id="35" is_weak="false" name="Workout Plan" x="531" y="593">
+        <attributes>
+            <attribute is_hidden="false" is_key="true" name="id" type=""/>
+            <attribute is_hidden="false" is_key="false" name="Antall dager" type=""/>
+            <attribute is_hidden="false" is_key="false" name="" type=""/>
+        </attributes>
     </entity>
-    <entity id="42" is_weak="true" name="Goal" x="14" y="271">
+    <entity id="42" is_weak="true" name="Goal" x="219" y="296">
         <attributes>
             <attribute is_hidden="false" is_key="false" name="Description" type=""/>
             <attribute is_hidden="false" is_key="true" name="id" type=""/>
@@ -65,134 +79,165 @@
             <attribute is_hidden="false" is_key="false" name="isCurrent" type=""/>
         </attributes>
     </entity>
-    <diamond id="2" is_weak="true" name="loggedweight" x="244" y="93">
+    <diamond id="2" is_weak="true" name="loggedweight" x="386" y="89">
         <attributes/>
     </diamond>
-    <diamond id="7" is_weak="true" name="loggedSessions" x="151" y="320">
+    <diamond id="7" is_weak="true" name="loggedSessions" x="356" y="345">
         <attributes/>
     </diamond>
-    <diamond id="11" is_weak="false" name="suggests" x="612" y="369">
+    <diamond id="11" is_weak="false" name="suggests" x="810" y="450">
         <attributes/>
     </diamond>
-    <diamond id="15" is_weak="false" name="" x="279" y="475">
+    <diamond id="15" is_weak="false" name="belongsTo" x="457" y="498">
         <attributes/>
     </diamond>
-    <diamond id="18" is_weak="true" name="loggedPulse" x="240" y="161">
+    <diamond id="18" is_weak="true" name="loggedPulse" x="445" y="186">
         <attributes/>
     </diamond>
-    <diamond id="21" is_weak="false" name="Processes data" x="51" y="12">
+    <diamond id="21" is_weak="false" name="Processes data" x="256" y="37">
+        <attributes>
+            <attribute name="Weight" type=""/>
+            <attribute name="Resting Pulse" type=""/>
+            <attribute name="Workout Session" type=""/>
+            <attribute name="Height" type=""/>
+            <attribute name="Date of Birth" type=""/>
+            <attribute name="email" type=""/>
+            <attribute name="Username" type=""/>
+            <attribute name="Name" type=""/>
+        </attributes>
+    </diamond>
+    <diamond id="31" is_weak="false" name="worksWith" x="851" y="304">
         <attributes/>
     </diamond>
-    <diamond id="31" is_weak="false" name="worksAt" x="602" y="261">
+    <diamond id="36" is_weak="false" name="consistsOf" x="663" y="535">
         <attributes/>
     </diamond>
-    <diamond id="36" is_weak="false" name="consistsOf" x="458" y="510">
+    <diamond id="39" is_weak="false" name="Based on" x="568" y="487">
         <attributes/>
     </diamond>
-    <diamond id="39" is_weak="false" name="Based on" x="360" y="433">
+    <diamond id="43" is_weak="false" name="" x="221" y="220">
         <attributes/>
     </diamond>
-    <diamond id="43" is_weak="false" name="" x="16" y="195">
+    <diamond id="46" is_weak="false" name="knows" x="230" y="432">
         <attributes/>
     </diamond>
-    <diamond id="46" is_weak="false" name="knows" x="25" y="407">
+    <diamond id="49" is_weak="false" name="suggests" x="893" y="642">
         <attributes/>
     </diamond>
-    <circle id="25" name="D" x="644" y="140"/>
+    <diamond id="52" is_weak="false" name="suggestedTo" x="301" y="596">
+        <attributes/>
+    </diamond>
+    <circle id="25" name="D" x="852" y="166"/>
     <line cardinality_string="(1,1)" has_u="false" id="3" is_weak="false" role="" style="0" turned="false">
-        <connection connection_side="0" direction="0" object_id="1" relation_point_x="422" relation_point_y="81"/>
-        <connection connection_side="2" direction="0" object_id="2" relation_point_x="276" relation_point_y="109"/>
+        <connection connection_side="0" direction="0" object_id="1" relation_point_x="516" relation_point_y="112"/>
+        <connection connection_side="2" direction="0" object_id="2" relation_point_x="418" relation_point_y="105"/>
     </line>
     <line cardinality_string="(0,n)" has_u="false" id="4" is_weak="false" role="" style="0" turned="false">
-        <connection connection_side="1" direction="1" object_id="0" relation_point_x="147" relation_point_y="158"/>
-        <connection connection_side="0" direction="0" object_id="2" relation_point_x="244" relation_point_y="109"/>
+        <connection connection_side="1" direction="1" object_id="0" relation_point_x="367" relation_point_y="166"/>
+        <connection connection_side="0" direction="0" object_id="2" relation_point_x="386" relation_point_y="105"/>
     </line>
     <line cardinality_string="(1,1)" has_u="false" id="8" is_weak="false" role="" style="0" turned="false">
-        <connection connection_side="0" direction="0" object_id="6" relation_point_x="317" relation_point_y="341"/>
-        <connection connection_side="2" direction="0" object_id="7" relation_point_x="183" relation_point_y="336"/>
+        <connection connection_side="0" direction="0" object_id="6" relation_point_x="516" relation_point_y="352"/>
+        <connection connection_side="2" direction="0" object_id="7" relation_point_x="388" relation_point_y="361"/>
     </line>
     <line cardinality_string="(0,n)" has_u="false" id="9" is_weak="false" role="" style="0" turned="false">
-        <connection connection_side="3" direction="1" object_id="0" relation_point_x="158" relation_point_y="263"/>
-        <connection connection_side="1" direction="1" object_id="7" relation_point_x="167" relation_point_y="320"/>
+        <connection connection_side="3" direction="1" object_id="0" relation_point_x="379" relation_point_y="316"/>
+        <connection connection_side="1" direction="1" object_id="7" relation_point_x="372" relation_point_y="345"/>
     </line>
     <line cardinality_string="(1,1)" has_u="false" id="14" is_weak="false" role="" style="0" turned="false">
-        <connection connection_side="1" direction="1" object_id="13" relation_point_x="605" relation_point_y="454"/>
-        <connection connection_side="3" direction="1" object_id="11" relation_point_x="628" relation_point_y="401"/>
+        <connection connection_side="1" direction="1" object_id="13" relation_point_x="828" relation_point_y="541"/>
+        <connection connection_side="3" direction="1" object_id="11" relation_point_x="826" relation_point_y="482"/>
     </line>
-    <line cardinality_string="" has_u="false" id="16" is_weak="false" role="" style="0" turned="false">
-        <connection connection_side="0" direction="0" object_id="13" relation_point_x="560" relation_point_y="484"/>
-        <connection connection_side="2" direction="0" object_id="15" relation_point_x="311" relation_point_y="491"/>
+    <line cardinality_string="(1,1)" has_u="false" id="16" is_weak="false" role="" style="0" turned="false">
+        <connection connection_side="1" direction="1" object_id="13" relation_point_x="798" relation_point_y="541"/>
+        <connection connection_side="2" direction="0" object_id="15" relation_point_x="489" relation_point_y="514"/>
     </line>
-    <line cardinality_string="" has_u="false" id="17" is_weak="false" role="" style="0" turned="false">
-        <connection connection_side="3" direction="1" object_id="0" relation_point_x="135" relation_point_y="263"/>
-        <connection connection_side="0" direction="0" object_id="15" relation_point_x="279" relation_point_y="491"/>
+    <line cardinality_string="(0,1)" has_u="false" id="17" is_weak="false" role="" style="0" turned="false">
+        <connection connection_side="3" direction="1" object_id="0" relation_point_x="354" relation_point_y="316"/>
+        <connection connection_side="0" direction="0" object_id="15" relation_point_x="457" relation_point_y="514"/>
     </line>
     <line cardinality_string="(0,n)" has_u="false" id="19" is_weak="false" role="" style="0" turned="false">
-        <connection connection_side="2" direction="0" object_id="0" relation_point_x="182" relation_point_y="211"/>
-        <connection connection_side="0" direction="0" object_id="18" relation_point_x="240" relation_point_y="177"/>
+        <connection connection_side="2" direction="0" object_id="0" relation_point_x="404" relation_point_y="241"/>
+        <connection connection_side="0" direction="0" object_id="18" relation_point_x="445" relation_point_y="202"/>
     </line>
     <line cardinality_string="(1,1)" has_u="false" id="20" is_weak="false" role="" style="0" turned="false">
-        <connection connection_side="0" direction="0" object_id="10" relation_point_x="418" relation_point_y="180"/>
-        <connection connection_side="2" direction="0" object_id="18" relation_point_x="272" relation_point_y="177"/>
+        <connection connection_side="3" direction="1" object_id="10" relation_point_x="702" relation_point_y="187"/>
+        <connection connection_side="2" direction="0" object_id="18" relation_point_x="477" relation_point_y="202"/>
     </line>
     <line cardinality_string="(0,n)" has_u="false" id="22" is_weak="false" role="" style="0" turned="false">
-        <connection connection_side="1" direction="1" object_id="5" relation_point_x="659" relation_point_y="69"/>
-        <connection connection_side="2" direction="0" object_id="21" relation_point_x="83" relation_point_y="28"/>
+        <connection connection_side="1" direction="1" object_id="5" relation_point_x="866" relation_point_y="84"/>
+        <connection connection_side="2" direction="0" object_id="21" relation_point_x="288" relation_point_y="53"/>
     </line>
-    <line cardinality_string="(0,1)" has_u="false" id="23" is_weak="false" role="" style="0" turned="false">
-        <connection connection_side="0" direction="0" object_id="0" relation_point_x="112" relation_point_y="193"/>
-        <connection connection_side="3" direction="1" object_id="21" relation_point_x="67" relation_point_y="44"/>
+    <line cardinality_string="(0,n)" has_u="false" id="23" is_weak="false" role="" style="0" turned="false">
+        <connection connection_side="0" direction="0" object_id="0" relation_point_x="329" relation_point_y="240"/>
+        <connection connection_side="3" direction="1" object_id="21" relation_point_x="272" relation_point_y="69"/>
     </line>
-    <line cardinality_string="" has_u="false" id="26" is_weak="false" role="" style="1" turned="false">
-        <connection connection_side="3" direction="1" object_id="5" relation_point_x="659" relation_point_y="114"/>
-        <connection connection_side="1" direction="1" object_id="25" relation_point_x="659" relation_point_y="140"/>
+    <line cardinality_string="" has_u="false" id="26" is_weak="true" role="" style="1" turned="false">
+        <connection connection_side="3" direction="1" object_id="5" relation_point_x="866" relation_point_y="129"/>
+        <connection connection_side="1" direction="1" object_id="25" relation_point_x="867" relation_point_y="166"/>
     </line>
-    <line cardinality_string="" has_u="false" id="27" is_weak="false" role="" style="1" turned="false">
-        <connection connection_side="1" direction="1" object_id="24" relation_point_x="628" relation_point_y="211"/>
-        <connection connection_side="3" direction="1" object_id="25" relation_point_x="659" relation_point_y="170"/>
+    <line cardinality_string="" has_u="true" id="27" is_weak="false" role="" style="1" turned="false">
+        <connection connection_side="1" direction="1" object_id="24" relation_point_x="867" relation_point_y="235"/>
+        <connection connection_side="3" direction="1" object_id="25" relation_point_x="867" relation_point_y="196"/>
     </line>
-    <line cardinality_string="" has_u="false" id="32" is_weak="false" role="" style="0" turned="false">
-        <connection connection_side="1" direction="1" object_id="29" relation_point_x="598" relation_point_y="325"/>
-        <connection connection_side="3" direction="1" object_id="31" relation_point_x="618" relation_point_y="293"/>
+    <line cardinality_string="(1,1)" has_u="false" id="32" is_weak="false" role="" style="0" turned="false">
+        <connection connection_side="2" direction="0" object_id="29" relation_point_x="786" relation_point_y="365"/>
+        <connection connection_side="3" direction="1" object_id="31" relation_point_x="867" relation_point_y="336"/>
     </line>
-    <line cardinality_string="" has_u="false" id="33" is_weak="false" role="" style="0" turned="false">
-        <connection connection_side="3" direction="1" object_id="24" relation_point_x="628" relation_point_y="231"/>
-        <connection connection_side="1" direction="1" object_id="31" relation_point_x="618" relation_point_y="261"/>
+    <line cardinality_string="(0,n)" has_u="false" id="33" is_weak="false" role="" style="0" turned="false">
+        <connection connection_side="3" direction="1" object_id="24" relation_point_x="867" relation_point_y="280"/>
+        <connection connection_side="1" direction="1" object_id="31" relation_point_x="867" relation_point_y="304"/>
     </line>
     <line cardinality_string="(0,n)" has_u="false" id="34" is_weak="false" role="" style="0" turned="false">
-        <connection connection_side="3" direction="1" object_id="29" relation_point_x="608" relation_point_y="345"/>
-        <connection connection_side="1" direction="1" object_id="11" relation_point_x="628" relation_point_y="369"/>
+        <connection connection_side="3" direction="1" object_id="29" relation_point_x="761" relation_point_y="425"/>
+        <connection connection_side="0" direction="0" object_id="11" relation_point_x="810" relation_point_y="466"/>
     </line>
     <line cardinality_string="" has_u="false" id="37" is_weak="false" role="" style="0" turned="false">
-        <connection connection_side="0" direction="0" object_id="13" relation_point_x="560" relation_point_y="514"/>
-        <connection connection_side="1" direction="1" object_id="36" relation_point_x="474" relation_point_y="510"/>
+        <connection connection_side="0" direction="0" object_id="13" relation_point_x="768" relation_point_y="586"/>
+        <connection connection_side="2" direction="0" object_id="36" relation_point_x="695" relation_point_y="551"/>
     </line>
-    <line cardinality_string="" has_u="false" id="38" is_weak="false" role="" style="0" turned="false">
-        <connection connection_side="2" direction="0" object_id="35" relation_point_x="423" relation_point_y="528"/>
-        <connection connection_side="0" direction="0" object_id="36" relation_point_x="458" relation_point_y="526"/>
+    <line cardinality_string="(0,1)" has_u="false" id="38" is_weak="false" role="" style="0" turned="false">
+        <connection connection_side="2" direction="0" object_id="35" relation_point_x="633" relation_point_y="643"/>
+        <connection connection_side="3" direction="1" object_id="36" relation_point_x="679" relation_point_y="567"/>
     </line>
-    <line cardinality_string="" has_u="false" id="40" is_weak="false" role="" style="0" turned="false">
-        <connection connection_side="1" direction="1" object_id="35" relation_point_x="372" relation_point_y="518"/>
-        <connection connection_side="3" direction="1" object_id="39" relation_point_x="376" relation_point_y="465"/>
+    <line cardinality_string="(0,1)" has_u="false" id="40" is_weak="false" role="" style="0" turned="false">
+        <connection connection_side="1" direction="1" object_id="35" relation_point_x="582" relation_point_y="593"/>
+        <connection connection_side="3" direction="1" object_id="39" relation_point_x="584" relation_point_y="519"/>
     </line>
-    <line cardinality_string="" has_u="false" id="41" is_weak="false" role="" style="0" turned="false">
-        <connection connection_side="3" direction="1" object_id="6" relation_point_x="385" relation_point_y="412"/>
-        <connection connection_side="1" direction="1" object_id="39" relation_point_x="376" relation_point_y="433"/>
+    <line cardinality_string="(0,1)" has_u="false" id="41" is_weak="false" role="" style="0" turned="false">
+        <connection connection_side="3" direction="1" object_id="6" relation_point_x="584" relation_point_y="423"/>
+        <connection connection_side="1" direction="1" object_id="39" relation_point_x="584" relation_point_y="487"/>
     </line>
     <line cardinality_string="" has_u="false" id="44" is_weak="false" role="" style="0" turned="false">
-        <connection connection_side="1" direction="1" object_id="42" relation_point_x="58" relation_point_y="271"/>
-        <connection connection_side="3" direction="1" object_id="43" relation_point_x="32" relation_point_y="227"/>
+        <connection connection_side="1" direction="1" object_id="42" relation_point_x="263" relation_point_y="296"/>
+        <connection connection_side="3" direction="1" object_id="43" relation_point_x="237" relation_point_y="252"/>
     </line>
     <line cardinality_string="" has_u="false" id="45" is_weak="false" role="" style="0" turned="false">
-        <connection connection_side="0" direction="0" object_id="0" relation_point_x="112" relation_point_y="228"/>
-        <connection connection_side="2" direction="0" object_id="43" relation_point_x="48" relation_point_y="211"/>
+        <connection connection_side="0" direction="0" object_id="0" relation_point_x="329" relation_point_y="203"/>
+        <connection connection_side="2" direction="0" object_id="43" relation_point_x="253" relation_point_y="236"/>
     </line>
     <line cardinality_string="" has_u="false" id="47" is_weak="false" role="" style="0" turned="false">
-        <connection connection_side="3" direction="1" object_id="42" relation_point_x="58" relation_point_y="369"/>
-        <connection connection_side="1" direction="1" object_id="46" relation_point_x="41" relation_point_y="407"/>
+        <connection connection_side="3" direction="1" object_id="42" relation_point_x="263" relation_point_y="394"/>
+        <connection connection_side="1" direction="1" object_id="46" relation_point_x="246" relation_point_y="432"/>
     </line>
     <line cardinality_string="" has_u="false" id="48" is_weak="false" role="" style="0" turned="false">
-        <connection connection_side="3" direction="1" object_id="29" relation_point_x="588" relation_point_y="345"/>
-        <connection connection_side="2" direction="0" object_id="46" relation_point_x="57" relation_point_y="423"/>
+        <connection connection_side="3" direction="1" object_id="29" relation_point_x="737" relation_point_y="425"/>
+        <connection connection_side="2" direction="0" object_id="46" relation_point_x="262" relation_point_y="448"/>
+    </line>
+    <line cardinality_string="(0,n)" has_u="false" id="50" is_weak="false" role="" style="0" turned="false">
+        <connection connection_side="2" direction="0" object_id="29" relation_point_x="786" relation_point_y="395"/>
+        <connection connection_side="1" direction="1" object_id="49" relation_point_x="909" relation_point_y="642"/>
+    </line>
+    <line cardinality_string="(0,1)" has_u="false" id="51" is_weak="false" role="" style="0" turned="false">
+        <connection connection_side="2" direction="0" object_id="35" relation_point_x="633" relation_point_y="618"/>
+        <connection connection_side="0" direction="0" object_id="49" relation_point_x="893" relation_point_y="658"/>
+    </line>
+    <line cardinality_string="(1,1)" has_u="false" id="53" is_weak="false" role="" style="0" turned="false">
+        <connection connection_side="0" direction="0" object_id="35" relation_point_x="531" relation_point_y="631"/>
+        <connection connection_side="2" direction="0" object_id="52" relation_point_x="333" relation_point_y="612"/>
+    </line>
+    <line cardinality_string="(0,n)" has_u="false" id="54" is_weak="false" role="" style="0" turned="false">
+        <connection connection_side="0" direction="0" object_id="0" relation_point_x="329" relation_point_y="277"/>
+        <connection connection_side="1" direction="1" object_id="52" relation_point_x="317" relation_point_y="596"/>
     </line>
 </diagram>
