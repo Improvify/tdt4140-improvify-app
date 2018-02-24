@@ -32,6 +32,12 @@
             <artifactId>tdt4140-gr1817.app.ui</artifactId>
             <version>${project.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>tdt4140-gr1817</groupId>
+            <artifactId>ecosystem.persistence</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
     <build>
