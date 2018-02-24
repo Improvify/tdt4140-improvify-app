@@ -13,10 +13,6 @@
     <name>Service provider Webserver</name>
     <description>REST API endpoints for Improvify</description>
 
-    <!-- properties/>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <properties/-->
-
     <dependencies>
         <dependency>
             <groupId>tdt4140-gr1817</groupId>
