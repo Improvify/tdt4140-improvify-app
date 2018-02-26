@@ -29,7 +29,10 @@ public class MySqlUserRepositoryTest {
 
         // Then
         verify(connection).prepareStatement(anyString());
-        verify(preparedStatement).setString(1, "Test");
+        verify(preparedStatement, never()).setObject(eq(0), any());
+        verify(preparedStatement).setObject(anyInt(), eq("Test"));
+        verify(preparedStatement).setObject(anyInt(), eq("Person"));
+        verify(preparedStatement).setObject(anyInt(), eq(1));
     }
 
     private static User createUser(int id) {
