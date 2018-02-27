@@ -64,7 +64,7 @@ public class MySqlUserRepository implements UserRepository {
 
     @Override
     public void remove(Iterable<User> items) {
-
+        throw new UnsupportedOperationException("Not implemented");
     }
 
     @Override
