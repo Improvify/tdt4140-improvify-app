@@ -98,6 +98,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `ServiceProvider` (
   `id` INT NOT NULL,
+  `name` VARCHAR(255),
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
