@@ -1,5 +1,6 @@
 package tdt4140.gr1817.ecosystem.persistence.data.improvify;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NonNull;
@@ -35,6 +36,7 @@ import tdt4140.gr1817.ecosystem.persistence.data.WorkoutSession;
  */
 @Data
 @Builder
+@AllArgsConstructor
 @RequiredArgsConstructor
 public class ServiceProviderPermissions {
     private @NonNull User user;
