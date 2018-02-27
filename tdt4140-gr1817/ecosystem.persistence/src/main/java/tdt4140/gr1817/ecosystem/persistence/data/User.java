@@ -8,7 +8,7 @@ import java.util.Date;
 @Data
 @Builder
 public class User {
-    private final int id;
+    private int id;
     private String firstName;
     private String lastName;
     private float height;
