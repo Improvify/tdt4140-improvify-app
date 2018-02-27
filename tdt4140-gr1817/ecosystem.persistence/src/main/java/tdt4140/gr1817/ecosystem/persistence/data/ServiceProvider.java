@@ -1,7 +1,7 @@
-package tdt4140.gr1817.ecosystem.persistence.data.improvify;
+package tdt4140.gr1817.ecosystem.persistence.data;
 
 import lombok.Data;
-import tdt4140.gr1817.ecosystem.persistence.data.User;
+import lombok.NonNull;
 
 /**
  * A single service provider.
@@ -16,5 +16,5 @@ import tdt4140.gr1817.ecosystem.persistence.data.User;
 @Data
 public class ServiceProvider {
     private int id;
-    private String name;
+    private @NonNull String name;
 }

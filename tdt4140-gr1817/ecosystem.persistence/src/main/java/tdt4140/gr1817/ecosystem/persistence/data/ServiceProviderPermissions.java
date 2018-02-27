@@ -1,14 +1,10 @@
-package tdt4140.gr1817.ecosystem.persistence.data.improvify;
+package tdt4140.gr1817.ecosystem.persistence.data;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import tdt4140.gr1817.ecosystem.persistence.data.RestingHeartRate;
-import tdt4140.gr1817.ecosystem.persistence.data.User;
-import tdt4140.gr1817.ecosystem.persistence.data.Weight;
-import tdt4140.gr1817.ecosystem.persistence.data.WorkoutSession;
 
 /**
  * <p>The permissions for a service provider,
