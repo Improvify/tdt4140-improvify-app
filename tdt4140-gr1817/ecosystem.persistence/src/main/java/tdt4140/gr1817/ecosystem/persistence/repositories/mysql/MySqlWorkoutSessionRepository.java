@@ -2,8 +2,8 @@ package tdt4140.gr1817.ecosystem.persistence.repositories.mysql;
 
 import lombok.extern.slf4j.Slf4j;
 import tdt4140.gr1817.ecosystem.persistence.Specification;
-import tdt4140.gr1817.ecosystem.persistence.data.User;
-import tdt4140.gr1817.ecosystem.persistence.repositories.UserRepository;
+import tdt4140.gr1817.ecosystem.persistence.data.WorkoutSession;
+import tdt4140.gr1817.ecosystem.persistence.repositories.WorkoutSessionRepository;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -13,60 +13,63 @@ import java.sql.SQLException;
 import java.util.List;
 
 @Slf4j
-public class MySqlUserRepository implements UserRepository {
+public class MySqlWorkoutSessionRepository implements WorkoutSessionRepository {
+
 
     private Provider<Connection> connection;
 
     @Inject
-    public MySqlUserRepository(Provider<Connection> connection) {
+    public MySqlWorkoutSessionRepository(Provider<Connection> connection) {
         this.connection = connection;
     }
 
 
     @Override
-    public void add(User user) {
+    public void add(WorkoutSession workoutSession) {
         /*
         Currently just a test implementation.
         This code is ugly, please find a cleaner way to do this.
          */
         try {
-            String insertSql = "INSERT INTO useraccount(firstname, lastname, height, birthdate, "
-                    + "username, password, email, id) "
+            String insertSql = "INSERT INTO workoutsession(id, `time`, intensity, KCal, " +
+                    "avgheartrate, maxheartrate, distancerun, useraccount_id) "
                     + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
             try (
                     Connection connection = this.connection.get();
                     PreparedStatement preparedStatement = connection.prepareStatement(insertSql)
             ) {
-                setParameters(preparedStatement, user.getFirstName(), user.getLastName(), user.getHeight(),
-                        user.getBirthDate(), user.getUsername(), user.getPassword(), user.getEmail(), user.getId());
-
+                setParameters(preparedStatement, workoutSession.getTime(), workoutSession.getIntensity(), workoutSession.getKiloCalories(),
+                        workoutSession.getAverageHeartRate(), workoutSession.getMaxHeartRate(), workoutSession.getUser().getId(), workoutSession.getId());
+/*                                                                                                 Usikker på om det her burde være .getUserAccount_ID()*/
                 preparedStatement.execute();
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Failed to add user", e);
+            throw new RuntimeException("Failed to add workoutsession", e);
         }
     }
 
     @Override
-    public void add(Iterable<User> items) {
-        for (User user: items){
-            this.add(user);
+    public void add(Iterable<WorkoutSession> items) {
+        for (WorkoutSession session: items
+             ) this.add(session); {
+            
         }
+                
     }
 
     @Override
-    public void update(User item) {
+    public void update(WorkoutSession item) {
         throw new UnsupportedOperationException("Not implemented");
     }
 
     @Override
-    public void remove(User item) {
+    public void remove(WorkoutSession item) {
         throw new UnsupportedOperationException("Not implemented");
     }
 
     @Override
-    public void remove(Iterable<User> items) {
-        throw new UnsupportedOperationException("Not implemented");
+    public void remove(Iterable<WorkoutSession> items) {
+
     }
 
     @Override
@@ -75,7 +78,7 @@ public class MySqlUserRepository implements UserRepository {
     }
 
     @Override
-    public List<User> query(Specification specification) {
+    public List<WorkoutSession> query(Specification specification) {
         throw new UnsupportedOperationException("Not implemented");
     }
 
@@ -87,3 +90,5 @@ public class MySqlUserRepository implements UserRepository {
         }
     }
 }
+
+

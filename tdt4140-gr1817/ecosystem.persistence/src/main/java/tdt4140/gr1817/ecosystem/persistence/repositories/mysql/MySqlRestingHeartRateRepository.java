@@ -2,8 +2,8 @@ package tdt4140.gr1817.ecosystem.persistence.repositories.mysql;
 
 import lombok.extern.slf4j.Slf4j;
 import tdt4140.gr1817.ecosystem.persistence.Specification;
-import tdt4140.gr1817.ecosystem.persistence.data.User;
-import tdt4140.gr1817.ecosystem.persistence.repositories.UserRepository;
+import tdt4140.gr1817.ecosystem.persistence.data.RestingHeartRate;
+import tdt4140.gr1817.ecosystem.persistence.repositories.RestingHeartRateRepository;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -11,62 +11,58 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
-
 @Slf4j
-public class MySqlUserRepository implements UserRepository {
+public class MySqlRestingHeartRateRepository implements RestingHeartRateRepository{
 
     private Provider<Connection> connection;
 
     @Inject
-    public MySqlUserRepository(Provider<Connection> connection) {
+    public MySqlRestingHeartRateRepository(Provider<Connection> connection) {
         this.connection = connection;
     }
 
 
     @Override
-    public void add(User user) {
-        /*
+    public void add(RestingHeartRate restingHeartRate) {
+           /*
         Currently just a test implementation.
         This code is ugly, please find a cleaner way to do this.
          */
         try {
-            String insertSql = "INSERT INTO useraccount(firstname, lastname, height, birthdate, "
-                    + "username, password, email, id) "
-                    + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            String insertSql = "INSERT INTO restingheartrate(id, `heartrate`, `date`, useraccount_id) "
+                    + "VALUES (?, ?, ?, ?)";
             try (
                     Connection connection = this.connection.get();
                     PreparedStatement preparedStatement = connection.prepareStatement(insertSql)
             ) {
-                setParameters(preparedStatement, user.getFirstName(), user.getLastName(), user.getHeight(),
-                        user.getBirthDate(), user.getUsername(), user.getPassword(), user.getEmail(), user.getId());
-
+                setParameters(preparedStatement, restingHeartRate.getId(), restingHeartRate.getMeasuredAt(), restingHeartRate.getHeartRate(),
+                        restingHeartRate.getMeasuredBy().getId() );
+                /*                                   Usikker på om det her burde være .getUserAccount_ID()*/
                 preparedStatement.execute();
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Failed to add user", e);
+            throw new RuntimeException("Failed to add resting heart rate", e);
         }
     }
 
     @Override
-    public void add(Iterable<User> items) {
-        for (User user: items){
-            this.add(user);
-        }
-    }
-
-    @Override
-    public void update(User item) {
+    public void add(Iterable<RestingHeartRate> items) {
         throw new UnsupportedOperationException("Not implemented");
     }
 
     @Override
-    public void remove(User item) {
+    public void update(RestingHeartRate item) {
         throw new UnsupportedOperationException("Not implemented");
     }
 
     @Override
-    public void remove(Iterable<User> items) {
+    public void remove(RestingHeartRate item) {
         throw new UnsupportedOperationException("Not implemented");
+    }
+
+    @Override
+    public void remove(Iterable<RestingHeartRate> items) {
+
     }
 
     @Override
@@ -75,7 +71,7 @@ public class MySqlUserRepository implements UserRepository {
     }
 
     @Override
-    public List<User> query(Specification specification) {
+    public List<RestingHeartRate> query(Specification specification) {
         throw new UnsupportedOperationException("Not implemented");
     }
 
@@ -86,4 +82,5 @@ public class MySqlUserRepository implements UserRepository {
             statement.setObject(i + 1, parameters[i]);
         }
     }
+
 }
