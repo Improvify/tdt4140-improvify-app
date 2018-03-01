@@ -5,9 +5,9 @@ import lombok.Data;
 @Data
 public class GpsPoint {
 
-    double time;
-    double longitude;
-    double latitude;
-    int elevation;
-    int heartRate;
+    private double time;
+    private double longitude;
+    private double latitude;
+    private int elevation;
+    private int heartRate;
 }
