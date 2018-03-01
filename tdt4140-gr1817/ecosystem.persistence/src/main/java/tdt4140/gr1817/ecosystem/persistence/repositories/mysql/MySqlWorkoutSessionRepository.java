@@ -31,16 +31,18 @@ public class MySqlWorkoutSessionRepository implements WorkoutSessionRepository {
         This code is ugly, please find a cleaner way to do this.
          */
         try {
-            String insertSql = "INSERT INTO workoutsession(id, `time`, intensity, KCal, " +
-                    "avgheartrate, maxheartrate, distancerun, useraccount_id) "
+            String insertSql = "INSERT INTO workoutsession(id, `time`, intensity, KCal, "
+                    + "avgheartrate, maxheartrate, distancerun, useraccount_id) "
                     + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
             try (
                     Connection connection = this.connection.get();
                     PreparedStatement preparedStatement = connection.prepareStatement(insertSql)
             ) {
-                setParameters(preparedStatement, workoutSession.getTime(), workoutSession.getIntensity(), workoutSession.getKiloCalories(),
-                        workoutSession.getAverageHeartRate(), workoutSession.getMaxHeartRate(), workoutSession.getUser().getId(), workoutSession.getId());
-/*                                                                                                 Usikker på om det her burde være .getUserAccount_ID()*/
+                setParameters(preparedStatement, workoutSession.getTime(), workoutSession.getIntensity(),
+                        workoutSession.getKiloCalories(), workoutSession.getAverageHeartRate(),
+                        workoutSession.getMaxHeartRate(), workoutSession.getUser().getId(),
+                        workoutSession.getId());
+
                 preparedStatement.execute();
             }
         } catch (SQLException e) {
@@ -50,11 +52,9 @@ public class MySqlWorkoutSessionRepository implements WorkoutSessionRepository {
 
     @Override
     public void add(Iterable<WorkoutSession> items) {
-        for (WorkoutSession session: items
-             ) this.add(session); {
-            
+        for (WorkoutSession session : items) {
+            this.add(session);
         }
-                
     }
 
     @Override

@@ -46,7 +46,9 @@ public class MySqlWeightRepository implements WeightRepository{
 
     @Override
     public void add(Iterable<Weight> items) {
-        throw new UnsupportedOperationException("Not implemented");
+        for (Weight weight: items){
+            this.add(weight);
+        }
     }
 
     @Override

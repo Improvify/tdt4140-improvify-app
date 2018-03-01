@@ -9,6 +9,7 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -49,11 +50,71 @@ public class MySqlUserRepository implements UserRepository {
 
     @Override
     public void add(Iterable<User> items) {
-        for (User user: items){
+        for (User user : items) {
             this.add(user);
         }
+        ;
     }
 
+
+    /*@Override
+    public User getUser(int idNr){
+        try (
+                Connection connection = this.connection.get();
+                String query = "SELECT * FROM user WHERE id = idNr";
+                ){
+
+        }   catch (SQLException e){
+            throw new RuntimeException();
+        }
+
+
+
+        return user
+    }
+*/
+    public User getUser(int idNr) {
+        try {
+            String mySQLgetter = "SELECT id, birthdate, email, firstname, lastname, height,"
+                    + " username, password FROM useraccount WHERE ID = ?";
+            try (
+                    Connection connection = this.connection.get();
+                    PreparedStatement preparedStatement = connection.prepareStatement(mySQLgetter)
+            ) {
+
+
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    if (resultSet.next()) {
+                        int userId = resultSet.getInt(1);
+
+                    }
+                }
+
+
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to get user", e);
+        }
+        throw new UnsupportedOperationException("Not fully implemented");
+//        User user = new User();
+//        return user;
+    }
+
+    /*
+        public User getUser (int idNr){
+            try{
+                Connection connection = this.connection.get();
+                Statement st = connection.createStatement();
+                String sql = ("SELECT * FROM posts ORDER BY id DESC LIMIT 1;");
+                ResultSet rs = st.executeQuery(sql);
+                int id = rs.getInt("first_column_name");
+                String str1 = rs.getString("second_column_name");
+            } catch (SQLException e){
+                throw new RuntimeException();
+            }
+
+            con.close();
+        }*/
     @Override
     public void update(User item) {
         throw new UnsupportedOperationException("Not implemented");

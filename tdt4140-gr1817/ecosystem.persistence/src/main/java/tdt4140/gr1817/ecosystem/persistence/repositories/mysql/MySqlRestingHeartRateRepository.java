@@ -47,8 +47,13 @@ public class MySqlRestingHeartRateRepository implements RestingHeartRateReposito
 
     @Override
     public void add(Iterable<RestingHeartRate> items) {
-        throw new UnsupportedOperationException("Not implemented");
+        for (RestingHeartRate rhr: items)
+                this.add(rhr);
+              {
+
+        }
     }
+
 
     @Override
     public void update(RestingHeartRate item) {
