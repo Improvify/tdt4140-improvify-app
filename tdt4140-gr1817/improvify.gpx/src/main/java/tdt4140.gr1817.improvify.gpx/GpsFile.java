@@ -9,6 +9,14 @@ import java.util.Collection;
 @Data
 public class GpsFile {
 
+    private int sessionID;
+    private double time;
+    private int intensity;
+    private int KCal;
+    private int averageHR;
+    private int maxHR;
+    private int distanceRun;
+
     public GpsFile(ArrayList<GpsPoint> L){
 
     }
@@ -24,7 +32,16 @@ public class GpsFile {
 
         return total;
     }
-    public static int calculateAverageHeartRate(ArrayList<GpsPoint> L){
+    public static int getMaxHeartRate(ArrayList<GpsPoint> L){
+        int max = 0;
+        for(GpsPoint p: L){
+            if (p.getHeartRate()> max){
+                max = p.getHeartRate();
+            }
+        }
+        return max;
+    }
+    public static int calculateAverageAndMaxHeartRate(ArrayList<GpsPoint> L){
         int total = 0;
         for(GpsPoint HR: L){
             total += HR.getHeartRate();
@@ -54,15 +71,22 @@ public class GpsFile {
     public static void main(String[] args){
         String FILEPATH = "C:\\Users\\Henrik\\IdeaProjects\\pu\\tdt4140-gr1817\\improvify.gpx\\src\\main\\java\\tdt4140.gr1817.improvify.gpx\\exampleactivity.gpx";
         tdt4140.gr1817.improvify.gpx.GpsFileHandler handler = new tdt4140.gr1817.improvify.gpx.GpsFileHandler();
-        ArrayList<String> arr = handler.loadFile(FILEPATH);
-        ArrayList<GpsPoint> points = handler.generateGpsPoints(arr);
+        try {
+            ArrayList<String> arr = handler.loadFile(FILEPATH);
+            ArrayList<GpsPoint> points = handler.generateGpsPoints(arr);
+            double dist = GpsFile.calculateTotalDistance(points);
+
+            System.out.println("*");
+            System.out.println("The total distance run is "+Double.toString(dist) +" meters.");
+            System.out.print(GpsFile.calculateAverageAndMaxHeartRate(points));
+        }
+        catch (Exception e){
+            System.out.println(e);
+        }
 
 
-        double dist = GpsFile.calculateTotalDistance(points);
 
-        System.out.println("*");
-        System.out.println("The total distance run is "+Double.toString(dist) +" meters.");
-        System.out.print(GpsFile.calculateAverageHeartRate(points));
+
 
     }
 

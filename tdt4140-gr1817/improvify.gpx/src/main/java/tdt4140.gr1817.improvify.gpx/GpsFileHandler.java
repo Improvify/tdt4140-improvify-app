@@ -10,10 +10,10 @@ import java.util.ArrayList;
 public class GpsFileHandler {
 
 
-    public ArrayList<String> loadFile(String path){
+    public static ArrayList<String> loadFile(String path) throws FileNotFoundException,IOException{
 
         ArrayList<String> fileArr = new ArrayList<>(1000);
-        try {
+
             FileReader inputStream = new FileReader(path);
             BufferedReader reader = new BufferedReader(inputStream);
             String l;
@@ -21,21 +21,15 @@ public class GpsFileHandler {
                 fileArr.add(l);
             }
             reader.close();
-        }
-        catch(FileNotFoundException f){
-            System.out.println(f);
-        }
-        catch(IOException e){
-            System.out.println(e);
-        }
+
         return fileArr;
     }
 
-    public ArrayList<GpsPoint> generateGpsPoints(ArrayList<String> fileList){
+    public static ArrayList<GpsPoint> generateGpsPoints(ArrayList<String> fileList){
         ArrayList<GpsPoint> gpsPoints = new ArrayList<GpsPoint>();
 
         //This point is initialized only for reasons of allowing the code to compile. It gets removed by the end.
-        //This is, in my opinion, a hack. And it should be dealt with different
+        //This is, in my opinion, a hack. And it should be dealt with differently
         GpsPoint gpsPoint = new GpsPoint();
 
         for (String line: fileList){
@@ -64,6 +58,7 @@ public class GpsFileHandler {
             }
 
             else if(line.startsWith("        <time>")){
+                    //TODO: Add actual functionality here
                     gpsPoint.setTime(10);
             }
 
@@ -91,10 +86,5 @@ public class GpsFileHandler {
 
     public static void main(String[] args){
 
-        String FILEPATH = "C:\\Users\\Henrik\\IdeaProjects\\pu\\tdt4140-gr1817\\improvify.gpx\\src\\main\\java\\tdt4140.gr1817.improvify.gpx\\exampleactivity.gpx";
-        tdt4140.gr1817.improvify.gpx.GpsFileHandler handler = new tdt4140.gr1817.improvify.gpx.GpsFileHandler();
-        ArrayList<String> arr = handler.loadFile(FILEPATH);
-        ArrayList<GpsPoint> points = handler.generateGpsPoints(arr);
-        System.out.println(points);
     }
 }
