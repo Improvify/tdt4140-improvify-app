@@ -37,12 +37,10 @@ public class UserResource{
     }
 
     @POST
-    @Produces(MediaType.APPLICATION_JSON)
+    //@Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public String createUser(String json) {
-        //tdt4140.gr1817.ecosystem.persistence.data.User user = gson.fromJson(json, tdt4140.gr1817.ecosystem.persistence.data.User.class);
-        //repository.add(user);
-        //return "304 OK";
-        return json;
+    public void createUser(String json) {
+        tdt4140.gr1817.ecosystem.persistence.data.User user = gson.fromJson(json, tdt4140.gr1817.ecosystem.persistence.data.User.class);
+        repository.add(user);
     }
 }
