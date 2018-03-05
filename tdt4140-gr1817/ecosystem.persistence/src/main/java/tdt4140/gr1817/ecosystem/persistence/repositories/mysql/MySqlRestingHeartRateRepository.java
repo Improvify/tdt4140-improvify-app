@@ -3,6 +3,7 @@ package tdt4140.gr1817.ecosystem.persistence.repositories.mysql;
 import lombok.extern.slf4j.Slf4j;
 import tdt4140.gr1817.ecosystem.persistence.Specification;
 import tdt4140.gr1817.ecosystem.persistence.data.RestingHeartRate;
+import tdt4140.gr1817.ecosystem.persistence.data.User;
 import tdt4140.gr1817.ecosystem.persistence.repositories.RestingHeartRateRepository;
 
 import javax.inject.Inject;
@@ -10,6 +11,7 @@ import javax.inject.Provider;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 @Slf4j
 public class MySqlRestingHeartRateRepository implements RestingHeartRateRepository{
@@ -29,7 +31,7 @@ public class MySqlRestingHeartRateRepository implements RestingHeartRateReposito
         This code is ugly, please find a cleaner way to do this.
          */
         try {
-            String insertSql = "INSERT INTO restingheartrate(id, `heartrate`, `date`, useraccount_id) "
+            String insertSql = "INSERT INTO restingheartrate(id, `heartrate`, `date`, measuredBy) "
                     + "VALUES (?, ?, ?, ?)";
             try (
                     Connection connection = this.connection.get();
@@ -57,16 +59,40 @@ public class MySqlRestingHeartRateRepository implements RestingHeartRateReposito
 
     @Override
     public void update(RestingHeartRate item) {
-        throw new UnsupportedOperationException("Not implemented");
+        try{
+            Date measuredAt = item.getMeasuredAt();
+            int heartRate = item.getHeartRate();
+            User measuredBy = item.getMeasuredBy();
+
+            String updateHeartRateSql = "UPDATE restingheartrate SET date = '"+measuredAt+"', heartRate = '"+heartRate+"', measuredBy = '"+measuredBy+"'";
+            Connection connection = this.connection.get();
+            PreparedStatement pst = connection.prepareStatement(updateHeartRateSql);
+            pst.execute();
+
+        }catch(SQLException e){
+            throw new RuntimeException("Update not successful");
+        }
     }
 
     @Override
     public void remove(RestingHeartRate item) {
-        throw new UnsupportedOperationException("Not implemented");
+        try{
+            int id = item.getId();
+            String deleteHeartRateSql = "DELETE FROM RestingHeartRate WHERE id = '"+id+"'";
+            Connection connection = this.connection.get();
+            PreparedStatement pst = connection.prepareStatement((deleteHeartRateSql));
+            pst.execute();
+
+        }catch (SQLException e){
+            throw new RuntimeException("Delete not successful");
+        }
     }
 
     @Override
     public void remove(Iterable<RestingHeartRate> items) {
+        for(RestingHeartRate heartRate : items){
+            this.remove(heartRate);
+        }
 
     }
 

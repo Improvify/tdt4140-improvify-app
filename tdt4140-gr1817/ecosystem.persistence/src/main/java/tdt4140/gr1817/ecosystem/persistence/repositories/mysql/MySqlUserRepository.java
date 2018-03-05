@@ -6,6 +6,8 @@ import tdt4140.gr1817.ecosystem.persistence.data.User;
 import tdt4140.gr1817.ecosystem.persistence.repositories.UserRepository;
 import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.specification.SqlSpecification;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -14,8 +16,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 
-import javax.inject.Inject;
-import javax.inject.Provider;
+
 import java.util.List;
 
 @Slf4j
@@ -101,17 +102,44 @@ public class MySqlUserRepository implements UserRepository {
 
     @Override
     public void update(User item) {
-        throw new UnsupportedOperationException("Not implemented");
+        try{
+
+            String firstName = item.getFirstName();
+            String lastName = item.getLastName();
+            float height = item.getHeight();
+            Date birthDate = item.getBirthDate();
+            String userName = item.getUsername();
+            String password = item.getPassword();
+            String email = item.getEmail();
+
+            String updateSql = "UPDATE useraccount SET firstName = '"+firstName+"', lastName = '"+lastName+"', height = '"+height+"', birthDate = '"+birthDate+"', userName = '"+userName+"', password = '"+password+"', email = '"+email+"'";
+            Connection connection = this.connection.get();
+            PreparedStatement pst = connection.prepareStatement(updateSql);
+            pst.execute();
+
+        }catch(SQLException e){
+            throw new RuntimeException("Update not successful");
+        }
     }
 
     @Override
     public void remove(User item) {
-        throw new UnsupportedOperationException("Not implemented");
+        try {
+            int id = item.getId();
+            String delete = "DELETE FROM useraccount WHERE id = '"+id+"'";
+            Connection connection = this.connection.get();
+            PreparedStatement pst = connection.prepareStatement(delete);
+
+        }catch(SQLException e){
+            throw new RuntimeException("Delete not successful");
+        }
     }
 
     @Override
     public void remove(Iterable<User> items) {
-        throw new UnsupportedOperationException("Not implemented");
+        for(User user : items){
+            this.remove(user);
+        }
     }
 
     @Override
