@@ -18,12 +18,6 @@ public class GoalResource {
     GoalRepository repository;
     private Gson gson;
 
-    public class GoalRepository {
-        String description;
-        boolean isCompleted;
-        boolean isCurrent;
-    }
-
     @Inject
     public GoalResource(GoalRepository repository, Gson gson) {
         this.repository = repository;
@@ -31,10 +25,11 @@ public class GoalResource {
     }
 
     @POST
-    @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public String createGoal(String json) {
-        //serviceproviderwebserver.WeightResource.Weight weight = gson.fromJson(json, serviceproviderwebserver.WeightResource.Weight.class);
-        return json;
+        //Goal goal = gson.fromJson(json, goal.class);
+        //validateGoalInput();
+        //repository.add(goal);
+        return "Goal added";
     }
 }

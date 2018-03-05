@@ -2,6 +2,7 @@ package serviceproviderwebserver;
 
 import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
+import tdt4140.gr1817.ecosystem.persistence.data.WorkoutSession;
 import tdt4140.gr1817.ecosystem.persistence.repositories.WorkoutSessionRepository;
 
 import javax.inject.Inject;
@@ -18,15 +19,6 @@ public class WorkoutSessionResource {
     WorkoutSessionRepository repository;
     private Gson gson;
 
-    static class WorkoutSession {
-        Date date;
-        int intensity;
-        int kcal;
-        int avgHeartRate;
-        int maxHeartRate;
-        float distanceRun;
-    }
-
     @Inject
     public WorkoutSessionResource(WorkoutSessionRepository repository, Gson gson) {
         this.repository = repository;
@@ -34,10 +26,11 @@ public class WorkoutSessionResource {
     }
 
     @POST
-    @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public String createWorkoutSession(String json) {
-        //serviceproviderwebserver.WorkoutSessionResource.WorkoutSession workoutSession = gson.fromJson(json, serviceproviderwebserver.WorkoutSessionResource.WorkoutSession.class);
-        return json;
+        WorkoutSession workoutSession = gson.fromJson(json, WorkoutSession.class);
+        //validateWorkoutSessionInput();
+        repository.add(workoutSession);
+        return "Workoutsession added";
     }
 }

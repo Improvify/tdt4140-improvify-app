@@ -3,6 +3,7 @@ package serviceproviderwebserver;
 import com.google.gson.Gson;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import tdt4140.gr1817.ecosystem.persistence.data.RestingHeartRate;
 import tdt4140.gr1817.ecosystem.persistence.repositories.RestingHeartRateRepository;
 import tdt4140.gr1817.ecosystem.persistence.repositories.WeightRepository;
 
@@ -20,11 +21,6 @@ public class RestingHeartRateResource {
     RestingHeartRateRepository repository;
     private Gson gson;
 
-    public class RestingHeartRate {
-        int heartRateValue;
-        Date date;
-    }
-
     @Inject
     public RestingHeartRateResource(RestingHeartRateRepository repository, Gson gson) {
         this.repository = repository;
@@ -32,10 +28,10 @@ public class RestingHeartRateResource {
     }
 
     @POST
-    @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public String createRestingHeartRate(String json) {
-        //serviceproviderwebserver.WeightResource.Weight weight = gson.fromJson(json, serviceproviderwebserver.WeightResource.Weight.class);
-        return json;
+        RestingHeartRate weight = gson.fromJson(json, RestingHeartRate.class);
+        //validateRestingHeartRateInput();
+        return "Resting heart rate added";
     }
 }

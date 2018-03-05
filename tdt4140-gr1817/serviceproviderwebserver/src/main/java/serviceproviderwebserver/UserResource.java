@@ -11,6 +11,7 @@ import javax.print.attribute.standard.Media;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.MessageBodyReader;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Slf4j
@@ -19,7 +20,7 @@ public class UserResource{
     UserRepository repository;
     private Gson gson;
 
-    public class User {
+    /*public class User {
         public int id;
         public String firstName;
         public String lastName;
@@ -28,7 +29,7 @@ public class UserResource{
         public String username;
         public String password;
         public String email;
-    }
+    }*/
 
     @Inject
     public UserResource(UserRepository repository, Gson gson) {
@@ -37,10 +38,11 @@ public class UserResource{
     }
 
     @POST
-    //@Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public void createUser(String json) {
-        tdt4140.gr1817.ecosystem.persistence.data.User user = gson.fromJson(json, tdt4140.gr1817.ecosystem.persistence.data.User.class);
+    public String createUser(String json) {
+        User user = gson.fromJson(json, User.class);
+        //validateUserInput();
         repository.add(user);
+        return "User added";
     }
 }

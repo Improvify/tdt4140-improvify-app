@@ -2,6 +2,7 @@ package serviceproviderwebserver;
 
 import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
+import tdt4140.gr1817.ecosystem.persistence.data.Weight;
 import tdt4140.gr1817.ecosystem.persistence.repositories.WeightRepository;
 
 import javax.inject.Inject;
@@ -18,11 +19,6 @@ public class WeightResource {
     WeightRepository repository;
     private Gson gson;
 
-    static class Weight {
-        private float weight;
-        private Date date;
-    }
-
     @Inject
     public WeightResource(WeightRepository repository, Gson gson) {
         this.repository = repository;
@@ -30,10 +26,11 @@ public class WeightResource {
     }
 
     @POST
-    @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public String createWeight(String json) {
-        //serviceproviderwebserver.WeightResource.Weight weight = gson.fromJson(json, serviceproviderwebserver.WeightResource.Weight.class);
-        return json;
+        Weight weight = gson.fromJson(json, Weight.class);
+        //validateWeightInput();
+        repository.add(weight);
+        return "Weight added";
     }
 }

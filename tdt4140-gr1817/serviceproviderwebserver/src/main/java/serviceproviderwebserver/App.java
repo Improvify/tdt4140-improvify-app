@@ -42,7 +42,9 @@ public class App {
 
             @Provides
             public Connection provideConnection() throws SQLException {
-                return new MysqlDataSource().getConnection("root", "root");
+                MysqlDataSource source = new MysqlDataSource();
+                source.setDatabaseName("ecosystem");
+                return source.getConnection("root", "root");
             }
         });
 /*
