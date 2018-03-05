@@ -25,7 +25,7 @@ public class GoalResource {
     }
 
     @Inject
-    public GoalRepository(GoalRepository repository, Gson gson) {
+    public GoalResource(GoalRepository repository, Gson gson) {
         this.repository = repository;
         this.gson = gson;
     }

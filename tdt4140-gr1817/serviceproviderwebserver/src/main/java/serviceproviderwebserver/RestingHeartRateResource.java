@@ -26,7 +26,7 @@ public class RestingHeartRateResource {
     }
 
     @Inject
-    public RestingHeartRateRepository(RestingHeartRateRepository repository, Gson gson) {
+    public RestingHeartRateResource(RestingHeartRateRepository repository, Gson gson) {
         this.repository = repository;
         this.gson = gson;
     }
