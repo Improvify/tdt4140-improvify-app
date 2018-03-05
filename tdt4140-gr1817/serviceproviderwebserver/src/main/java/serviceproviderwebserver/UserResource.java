@@ -2,21 +2,24 @@ package serviceproviderwebserver;
 
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
+import lombok.extern.slf4j.Slf4j;
 import tdt4140.gr1817.ecosystem.persistence.data.User;
 import tdt4140.gr1817.ecosystem.persistence.repositories.UserRepository;
 
 import javax.inject.Inject;
+import javax.print.attribute.standard.Media;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.MessageBodyReader;
 import java.util.Date;
 
+@Slf4j
 @Path("user")
 public class UserResource{
     UserRepository repository;
     private Gson gson;
 
-    static class User {
+    public class User {
         public int id;
         public String firstName;
         public String lastName;
@@ -34,20 +37,12 @@ public class UserResource{
     }
 
     @POST
+    @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public void createUser(String json) {
-        User user = gson.fromJson(json, User.class);
-        System.out.println(user.username);
-        /*
-        user.password
-        Gson gson = new Gson();
-
-        gson.fromJson(json, User.class)
-        System.out.println(currentWeight);
-
-        repository.add(new User(0, "name", "lastname", 19.0f, new Date(), "kek", "123", "heh@ok.com"));
-
-        return currentWeight;
-*/
+    public String createUser(String json) {
+        //tdt4140.gr1817.ecosystem.persistence.data.User user = gson.fromJson(json, tdt4140.gr1817.ecosystem.persistence.data.User.class);
+        //repository.add(user);
+        //return "304 OK";
+        return json;
     }
 }

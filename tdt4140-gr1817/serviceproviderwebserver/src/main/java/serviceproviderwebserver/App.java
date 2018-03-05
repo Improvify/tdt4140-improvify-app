@@ -17,6 +17,7 @@ import org.glassfish.jersey.servlet.ServletContainer;
 import org.jvnet.hk2.guice.bridge.api.GuiceBridge;
 import org.jvnet.hk2.guice.bridge.api.GuiceIntoHK2Bridge;
 import tdt4140.gr1817.ecosystem.persistence.repositories.UserRepository;
+import tdt4140.gr1817.ecosystem.persistence.repositories.WorkoutSessionRepository;
 import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.MySqlUserRepository;
 
 import javax.servlet.DispatcherType;
@@ -35,6 +36,7 @@ public class App {
             @Override
             protected void configure() {
                 bind(UserRepository.class).to(MySqlUserRepository.class);
+                //bind(WorkoutSessionRepository.class).toInstance(null);
                 bind(Gson.class).toInstance(new Gson());
             }
 
