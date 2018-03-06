@@ -15,8 +15,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 
-
-
 import java.util.List;
 
 @Slf4j
@@ -102,22 +100,26 @@ public class MySqlUserRepository implements UserRepository {
 
     @Override
     public void update(User item) {
-        try{
 
-            String firstName = item.getFirstName();
-            String lastName = item.getLastName();
-            float height = item.getHeight();
-            Date birthDate = item.getBirthDate();
-            String userName = item.getUsername();
-            String password = item.getPassword();
-            String email = item.getEmail();
 
-            String updateSql = "UPDATE useraccount SET firstName = '"+firstName+"', lastName = '"+lastName+"', height = '"+height+"', birthDate = '"+birthDate+"', userName = '"+userName+"', password = '"+password+"', email = '"+email+"'";
-            Connection connection = this.connection.get();
-            PreparedStatement pst = connection.prepareStatement(updateSql);
+        String firstName = item.getFirstName();
+        String lastName = item.getLastName();
+        float height = item.getHeight();
+        Date birthDate = item.getBirthDate();
+        String userName = item.getUsername();
+        String password = item.getPassword();
+        String email = item.getEmail();
+
+        String updateUserSql = "UPDATE useraccount SET firstName = ?, lastName = ?,"
+                + " height = ?, birthDate = ?, userName = ?, password = ?, email = ?";
+
+        try (
+                Connection connection = this.connection.get();
+                PreparedStatement pst = connection.prepareStatement(updateUserSql)
+        ) {
+            setParameters(pst, firstName, lastName, height, birthDate, userName, password, email);
             pst.execute();
-
-        }catch(SQLException e){
+        } catch (SQLException e) {
             throw new RuntimeException("Update not successful");
         }
     }
@@ -126,18 +128,17 @@ public class MySqlUserRepository implements UserRepository {
     public void remove(User item) {
         try {
             int id = item.getId();
-            String delete = "DELETE FROM useraccount WHERE id = '"+id+"'";
+            String deleteUser = "DELETE FROM useraccount WHERE id = '" + id + "'";
             Connection connection = this.connection.get();
-            PreparedStatement pst = connection.prepareStatement(delete);
-
-        }catch(SQLException e){
+            PreparedStatement pst = connection.prepareStatement((deleteUser));
+        } catch (SQLException e) {
             throw new RuntimeException("Delete not successful");
         }
     }
 
     @Override
     public void remove(Iterable<User> items) {
-        for(User user : items){
+        for (User user : items) {
             this.remove(user);
         }
     }

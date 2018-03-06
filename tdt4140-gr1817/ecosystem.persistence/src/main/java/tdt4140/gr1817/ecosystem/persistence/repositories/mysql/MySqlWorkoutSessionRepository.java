@@ -61,7 +61,6 @@ public class MySqlWorkoutSessionRepository implements WorkoutSessionRepository {
 
     @Override
     public void update(WorkoutSession item) {
-        try{
             Date time = item.getTime();
             int intensity = item.getIntensity();
             float kiloCalories = item.getKiloCalories();
@@ -69,28 +68,28 @@ public class MySqlWorkoutSessionRepository implements WorkoutSessionRepository {
             float maxHeartRate = item.getMaxHeartRate();
             float distanceRun = item.getDistanceRun();
             User user = item.getUser();
-
-            String updateWorkoutSession = "UPDATE WorkoutSession SET time = '"+time+"', intensity = '"+intensity+"', KCal = '"+kiloCalories+"', avgHeartRate = '"+averageHeartRate+"', maxHeartRate = '"+maxHeartRate+"', distanceRun = '"+distanceRun+"', loggedBy = '"+user+"'";
-            Connection connection = this.connection.get();
-            PreparedStatement pst = connection.prepareStatement(updateWorkoutSession);
+            String updateWorkoutSession = "UPDATE Workoutsession SET time = ?, intensity = ?,"
+                    + " kCal = ?, avgHeartRate = ?, maxHeartRate = ?, distanceRun = ?, loggedBy = ?";
+        try (Connection connection = this.connection.get();
+             PreparedStatement pst = connection.prepareStatement(updateWorkoutSession)
+        ) {
+            setParameters(pst, time, intensity, kiloCalories, averageHeartRate, maxHeartRate, distanceRun, user);
             pst.execute();
-
-        }catch(SQLException e){
+        } catch (SQLException e) {
             throw new RuntimeException("Update not successful");
         }
-
     }
 
     @Override
     public void remove(WorkoutSession item) {
-        try{
+        try {
             int id = item.getId();
-            String deleteWorkoutSession = "DELETE FROM WorkoutSession WHERE id = '"+id+"' ";
+            String deleteWorkoutSession = "DELETE FROM WorkoutSession WHERE id = '" + id + "' ";
             Connection connection = this.connection.get();
             PreparedStatement pst = connection.prepareStatement(deleteWorkoutSession);
             pst.execute();
 
-        }catch(SQLException e){
+        } catch (SQLException e) {
             throw new RuntimeException("Delete not successful");
         }
 
@@ -98,7 +97,7 @@ public class MySqlWorkoutSessionRepository implements WorkoutSessionRepository {
 
     @Override
     public void remove(Iterable<WorkoutSession> items) {
-        for(WorkoutSession workoutSession : items){
+        for (WorkoutSession workoutSession : items) {
             this.remove(workoutSession);
         }
 

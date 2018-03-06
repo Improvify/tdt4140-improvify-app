@@ -13,8 +13,9 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
+
 @Slf4j
-public class MySqlRestingHeartRateRepository implements RestingHeartRateRepository{
+public class MySqlRestingHeartRateRepository implements RestingHeartRateRepository {
 
     private Provider<Connection> connection;
 
@@ -37,8 +38,8 @@ public class MySqlRestingHeartRateRepository implements RestingHeartRateReposito
                     Connection connection = this.connection.get();
                     PreparedStatement preparedStatement = connection.prepareStatement(insertSql)
             ) {
-                setParameters(preparedStatement, restingHeartRate.getId(), restingHeartRate.getMeasuredAt(), restingHeartRate.getHeartRate(),
-                        restingHeartRate.getMeasuredBy().getId() );
+                setParameters(preparedStatement, restingHeartRate.getId(), restingHeartRate.getMeasuredAt(),
+                        restingHeartRate.getHeartRate(), restingHeartRate.getMeasuredBy().getId());
                 /*                                   Usikker på om det her burde være .getUserAccount_ID()*/
                 preparedStatement.execute();
             }
@@ -49,48 +50,48 @@ public class MySqlRestingHeartRateRepository implements RestingHeartRateReposito
 
     @Override
     public void add(Iterable<RestingHeartRate> items) {
-        for (RestingHeartRate rhr: items)
-                this.add(rhr);
-              {
-
+         for (RestingHeartRate rhr : items) {
+            this.add(rhr);
         }
     }
 
 
     @Override
     public void update(RestingHeartRate item) {
-        try{
-            Date measuredAt = item.getMeasuredAt();
-            int heartRate = item.getHeartRate();
-            User measuredBy = item.getMeasuredBy();
+        Date measuredAt = item.getMeasuredAt();
+        int heartRate = item.getHeartRate();
+        User measuredBy = item.getMeasuredBy();
 
-            String updateHeartRateSql = "UPDATE restingheartrate SET date = '"+measuredAt+"', heartRate = '"+heartRate+"', measuredBy = '"+measuredBy+"'";
-            Connection connection = this.connection.get();
-            PreparedStatement pst = connection.prepareStatement(updateHeartRateSql);
+        String updateHeartRateSql = "UPDATE restingheartrate SET date = ?, heartRate = ?, measuredBy = ?";
+        try (
+                Connection connection = this.connection.get();
+                PreparedStatement pst = connection.prepareStatement(updateHeartRateSql)
+        ) {
+            setParameters(pst, measuredAt, heartRate, measuredBy);
             pst.execute();
-
-        }catch(SQLException e){
+        } catch (SQLException e) {
             throw new RuntimeException("Update not successful");
         }
+
     }
 
     @Override
     public void remove(RestingHeartRate item) {
-        try{
+        try {
             int id = item.getId();
-            String deleteHeartRateSql = "DELETE FROM RestingHeartRate WHERE id = '"+id+"'";
+            String deleteHeartRateSql = "DELETE FROM RestingHeartRate WHERE id = '" + id + "'";
             Connection connection = this.connection.get();
             PreparedStatement pst = connection.prepareStatement((deleteHeartRateSql));
             pst.execute();
 
-        }catch (SQLException e){
+        } catch (SQLException e) {
             throw new RuntimeException("Delete not successful");
         }
     }
 
     @Override
     public void remove(Iterable<RestingHeartRate> items) {
-        for(RestingHeartRate heartRate : items){
+        for (RestingHeartRate heartRate : items) {
             this.remove(heartRate);
         }
 

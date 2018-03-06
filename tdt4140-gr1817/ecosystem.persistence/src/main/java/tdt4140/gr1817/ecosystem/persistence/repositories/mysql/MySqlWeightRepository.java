@@ -14,7 +14,7 @@ import java.util.Date;
 import java.util.List;
 @Slf4j
 
-public class MySqlWeightRepository implements WeightRepository{
+public class MySqlWeightRepository implements WeightRepository {
 
     private Provider<Connection> connection;
 
@@ -37,7 +37,8 @@ public class MySqlWeightRepository implements WeightRepository{
                 Connection connection = this.connection.get();
                 PreparedStatement preparedStatement = connection.prepareStatement(insertSql)
         ) {
-            setParameters(preparedStatement, weight.getId(), weight.getDate(), weight.getCurrentWeight(), weight.getUser().getId());
+            setParameters(preparedStatement, weight.getId(), weight.getDate(), weight.getCurrentWeight(),
+                    weight.getUser().getId());
             /*                                   Usikker på om det her burde være .getUserAccount_ID()*/
             preparedStatement.execute();
         }
@@ -48,26 +49,26 @@ public class MySqlWeightRepository implements WeightRepository{
 
     @Override
     public void add(Iterable<Weight> items) {
-        for (Weight weight: items){
+        for (Weight weight : items) {
             this.add(weight);
         }
     }
 
     @Override
     public void update(Weight item) {
-       try{
            float currentWeight = item.getCurrentWeight();
            Date date = item.getDate();
            User user = item.getUser();
 
-           String updateWeightSql = "UPDATE Weight SET currentWeight = '"+currentWeight+"', date = '"+date+"', measuredBy = '"+user+"'";
-           Connection connection = this.connection.get();
-           PreparedStatement pst = connection.prepareStatement(updateWeightSql);
-           pst.execute();
-
-       }catch(SQLException e){
-           throw new RuntimeException("Update not successful");
-       }
+           String updateWeightSql = "UPDATE Weight SET currentWeight= ?, date = ?, measuredBy = ?";
+           try (Connection connection = this.connection.get();
+                PreparedStatement pst = connection.prepareStatement(updateWeightSql)
+           ) {
+               setParameters(pst, currentWeight, date, user);
+               pst.execute();
+           } catch (SQLException e) {
+               throw new RuntimeException("Update not successful");
+           }
 
     }
 
@@ -79,14 +80,14 @@ public class MySqlWeightRepository implements WeightRepository{
             Connection connection = this.connection.get();
             PreparedStatement pst = connection.prepareStatement(deleteWeightSql);
             pst.execute();
-        }catch(SQLException e){
+        } catch (SQLException e) {
             throw new RuntimeException("Delete not successful");
         }
     }
 
     @Override
     public void remove(Iterable<Weight> items) {
-        for (Weight weight : items){
+        for (Weight weight : items) {
             this.remove(weight);
         }
 
