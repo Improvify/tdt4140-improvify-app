@@ -10,7 +10,10 @@ import tdt4140.gr1817.ecosystem.persistence.repositories.WorkoutSessionRepositor
 import tdt4140.gr1817.ecosystem.persistence.repositories.improvify.PeriodPlanRepository;
 import tdt4140.gr1817.ecosystem.persistence.repositories.improvify.TrainerRepository;
 import tdt4140.gr1817.ecosystem.persistence.repositories.improvify.WorkoutPlanRepository;
+import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.MySqlRestingHeartRateRepository;
 import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.MySqlUserRepository;
+import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.MySqlWeightRepository;
+import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.MySqlWorkoutSessionRepository;
 
 public class MySqlRepositoryModule extends AbstractModule {
 
@@ -19,12 +22,12 @@ public class MySqlRepositoryModule extends AbstractModule {
         // TODO: add all bindings here
         // any call to todo() just throws an exception
 
-        bind(RestingHeartRateRepository.class).to(todo());
+        bind(RestingHeartRateRepository.class).to(MySqlRestingHeartRateRepository.class);
         bind(ServiceProviderPermissionsRepository.class).to(todo());
         bind(ServiceProviderRepository.class).to(todo());
         bind(UserRepository.class).to(MySqlUserRepository.class);
-        bind(WeightRepository.class).to(todo());
-        bind(WorkoutSessionRepository.class).to(todo());
+        bind(WeightRepository.class).to(MySqlWeightRepository.class);
+        bind(WorkoutSessionRepository.class).to(MySqlWorkoutSessionRepository.class);
 
         bind(PeriodPlanRepository.class).to(todo());
         bind(TrainerRepository.class).to(todo());
