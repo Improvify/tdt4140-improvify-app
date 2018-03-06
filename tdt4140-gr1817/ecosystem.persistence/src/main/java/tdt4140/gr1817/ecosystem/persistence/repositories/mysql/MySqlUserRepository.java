@@ -105,7 +105,10 @@ public class MySqlUserRepository implements UserRepository {
 
     @Override
     public void remove(Specification specification) {
-        throw new UnsupportedOperationException("Not implemented");
+        final List<User> users = query(specification);
+        for (User user : users) {
+            remove(user);
+        }
     }
 
     @Override

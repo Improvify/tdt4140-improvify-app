@@ -143,6 +143,27 @@ public class MySqlUserRepositoryTest {
         assertThat(users, is(empty()));
     }
 
+    @Test
+    public void shouldRemoveSpecifiedUsers() throws Exception {
+        // Given
+        final MySqlUserRepository repository = new MySqlUserRepository(hsqldb::getConnection);
+        final User user1 = createUser().id(1).build();
+        final User user2 = createUser().id(2).build();
+        final User user3 = createUser().id(3).build();
+
+        // When
+        repository.add(Arrays.asList(user1, user2, user3));
+        repository.remove(new GetAllUsersSpecification());
+
+        repository.add(Arrays.asList(user1, user3));
+        repository.remove(new GetUserByIdSpecification(1));
+
+        final List<User> users = repository.query(new GetAllUsersSpecification());
+
+        // Then
+        assertThat(users, is(not(empty())));
+        assertThat(users, hasItem(user3));
+    }
 
     @Test
     public void shouldRemoveAllSpecifiedUsers() throws Exception {
