@@ -34,7 +34,7 @@ public class MySqlUserRepositoryTest {
         final Date birthDate = new GregorianCalendar(1995, 8, 20).getTime();
 
         User user = createUser()
-                .id(1)
+                .id(5)
                 .birthDate(birthDate)
                 .build();
 
@@ -46,7 +46,7 @@ public class MySqlUserRepositoryTest {
         verify(connectionSpy).close();
 
         try (Connection connection = hsqldb.getConnection()) {
-            try (ResultSet resultSet = connection.createStatement().executeQuery("SELECT * FROM useraccount WHERE  id = 1")) {
+            try (ResultSet resultSet = connection.createStatement().executeQuery("SELECT * FROM useraccount WHERE  id = 5")) {
                 while (resultSet.next()) {
                     assertThat(resultSet.getString("firstname"), is("Test"));
                     assertThat(resultSet.getString("lastname"), is("Person"));
@@ -57,6 +57,24 @@ public class MySqlUserRepositoryTest {
                 }
             }
         }
+    }
+
+    @Test
+    public void shouldAddAllUsers() throws Exception {
+        // Given
+        final MySqlUserRepository repository = new MySqlUserRepository(hsqldb::getConnection);
+        final User user1 = createUser().id(1).build();
+        final User user2 = createUser().id(2).build();
+        final User user3 = createUser().id(3).build();
+
+        // When
+        repository.add(Arrays.asList(user1, user2, user3));
+
+        final List<User> users = repository.query(new GetAllUsersSpecification());
+
+        // Then
+        assertThat(users, hasSize(3));
+        assertThat(users, hasItems(user1, user2, user3));
     }
 
     @Test(expected = RuntimeException.class)

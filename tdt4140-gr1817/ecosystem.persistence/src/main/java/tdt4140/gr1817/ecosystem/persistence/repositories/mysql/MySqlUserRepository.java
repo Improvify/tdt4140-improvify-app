@@ -57,7 +57,6 @@ public class MySqlUserRepository implements UserRepository {
         for (User user : items) {
             this.add(user);
         }
-
     }
 
     @Override
@@ -118,7 +117,7 @@ public class MySqlUserRepository implements UserRepository {
                 ResultSet resultSet = statement.executeQuery()
         ) {
             ArrayList<User> results = new ArrayList<>();
-            if (resultSet.next()) {
+            while (resultSet.next()) {
                 results.add(createUserFromResultSet(resultSet));
             }
             return results;
