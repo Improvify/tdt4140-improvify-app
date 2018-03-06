@@ -4,13 +4,18 @@ import lombok.extern.slf4j.Slf4j;
 import tdt4140.gr1817.ecosystem.persistence.Specification;
 import tdt4140.gr1817.ecosystem.persistence.data.User;
 import tdt4140.gr1817.ecosystem.persistence.data.WorkoutSession;
+import tdt4140.gr1817.ecosystem.persistence.repositories.UserRepository;
 import tdt4140.gr1817.ecosystem.persistence.repositories.WorkoutSessionRepository;
+import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.specification.GetUserByIdSpecification;
+import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.specification.SqlSpecification;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -19,10 +24,12 @@ public class MySqlWorkoutSessionRepository implements WorkoutSessionRepository {
 
 
     private Provider<Connection> connection;
+    private final UserRepository userRepository;
 
     @Inject
-    public MySqlWorkoutSessionRepository(Provider<Connection> connection) {
+    public MySqlWorkoutSessionRepository(Provider<Connection> connection, UserRepository userRepository) {
         this.connection = connection;
+        this.userRepository = userRepository;
     }
 
 
@@ -33,17 +40,17 @@ public class MySqlWorkoutSessionRepository implements WorkoutSessionRepository {
         This code is ugly, please find a cleaner way to do this.
          */
         try {
-            String insertSql = "INSERT INTO workoutsession(id, `time`, intensity, KCal, "
+            String insertSql = "INSERT INTO workoutsession(id, time, intensity, KCal, "
                     + "avgheartrate, maxheartrate, distancerun, loggedBy) "
                     + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
             try (
                     Connection connection = this.connection.get();
                     PreparedStatement preparedStatement = connection.prepareStatement(insertSql)
             ) {
-                setParameters(preparedStatement, workoutSession.getTime(), workoutSession.getIntensity(),
-                        workoutSession.getKiloCalories(), workoutSession.getAverageHeartRate(),
-                        workoutSession.getMaxHeartRate(), workoutSession.getUser().getId(),
-                        workoutSession.getId());
+                setParameters(preparedStatement, workoutSession.getId(), workoutSession.getTime(),
+                        workoutSession.getIntensity(), workoutSession.getKiloCalories(),
+                        workoutSession.getAverageHeartRate(), workoutSession.getMaxHeartRate(),
+                        workoutSession.getDistanceRun(), workoutSession.getUser().getId());
 
                 preparedStatement.execute();
             }
@@ -60,37 +67,41 @@ public class MySqlWorkoutSessionRepository implements WorkoutSessionRepository {
     }
 
     @Override
-    public void update(WorkoutSession item) {
-            Date time = item.getTime();
-            int intensity = item.getIntensity();
-            float kiloCalories = item.getKiloCalories();
-            float averageHeartRate = item.getAverageHeartRate();
-            float maxHeartRate = item.getMaxHeartRate();
-            float distanceRun = item.getDistanceRun();
-            User user = item.getUser();
-            String updateWorkoutSession = "UPDATE Workoutsession SET time = ?, intensity = ?,"
-                    + " kCal = ?, avgHeartRate = ?, maxHeartRate = ?, distanceRun = ?, loggedBy = ?";
-        try (Connection connection = this.connection.get();
-             PreparedStatement pst = connection.prepareStatement(updateWorkoutSession)
+    public void update(WorkoutSession session) {
+        Date time = session.getTime();
+        int intensity = session.getIntensity();
+        float kiloCalories = session.getKiloCalories();
+        float averageHeartRate = session.getAverageHeartRate();
+        float maxHeartRate = session.getMaxHeartRate();
+        float distanceRun = session.getDistanceRun();
+        User user = session.getUser();
+
+        String updateWorkoutSession = "UPDATE Workoutsession SET time = ?, intensity = ?, kCal = ?, avgHeartRate = ?,"
+                + " maxHeartRate = ?, distanceRun = ?, loggedBy = ?"
+                + "WHERE id = ?";
+        try (
+                Connection connection = this.connection.get();
+                PreparedStatement pst = connection.prepareStatement(updateWorkoutSession)
         ) {
-            setParameters(pst, time, intensity, kiloCalories, averageHeartRate, maxHeartRate, distanceRun, user);
+            setParameters(pst, time, intensity, kiloCalories, averageHeartRate, maxHeartRate, distanceRun,
+                    session.getUser().getId(), session.getId());
             pst.execute();
         } catch (SQLException e) {
-            throw new RuntimeException("Update not successful");
+            throw new RuntimeException("Update of workout session failed", e);
         }
     }
 
     @Override
     public void remove(WorkoutSession item) {
-        try {
-            int id = item.getId();
-            String deleteWorkoutSession = "DELETE FROM WorkoutSession WHERE id = '" + id + "' ";
-            Connection connection = this.connection.get();
-            PreparedStatement pst = connection.prepareStatement(deleteWorkoutSession);
+        int id = item.getId();
+        try (
+                Connection connection = this.connection.get();
+                PreparedStatement pst = connection.prepareStatement("DELETE FROM WorkoutSession WHERE id = ?")
+        ) {
+            setParameters(pst, id);
             pst.execute();
-
         } catch (SQLException e) {
-            throw new RuntimeException("Delete not successful");
+            throw new RuntimeException("Deleting workout session failed", e);
         }
 
     }
@@ -100,19 +111,51 @@ public class MySqlWorkoutSessionRepository implements WorkoutSessionRepository {
         for (WorkoutSession workoutSession : items) {
             this.remove(workoutSession);
         }
-
     }
 
     @Override
     public void remove(Specification specification) {
-        throw new UnsupportedOperationException("Not implemented");
+        final List<WorkoutSession> sessions = query(specification);
+        for (WorkoutSession session : sessions) {
+            remove(session);
+        }
     }
 
     @Override
     public List<WorkoutSession> query(Specification specification) {
-        throw new UnsupportedOperationException("Not implemented");
+        final SqlSpecification sqlSpecification = (SqlSpecification) specification;
+        try (
+                Connection connection = this.connection.get();
+                PreparedStatement statement = sqlSpecification.toStatement(connection);
+                ResultSet resultSet = statement.executeQuery();
+        ) {
+            final ArrayList<WorkoutSession> results = new ArrayList<>();
+            while (resultSet.next()) {
+                final WorkoutSession workoutSession = createWorkoutSessionFromResult(resultSet, userRepository);
+                results.add(workoutSession);
+            }
+            return results;
+        } catch (Exception ex) {
+            throw new RuntimeException("Failed to get workout sessions", ex);
+        }
     }
 
+
+    private static WorkoutSession createWorkoutSessionFromResult(ResultSet resultSet, UserRepository userRepository)
+            throws SQLException {
+        int id = resultSet.getInt("id");
+        Date time = new Date(resultSet.getDate("time").getTime());
+        final int intensity = resultSet.getInt("intensity");
+        final float kcal = resultSet.getFloat("kcal");
+        final int avgHeartRate = resultSet.getInt("avgHeartRate");
+        final int maxHeartRate = resultSet.getInt("maxHeartRate");
+        final int distanceRun = resultSet.getInt("distanceRun");
+        final int loggedByUserId = resultSet.getInt("loggedBy");
+
+        final User user = userRepository.query(new GetUserByIdSpecification(loggedByUserId)).get(0);
+
+        return new WorkoutSession(id, time, intensity, kcal, avgHeartRate, maxHeartRate, distanceRun, user);
+    }
 
     private static void setParameters(PreparedStatement statement, Object... parameters) throws SQLException {
         for (int i = 0; i < parameters.length; i++) {

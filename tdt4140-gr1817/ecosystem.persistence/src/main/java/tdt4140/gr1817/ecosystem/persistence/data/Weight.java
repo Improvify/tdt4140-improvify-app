@@ -1,5 +1,6 @@
 package tdt4140.gr1817.ecosystem.persistence.data;
 
+import lombok.Builder;
 import lombok.Data;
 
 import java.util.Date;
@@ -8,6 +9,7 @@ import java.util.Date;
  * Represents a {@link User}'s weight measurement at a specific date.
  */
 @Data
+@Builder
 public class Weight {
     private int id;
     private float currentWeight;
