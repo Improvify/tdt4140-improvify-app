@@ -39,7 +39,8 @@ public class MySqlWeightRepository implements WeightRepository {
                 Connection connection = this.connection.get();
                 PreparedStatement preparedStatement = connection.prepareStatement(insertSql)
         ) {
-            setParameters(preparedStatement, weight.getId(), weight.getDate(), weight.getCurrentWeight(), weight.getUser().getId());
+            setParameters(preparedStatement, weight.getId(), weight.getDate(), weight.getCurrentWeight(),
+                    weight.getUser().getId());
             /*                                   Usikker på om det her burde være .getUserAccount_ID()*/
             preparedStatement.execute();
         }
