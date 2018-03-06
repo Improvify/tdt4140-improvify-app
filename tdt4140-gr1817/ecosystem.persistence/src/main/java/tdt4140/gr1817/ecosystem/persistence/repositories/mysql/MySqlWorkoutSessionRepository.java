@@ -93,15 +93,15 @@ public class MySqlWorkoutSessionRepository implements WorkoutSessionRepository {
 
     @Override
     public void remove(WorkoutSession item) {
-        try {
-            int id = item.getId();
-            String deleteWorkoutSession = "DELETE FROM WorkoutSession WHERE id = '" + id + "' ";
-            Connection connection = this.connection.get();
-            PreparedStatement pst = connection.prepareStatement(deleteWorkoutSession);
+        int id = item.getId();
+        try (
+                Connection connection = this.connection.get();
+                PreparedStatement pst = connection.prepareStatement("DELETE FROM WorkoutSession WHERE id = ?")
+        ) {
+            setParameters(pst, id);
             pst.execute();
-
         } catch (SQLException e) {
-            throw new RuntimeException("Delete not successful");
+            throw new RuntimeException("Deleting workout session failed", e);
         }
 
     }
@@ -111,12 +111,14 @@ public class MySqlWorkoutSessionRepository implements WorkoutSessionRepository {
         for (WorkoutSession workoutSession : items) {
             this.remove(workoutSession);
         }
-
     }
 
     @Override
     public void remove(Specification specification) {
-        throw new UnsupportedOperationException("Not implemented");
+        final List<WorkoutSession> sessions = query(specification);
+        for (WorkoutSession session : sessions) {
+            remove(session);
+        }
     }
 
     @Override

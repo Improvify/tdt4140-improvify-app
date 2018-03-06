@@ -115,14 +115,53 @@ public class MySqlWorkoutSessionRepositoryTest {
 
     @Test
     public void shouldRemoveSession() throws Exception {
+        final WorkoutSession session = workoutSessionBuilder.build();
+
+        // When
+        repository.add(session);
+        repository.remove(session);
+
+        final List<WorkoutSession> sessions = repository.query(new GetWorkoutSessionByIdSpecification(session.getId()));
+
+        // Then
+        assertThat(sessions, is(empty()));
     }
 
     @Test
     public void shouldRemoveAllSessions() throws Exception {
+        // Given
+        final WorkoutSession session1 = workoutSessionBuilder.id(1).build();
+        final WorkoutSession session2 = workoutSessionBuilder.id(2).build();
+        final WorkoutSession session3 = workoutSessionBuilder.id(3).build();
+
+        // When
+        repository.add(Arrays.asList(session1, session2, session3));
+        repository.remove(Arrays.asList(session1, session3));
+
+        final List<WorkoutSession> sessions = repository.query(new GetAllWorkoutSessionsSpecification());
+
+        // Then
+        assertThat(sessions, hasSize(1));
+        assertThat(sessions, hasItem(session2));
     }
 
     @Test
     public void shouldRemoveSpecifiedSessions() throws Exception {
+        // Given
+        final WorkoutSession session1 = workoutSessionBuilder.id(1).build();
+        final WorkoutSession session2 = workoutSessionBuilder.id(2).build();
+        final WorkoutSession session3 = workoutSessionBuilder.id(3).build();
+
+        // When
+        repository.add(Arrays.asList(session1, session2, session3));
+        repository.remove(new GetWorkoutSessionByIdSpecification(2));
+
+        final List<WorkoutSession> sessions = repository.query(new GetAllWorkoutSessionsSpecification());
+
+        // Then
+        assertThat(sessions, hasSize(2));
+        assertThat(sessions, hasItems(session1, session3));
+
     }
 
 
