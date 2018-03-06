@@ -1,5 +1,6 @@
 package tdt4140.gr1817.ecosystem.persistence.repositories.mysql.util;
 
+import tdt4140.gr1817.ecosystem.persistence.data.RestingHeartRate;
 import tdt4140.gr1817.ecosystem.persistence.data.User;
 import tdt4140.gr1817.ecosystem.persistence.data.Weight;
 import tdt4140.gr1817.ecosystem.persistence.data.WorkoutSession;
@@ -46,5 +47,16 @@ public class BuilderFactory {
                 .date(date)
                 .currentWeight(69f)
                 .user(user);
+    }
+
+    public static RestingHeartRate.RestingHeartRateBuilder createRestingHeartRate() {
+        final Date date = new GregorianCalendar(2018, Calendar.JANUARY, 5).getTime();
+        final User user = createUser().id(1).build();
+
+        return RestingHeartRate.builder()
+                .id(1)
+                .heartRate(60)
+                .measuredAt(date)
+                .measuredBy(user);
     }
 }
