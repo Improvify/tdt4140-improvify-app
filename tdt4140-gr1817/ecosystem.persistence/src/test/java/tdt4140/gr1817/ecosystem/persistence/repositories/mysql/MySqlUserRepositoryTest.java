@@ -6,6 +6,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.Mockito;
 import tdt4140.gr1817.ecosystem.persistence.data.User;
+import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.specification.GetAllUsersSpecification;
 import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.specification.GetUserByIdSpecification;
 import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.specification.SqlSpecification;
 import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.util.HsqldbRule;
@@ -13,10 +14,7 @@ import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.util.HsqldbRule;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLIntegrityConstraintViolationException;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
+import java.util.*;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -91,19 +89,6 @@ public class MySqlUserRepositoryTest {
         assertThat(users, hasItem(user));
     }
 
-    private static User.UserBuilder createUser() {
-        final Date birthDate = new GregorianCalendar(1995, Calendar.AUGUST, 25).getTime();
-        return User.builder()
-                .id(1)
-                .firstName("Test")
-                .lastName("Person")
-                .birthDate(birthDate)
-                .username("testuser")
-                .password("123")
-                .email("test@test.com")
-                .height(175.5f);
-    }
-
     @Test
     public void shouldUpdateExisitingUser() throws Exception {
         // Given
@@ -138,5 +123,41 @@ public class MySqlUserRepositoryTest {
 
         // Then
         assertThat(users, is(empty()));
+    }
+
+
+    @Test
+    public void shouldRemoveAllSpecifiedUsers() throws Exception {
+        // Given
+        final MySqlUserRepository repository = new MySqlUserRepository(() -> hsqldb.getConnection());
+        final User user1 = createUser().id(1).build();
+        final User user2 = createUser().id(2).build();
+        final User user3 = createUser().id(3).build();
+
+        // When
+        repository.add(user1);
+        repository.add(user2);
+        repository.add(user3);
+
+        repository.remove(Arrays.asList(user1, user3));
+
+        final List<User> users = repository.query(new GetAllUsersSpecification());
+
+        // Then
+        assertThat(users, hasSize(1));
+        assertThat(users, hasItem(user2));
+    }
+
+    private static User.UserBuilder createUser() {
+        final Date birthDate = new GregorianCalendar(1995, Calendar.AUGUST, 25).getTime();
+        return User.builder()
+                .id(1)
+                .firstName("Test")
+                .lastName("Person")
+                .birthDate(birthDate)
+                .username("testuser")
+                .password("123")
+                .email("test@test.com")
+                .height(175.5f);
     }
 }
