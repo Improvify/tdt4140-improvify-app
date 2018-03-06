@@ -1,5 +1,6 @@
 package tdt4140.gr1817.ecosystem.persistence.data;
 
+import lombok.Builder;
 import lombok.Data;
 
 import java.util.Date;
@@ -10,6 +11,7 @@ import java.util.Date;
  * A user can have many workout sessions that they have logged.
  */
 @Data
+@Builder
 public class WorkoutSession {
     public static final int INTENSITY_MINIMUM = 0;
     public static final int INTENSITY_MAXIMUM = 10;

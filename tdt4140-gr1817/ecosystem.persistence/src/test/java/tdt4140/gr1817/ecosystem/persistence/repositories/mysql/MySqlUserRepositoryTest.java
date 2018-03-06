@@ -1,7 +1,5 @@
 package tdt4140.gr1817.ecosystem.persistence.repositories.mysql;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -9,11 +7,11 @@ import tdt4140.gr1817.ecosystem.persistence.data.User;
 import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.specification.GetAllUsersSpecification;
 import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.specification.GetUserByIdSpecification;
 import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.specification.SqlSpecification;
+import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.util.BuilderFactory;
 import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.util.HsqldbRule;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.*;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -33,7 +31,7 @@ public class MySqlUserRepositoryTest {
         MySqlUserRepository repository = new MySqlUserRepository(() -> connectionSpy);
         final Date birthDate = new GregorianCalendar(1995, 8, 20).getTime();
 
-        User user = createUser()
+        User user = BuilderFactory.createUser()
                 .id(5)
                 .birthDate(birthDate)
                 .build();
@@ -63,9 +61,9 @@ public class MySqlUserRepositoryTest {
     public void shouldAddAllUsers() throws Exception {
         // Given
         final MySqlUserRepository repository = new MySqlUserRepository(hsqldb::getConnection);
-        final User user1 = createUser().id(1).build();
-        final User user2 = createUser().id(2).build();
-        final User user3 = createUser().id(3).build();
+        final User user1 = BuilderFactory.createUser().id(1).build();
+        final User user2 = BuilderFactory.createUser().id(2).build();
+        final User user3 = BuilderFactory.createUser().id(3).build();
 
         // When
         repository.add(Arrays.asList(user1, user2, user3));
@@ -81,7 +79,7 @@ public class MySqlUserRepositoryTest {
     public void shouldThrowOnAlreadyExistingId() throws Exception {
         // Given
         final MySqlUserRepository repository = new MySqlUserRepository(() -> hsqldb.getConnection());
-        final User user = createUser().build();
+        final User user = BuilderFactory.createUser().build();
 
         // When
         repository.add(user);
@@ -96,7 +94,7 @@ public class MySqlUserRepositoryTest {
         // Given
         SqlSpecification specification = new GetUserByIdSpecification(1);
         final MySqlUserRepository repository = new MySqlUserRepository(() -> hsqldb.getConnection());
-        final User user = createUser().build();
+        final User user = BuilderFactory.createUser().build();
 
         // When
         repository.add(user);
@@ -111,8 +109,8 @@ public class MySqlUserRepositoryTest {
     public void shouldUpdateExisitingUser() throws Exception {
         // Given
         final MySqlUserRepository repository = new MySqlUserRepository(() -> hsqldb.getConnection());
-        final User user = createUser().build();
-        final User updatedUser = createUser().firstName("NOT SAME AS FIRST").build();
+        final User user = BuilderFactory.createUser().build();
+        final User updatedUser = BuilderFactory.createUser().firstName("NOT SAME AS FIRST").build();
 
         // When
         repository.add(user);
@@ -131,7 +129,7 @@ public class MySqlUserRepositoryTest {
     public void shouldRemoveUser() throws Exception {
         // Given
         final MySqlUserRepository repository = new MySqlUserRepository(() -> hsqldb.getConnection());
-        final User user = createUser().build();
+        final User user = BuilderFactory.createUser().build();
 
         // When
         repository.add(user);
@@ -147,9 +145,9 @@ public class MySqlUserRepositoryTest {
     public void shouldRemoveSpecifiedUsers() throws Exception {
         // Given
         final MySqlUserRepository repository = new MySqlUserRepository(hsqldb::getConnection);
-        final User user1 = createUser().id(1).build();
-        final User user2 = createUser().id(2).build();
-        final User user3 = createUser().id(3).build();
+        final User user1 = BuilderFactory.createUser().id(1).build();
+        final User user2 = BuilderFactory.createUser().id(2).build();
+        final User user3 = BuilderFactory.createUser().id(3).build();
 
         // When
         repository.add(Arrays.asList(user1, user2, user3));
@@ -169,9 +167,9 @@ public class MySqlUserRepositoryTest {
     public void shouldRemoveAllSpecifiedUsers() throws Exception {
         // Given
         final MySqlUserRepository repository = new MySqlUserRepository(() -> hsqldb.getConnection());
-        final User user1 = createUser().id(1).build();
-        final User user2 = createUser().id(2).build();
-        final User user3 = createUser().id(3).build();
+        final User user1 = BuilderFactory.createUser().id(1).build();
+        final User user2 = BuilderFactory.createUser().id(2).build();
+        final User user3 = BuilderFactory.createUser().id(3).build();
 
         // When
         repository.add(user1);
@@ -187,16 +185,4 @@ public class MySqlUserRepositoryTest {
         assertThat(users, hasItem(user2));
     }
 
-    private static User.UserBuilder createUser() {
-        final Date birthDate = new GregorianCalendar(1995, Calendar.AUGUST, 25).getTime();
-        return User.builder()
-                .id(1)
-                .firstName("Test")
-                .lastName("Person")
-                .birthDate(birthDate)
-                .username("testuser")
-                .password("123")
-                .email("test@test.com")
-                .height(175.5f);
-    }
 }
