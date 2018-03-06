@@ -41,7 +41,8 @@ public class UserResource{
     @Consumes(MediaType.APPLICATION_JSON)
     public String createUser(String json) {
         User user = gson.fromJson(json, User.class);
-        //validateUserInput();
+        //UserValidator validator = new UserValidator();
+        //validator.validate(json);
         repository.add(user);
         return "User added";
     }

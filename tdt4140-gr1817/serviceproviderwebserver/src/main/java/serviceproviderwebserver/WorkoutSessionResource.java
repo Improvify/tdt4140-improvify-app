@@ -29,7 +29,8 @@ public class WorkoutSessionResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public String createWorkoutSession(String json) {
         WorkoutSession workoutSession = gson.fromJson(json, WorkoutSession.class);
-        //validateWorkoutSessionInput();
+        //WorkoutSessionValidator validator = new WorkoutSessionValidator();
+        //validator.validate(json);
         repository.add(workoutSession);
         return "Workoutsession added";
     }

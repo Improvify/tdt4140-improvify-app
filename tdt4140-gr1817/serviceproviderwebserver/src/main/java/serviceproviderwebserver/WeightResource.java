@@ -29,7 +29,8 @@ public class WeightResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public String createWeight(String json) {
         Weight weight = gson.fromJson(json, Weight.class);
-        //validateWeightInput();
+        //WeightValidator validator = new WeightValidator();
+        //validator.validate(json);
         repository.add(weight);
         return "Weight added";
     }

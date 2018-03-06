@@ -31,7 +31,8 @@ public class RestingHeartRateResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public String createRestingHeartRate(String json) {
         RestingHeartRate weight = gson.fromJson(json, RestingHeartRate.class);
-        //validateRestingHeartRateInput();
+        //RestingHeartRateValidator validator = new RestingHeartRateValidator();
+        //validator.validate(json);
         return "Resting heart rate added";
     }
 }

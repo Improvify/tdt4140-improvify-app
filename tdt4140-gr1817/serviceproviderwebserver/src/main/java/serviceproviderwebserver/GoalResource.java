@@ -28,7 +28,8 @@ public class GoalResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public String createGoal(String json) {
         //Goal goal = gson.fromJson(json, goal.class);
-        //validateGoalInput();
+        //GoalValidator validator = new GoalValidator;
+        //validator.validate(json);
         //repository.add(goal);
         return "Goal added";
     }
