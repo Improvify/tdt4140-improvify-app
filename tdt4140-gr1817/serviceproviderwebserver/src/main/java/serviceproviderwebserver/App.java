@@ -17,7 +17,6 @@ import org.glassfish.jersey.servlet.ServletContainer;
 import org.jvnet.hk2.guice.bridge.api.GuiceBridge;
 import org.jvnet.hk2.guice.bridge.api.GuiceIntoHK2Bridge;
 import tdt4140.gr1817.ecosystem.persistence.repositories.UserRepository;
-import tdt4140.gr1817.ecosystem.persistence.repositories.WorkoutSessionRepository;
 import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.MySqlUserRepository;
 
 import javax.servlet.DispatcherType;
@@ -29,7 +28,8 @@ import java.util.EnumSet;
 
 public class App {
 
-    private App() {}
+    private App() {
+    }
 
     public static void main(String[] args) throws Exception {
         Injector injector = Guice.createInjector(new AbstractModule() {
@@ -85,7 +85,7 @@ public class App {
         try {
             server.start();
             server.join();
-        } catch (Exception e){
+        } catch (Exception e) {
             server.stop();
             server.destroy();
         }
