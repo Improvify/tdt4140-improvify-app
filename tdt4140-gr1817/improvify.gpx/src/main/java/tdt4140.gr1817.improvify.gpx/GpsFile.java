@@ -2,91 +2,110 @@ package tdt4140.gr1817.improvify.gpx;
 
 import lombok.Data;
 
-import java.lang.reflect.Array;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collection;
 
 @Data
 public class GpsFile {
+    private static int secondsInMinute = 60;
+    private static int minutesInHour = 60;
+    private static int hoursInDay = 24;
 
-    private int sessionID;
-    private double time;
-    private int intensity;
-    private int KCal;
-    private int averageHR;
-    private int maxHR;
+    private LocalDateTime startTime;
+    private int averageHeartRate;
+    private int maxHeartRate;
     private int distanceRun;
+    private int duration; //in seconds
 
-    public GpsFile(ArrayList<GpsPoint> L){
+    public GpsFile(ArrayList<GpsPoint> pointList) {
+
+        //Set startTime to first time point in file.
+        this.startTime = pointList.get(0).getTime();
+
+        //calculate average heart rate
+        this.averageHeartRate = calculateAverageHeartRate(pointList);
+
+        //find max heart rate
+        this.maxHeartRate = calculateMaxHeartRate(pointList);
+
+        //calculate distance run
+        this.distanceRun = calculateTotalDistance(pointList);
+
+        //find time difference between first trackpoint and last.
+        this.duration = calculateDuration(pointList);
+        System.out.println(this.duration);
 
     }
 
-    public static double calculateTotalDistance(ArrayList<GpsPoint> L){
+    private static int calculateTotalDistance(ArrayList<GpsPoint> pointList) {
 
         double total = 0;
 
-        for (int i = 0;i<L.size()-1;i++){
-            total += calculateDistanceBetweenPoints(L.get(i),L.get(i+1));
+        for (int i = 0; i < pointList.size() - 1; i++) {
+            total += calculateDistanceBetweenPoints(pointList.get(i), pointList.get(i + 1));
         }
 
 
-        return total;
+        return (int) total;
     }
-    public static int getMaxHeartRate(ArrayList<GpsPoint> L){
+
+    private int calculateDuration(ArrayList<GpsPoint> pointList) {
+
+        LocalDateTime endTime = pointList.get(pointList.size() - 1).getTime();
+        System.out.println(this.startTime);
+        System.out.println(endTime);
+        int deltaT = 0;
+
+        deltaT += (endTime.getSecond() - startTime.getSecond());
+        System.out.println(deltaT);
+        deltaT += secondsInMinute * (endTime.getMinute() - startTime.getMinute());
+        System.out.println(endTime.getMinute());
+        System.out.println(startTime.getMinute());
+        deltaT += secondsInMinute * minutesInHour * (endTime.getHour() - startTime.getHour());
+
+        return deltaT;
+    }
+
+    private static int calculateMaxHeartRate(ArrayList<GpsPoint> pointList) {
         int max = 0;
-        for(GpsPoint p: L){
-            if (p.getHeartRate()> max){
+        for (GpsPoint p : pointList) {
+            if (p.getHeartRate() > max) {
                 max = p.getHeartRate();
             }
         }
         return max;
     }
-    public static int calculateAverageAndMaxHeartRate(ArrayList<GpsPoint> L){
+
+    private static int calculateAverageHeartRate(ArrayList<GpsPoint> pointList) {
         int total = 0;
-        for(GpsPoint HR: L){
-            total += HR.getHeartRate();
+        for (GpsPoint p : pointList) {
+            total += p.getHeartRate();
         }
-        return total/L.size();
+        return total / pointList.size();
     }
 
-    public static double calculateDistanceBetweenPoints(GpsPoint p1, GpsPoint p2){
+    private static double calculateDistanceBetweenPoints(GpsPoint p1, GpsPoint p2) {
         //Employs the Haversine Formula in order to calculate the distance between two points
         //based on Longitude and Latitude
-        int R = 6370000; //Radius of the earth. Ish.
+        int r = 6370000; //Radius of the earth. Ish.
 
-        double dLat = Math.toRadians(p1.getLatitude()-p2.getLatitude());
-        double dLon = Math.toRadians(p1.getLongitude()-p2.getLongitude());
+        double dLat = Math.toRadians(p1.getLatitude() - p2.getLatitude());
+        double dLon = Math.toRadians(p1.getLongitude() - p2.getLongitude());
 
-        double a = Math.sin(dLat/2)*Math.sin(dLat/2) +
-                Math.cos(Math.toRadians(p1.getLatitude()))*Math.cos(Math.toRadians(p2.getLatitude()))*
-                Math.sin(dLon/2)*Math.sin(dLon/2);
+        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2)
+                + Math.cos(Math.toRadians(p1.getLatitude())) * Math.cos(Math.toRadians(p2.getLatitude()))
+                * Math.sin(dLon / 2) * Math.sin(dLon / 2);
 
-        double c = 2* Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
-        double d = R*c;
+        double d = r * c;
 
         return d;
     }
 
-    public static void main(String[] args){
-        String FILEPATH = "C:\\Users\\Henrik\\IdeaProjects\\pu\\tdt4140-gr1817\\improvify.gpx\\src\\main\\java\\tdt4140.gr1817.improvify.gpx\\exampleactivity.gpx";
-        tdt4140.gr1817.improvify.gpx.GpsFileHandler handler = new tdt4140.gr1817.improvify.gpx.GpsFileHandler();
-        try {
-            ArrayList<String> arr = handler.loadFile(FILEPATH);
-            ArrayList<GpsPoint> points = handler.generateGpsPoints(arr);
-            double dist = GpsFile.calculateTotalDistance(points);
-
-            System.out.println("*");
-            System.out.println("The total distance run is "+Double.toString(dist) +" meters.");
-            System.out.print(GpsFile.calculateAverageAndMaxHeartRate(points));
-        }
-        catch (Exception e){
-            System.out.println(e);
-        }
-
-
-
-
+    public static void main(String[] args) {
+        String filePath = "C:\\Users\\Henrik\\IdeaProjects\\pu\\tdt4140-gr1817\\improvify.gpx\\src\\main\\java\\tdt4140"
+                + ".gr1817.improvify.gpx\\exampleactivity.gpx";
 
     }
 
