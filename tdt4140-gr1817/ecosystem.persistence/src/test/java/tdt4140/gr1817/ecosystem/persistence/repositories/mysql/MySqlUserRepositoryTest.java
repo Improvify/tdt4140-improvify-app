@@ -1,5 +1,7 @@
 package tdt4140.gr1817.ecosystem.persistence.repositories.mysql;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -10,15 +12,14 @@ import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.util.HsqldbRule;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 
@@ -60,6 +61,20 @@ public class MySqlUserRepositoryTest {
         }
     }
 
+    @Test(expected = RuntimeException.class)
+    public void shouldThrowOnAlreadyExistingId() throws Exception {
+        // Given
+        final MySqlUserRepository repository = new MySqlUserRepository(() -> hsqldb.getConnection());
+        final User user = createUser().build();
+
+        // When
+        repository.add(user);
+        repository.add(user);
+
+        // Then
+
+    }
+
     @Test
     public void shouldQueryUsingSpecification() throws Exception {
         // Given
@@ -87,5 +102,41 @@ public class MySqlUserRepositoryTest {
                 .password("123")
                 .email("test@test.com")
                 .height(175.5f);
+    }
+
+    @Test
+    public void shouldUpdateExisitingUser() throws Exception {
+        // Given
+        final MySqlUserRepository repository = new MySqlUserRepository(() -> hsqldb.getConnection());
+        final User user = createUser().build();
+        final User updatedUser = createUser().firstName("NOT SAME AS FIRST").build();
+
+        // When
+        repository.add(user);
+        repository.update(updatedUser);
+
+        final List<User> users = repository.query(new GetUserByIdSpecification(user.getId()));
+
+        // Then
+        final User result = users.get(0);
+        assertThat(result.getId(), is(user.getId()));
+        assertThat(result.getFirstName(), is(not(user.getFirstName())));
+        assertThat(result.getFirstName(), is(updatedUser.getFirstName()));
+    }
+
+    @Test
+    public void shouldRemoveUser() throws Exception {
+        // Given
+        final MySqlUserRepository repository = new MySqlUserRepository(() -> hsqldb.getConnection());
+        final User user = createUser().build();
+
+        // When
+        repository.add(user);
+        repository.remove(user);
+
+        final List<User> users = repository.query(new GetUserByIdSpecification(user.getId()));
+
+        // Then
+        assertThat(users, is(empty()));
     }
 }

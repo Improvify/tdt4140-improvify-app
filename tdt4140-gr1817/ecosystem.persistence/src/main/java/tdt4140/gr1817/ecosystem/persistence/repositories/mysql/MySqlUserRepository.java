@@ -85,12 +85,13 @@ public class MySqlUserRepository implements UserRepository {
     }
 
     @Override
-    public void remove(User item) {
-        try {
-            int id = item.getId();
-            String deleteUser = "DELETE FROM useraccount WHERE id = '" + id + "'";
-            Connection connection = this.connection.get();
-            PreparedStatement pst = connection.prepareStatement((deleteUser));
+    public void remove(User user) {
+        try (
+                Connection connection = this.connection.get();
+                PreparedStatement statement = connection.prepareStatement("DELETE FROM useraccount WHERE id = ?")
+        ) {
+            setParameters(statement, user.getId());
+            statement.execute();
         } catch (SQLException e) {
             throw new RuntimeException("Delete not successful");
         }
