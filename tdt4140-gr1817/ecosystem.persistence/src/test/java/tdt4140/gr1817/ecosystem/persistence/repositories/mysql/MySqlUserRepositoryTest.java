@@ -29,26 +29,6 @@ public class MySqlUserRepositoryTest {
     public HsqldbRule hsqldb = new HsqldbRule();
 
     @Test
-    public void hsqldbWorks() throws Exception {
-        try (
-                final Connection connection = hsqldb.getConnection();
-                Statement statement = connection.createStatement()
-        ) {
-            final int changed = statement.executeUpdate("INSERT INTO useraccount VALUES "
-                    + "(1, 'kek', 'Lord', 2.0, DATE '1997-01-01', 'keks', '123', 'hehe@gog.com')");
-
-            assertThat(changed, is(1));
-
-            try (ResultSet resultSet = statement.executeQuery("SELECT * FROM useraccount")) {
-                while (resultSet.next()) {
-                    assertThat(resultSet.getString("username"), is("keks"));
-                }
-            }
-
-        }
-    }
-
-    @Test
     public void shouldAddUser() throws Exception {
         // Given
         final Connection connectionSpy = Mockito.spy(hsqldb.getConnection()); // Will be closed

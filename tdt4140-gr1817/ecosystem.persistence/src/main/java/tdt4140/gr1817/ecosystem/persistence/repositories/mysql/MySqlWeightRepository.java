@@ -1,4 +1,5 @@
 package tdt4140.gr1817.ecosystem.persistence.repositories.mysql;
+
 import lombok.extern.slf4j.Slf4j;
 import tdt4140.gr1817.ecosystem.persistence.Specification;
 import tdt4140.gr1817.ecosystem.persistence.data.User;
@@ -12,6 +13,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
+
 @Slf4j
 
 public class MySqlWeightRepository implements WeightRepository {
@@ -37,8 +39,7 @@ public class MySqlWeightRepository implements WeightRepository {
                 Connection connection = this.connection.get();
                 PreparedStatement preparedStatement = connection.prepareStatement(insertSql)
         ) {
-            setParameters(preparedStatement, weight.getId(), weight.getDate(), weight.getCurrentWeight(),
-                    weight.getUser().getId());
+            setParameters(preparedStatement, weight.getId(), weight.getDate(), weight.getCurrentWeight(), weight.getUser().getId());
             /*                                   Usikker på om det her burde være .getUserAccount_ID()*/
             preparedStatement.execute();
         }
