@@ -67,23 +67,27 @@ public class MySqlWorkoutSessionRepository implements WorkoutSessionRepository {
     }
 
     @Override
-    public void update(WorkoutSession item) {
-        Date time = item.getTime();
-        int intensity = item.getIntensity();
-        float kiloCalories = item.getKiloCalories();
-        float averageHeartRate = item.getAverageHeartRate();
-        float maxHeartRate = item.getMaxHeartRate();
-        float distanceRun = item.getDistanceRun();
-        User user = item.getUser();
-        String updateWorkoutSession = "UPDATE Workoutsession SET time = ?, intensity = ?,"
-                + " kCal = ?, avgHeartRate = ?, maxHeartRate = ?, distanceRun = ?, loggedBy = ?";
-        try (Connection connection = this.connection.get();
-             PreparedStatement pst = connection.prepareStatement(updateWorkoutSession)
+    public void update(WorkoutSession session) {
+        Date time = session.getTime();
+        int intensity = session.getIntensity();
+        float kiloCalories = session.getKiloCalories();
+        float averageHeartRate = session.getAverageHeartRate();
+        float maxHeartRate = session.getMaxHeartRate();
+        float distanceRun = session.getDistanceRun();
+        User user = session.getUser();
+
+        String updateWorkoutSession = "UPDATE Workoutsession SET time = ?, intensity = ?, kCal = ?, avgHeartRate = ?,"
+                + " maxHeartRate = ?, distanceRun = ?, loggedBy = ?"
+                + "WHERE id = ?";
+        try (
+                Connection connection = this.connection.get();
+                PreparedStatement pst = connection.prepareStatement(updateWorkoutSession)
         ) {
-            setParameters(pst, time, intensity, kiloCalories, averageHeartRate, maxHeartRate, distanceRun, user);
+            setParameters(pst, time, intensity, kiloCalories, averageHeartRate, maxHeartRate, distanceRun,
+                    session.getUser().getId(), session.getId());
             pst.execute();
         } catch (SQLException e) {
-            throw new RuntimeException("Update not successful");
+            throw new RuntimeException("Update of workout session failed", e);
         }
     }
 

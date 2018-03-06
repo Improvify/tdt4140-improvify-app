@@ -97,6 +97,20 @@ public class MySqlWorkoutSessionRepositoryTest {
 
     @Test
     public void shouldUpdateSession() throws Exception {
+        // Given
+        final WorkoutSession session = workoutSessionBuilder.id(1).build();
+        final WorkoutSession updatedSession = workoutSessionBuilder.id(1).distanceRun(session.getDistanceRun() + 10).build();
+
+        // When
+        repository.add(session);
+        repository.update(updatedSession);
+
+        final List<WorkoutSession> sessions = repository.query(new GetWorkoutSessionByIdSpecification(session.getId()));
+
+        // Then
+        assertThat(sessions, hasSize(1));
+        assertThat(sessions.get(0).getId(), is(session.getId()));
+        assertThat(sessions, hasItems(updatedSession));
     }
 
     @Test
