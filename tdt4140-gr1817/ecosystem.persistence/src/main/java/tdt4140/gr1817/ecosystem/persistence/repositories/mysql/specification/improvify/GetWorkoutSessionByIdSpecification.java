@@ -16,7 +16,8 @@ public class GetWorkoutSessionByIdSpecification implements SqlSpecification {
 
     @Override
     public PreparedStatement toStatement(Connection connection) throws SQLException {
-        final PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM workoutsession WHERE id = ?");
+        final String sql = "SELECT * FROM workoutsession WHERE id = ?";
+        final PreparedStatement preparedStatement = connection.prepareStatement(sql);
         preparedStatement.setInt(1, id);
         return preparedStatement;
     }

@@ -11,7 +11,10 @@ import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.specification.Sql
 
 import javax.inject.Inject;
 import javax.inject.Provider;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -132,7 +135,8 @@ public class MySqlWorkoutSessionRepository implements WorkoutSessionRepository {
     }
 
 
-    private static WorkoutSession createWorkoutSessionFromResult(ResultSet resultSet, UserRepository userRepository) throws SQLException {
+    private static WorkoutSession createWorkoutSessionFromResult(ResultSet resultSet, UserRepository userRepository)
+            throws SQLException {
         int id = resultSet.getInt("id");
         Date time = new Date(resultSet.getDate("time").getTime());
         final int intensity = resultSet.getInt("intensity");

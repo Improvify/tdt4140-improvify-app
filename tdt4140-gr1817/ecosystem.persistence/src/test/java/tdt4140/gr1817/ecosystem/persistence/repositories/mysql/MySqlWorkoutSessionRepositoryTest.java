@@ -7,10 +7,12 @@ import org.mockito.Mockito;
 import tdt4140.gr1817.ecosystem.persistence.data.User;
 import tdt4140.gr1817.ecosystem.persistence.data.WorkoutSession;
 import tdt4140.gr1817.ecosystem.persistence.repositories.UserRepository;
+import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.specification.improvify.GetAllWorkoutSessionsSpecification;
 import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.specification.improvify.GetWorkoutSessionByIdSpecification;
 import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.util.BuilderFactory;
 import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.util.HsqldbRule;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -79,6 +81,18 @@ public class MySqlWorkoutSessionRepositoryTest {
 
     @Test
     public void shouldAddAllSessions() throws Exception {
+        // Given
+        final WorkoutSession session1 = workoutSessionBuilder.id(1).build();
+        final WorkoutSession session2 = workoutSessionBuilder.id(2).build();
+        final WorkoutSession session3 = workoutSessionBuilder.id(3).build();
+
+        // When
+        repository.add(Arrays.asList(session1, session2, session3));
+        final List<WorkoutSession> sessions = repository.query(new GetAllWorkoutSessionsSpecification());
+
+        // Then
+        assertThat(sessions, hasSize(3));
+        assertThat(sessions, hasItems(session1, session2, session3));
     }
 
     @Test
