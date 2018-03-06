@@ -19,14 +19,14 @@ public class UserValidator implements Validator {
         try {
             User user = gson.fromJson(json, User.class);
 
-            return (isValidName(user.getFirstName()) &&
-                    isValidName(user.getLastName()) &&
-                    isValidEmail(user.getEmail()) &&
-                    isValidBirthDate(user.getBirthDate()) &&
-                    isValidHeight(user.getHeight()) &&
-                    isValidID(user.getId()));
+            return (isValidName(user.getFirstName())
+                    && isValidName(user.getLastName())
+                    && isValidEmail(user.getEmail())
+                    && isValidBirthDate(user.getBirthDate())
+                    && isValidHeight(user.getHeight())
+                    && isValidID(user.getId()));
 
-        } catch (JsonSyntaxException | NullPointerException e) {
+        } catch (JsonSyntaxException | NullPointerException | NumberFormatException e) {
             return false;
         }
     }
@@ -79,6 +79,6 @@ public class UserValidator implements Validator {
      * @return If the email is valid.
      */
     private boolean isValidEmail(String email) {
-        return email.matches("[a-zA-Z0-9]+@[a-zA-Z0-9]+(\\.[a-zA-Z]+)+");
+        return email.matches("[a-zA-Z0-9_]+(\\.[a-zA-Z_]+)*@[a-zA-Z0-9]+(\\.[a-zA-Z]+)+");
     }
 }

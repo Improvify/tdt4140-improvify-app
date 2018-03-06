@@ -2,15 +2,11 @@ package validation;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
-import tdt4140.gr1817.ecosystem.persistence.data.User;
 import tdt4140.gr1817.ecosystem.persistence.data.WorkoutSession;
 
 import java.util.Date;
 
 public class WorkoutSessionValidator implements Validator {
-
-    private static final int INTENSITY_MINIMUM = 0;
-    private static final int INTENSITY_MAXIMUM = 10;
 
     private Gson gson;
 
@@ -23,16 +19,15 @@ public class WorkoutSessionValidator implements Validator {
         try {
             WorkoutSession workoutSession = gson.fromJson(json, WorkoutSession.class);
 
-            return (isValidDistance(workoutSession.getDistanceRun()) &&
-                    isValidID(workoutSession.getId()) &&
-                    isValidKCal(workoutSession.getKiloCalories()) &&
-                    isValidHeartRate(workoutSession.getAverageHeartRate()) &&
-                    isValidHeartRate(workoutSession.getMaxHeartRate()) &&
-                    isValidDate(workoutSession.getTime()) &&
-                    isValidIntensity(workoutSession.getIntensity()) &&
-                    isValidUser(workoutSession.getUser()));
+            return (isValidDistance(workoutSession.getDistanceRun())
+                    && isValidID(workoutSession.getId())
+                    && isValidKCal(workoutSession.getKiloCalories())
+                    && isValidHeartRate(workoutSession.getAverageHeartRate())
+                    && isValidHeartRate(workoutSession.getMaxHeartRate())
+                    && isValidDate(workoutSession.getTime())
+                    && isValidIntensity(workoutSession.getIntensity()));
 
-        } catch (JsonSyntaxException | NullPointerException e) {
+        } catch (JsonSyntaxException | NullPointerException | NumberFormatException e) {
             return false;
         }
     }
@@ -74,7 +69,7 @@ public class WorkoutSessionValidator implements Validator {
      * @return If the intensity is valid.
      */
     private boolean isValidIntensity(int intensity) {
-        return intensity >= INTENSITY_MINIMUM && intensity <= INTENSITY_MAXIMUM;
+        return intensity >= WorkoutSession.INTENSITY_MINIMUM && intensity <= WorkoutSession.INTENSITY_MAXIMUM;
     }
 
     /**
@@ -95,16 +90,5 @@ public class WorkoutSessionValidator implements Validator {
      */
     private boolean isValidDate(Date date) {
         return date.before(new Date());
-    }
-
-
-    /**
-     * Checks that the user exists (is not null).
-     *
-     * @param user The user to be checked.
-     * @return If the user is valid.
-     */
-    private boolean isValidUser(User user) {
-        return user != null;
     }
 }
