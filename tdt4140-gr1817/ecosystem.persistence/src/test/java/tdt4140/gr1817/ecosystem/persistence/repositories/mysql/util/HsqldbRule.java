@@ -98,13 +98,16 @@ public class HsqldbRule extends ExternalResource {
      */
     @Override
     protected void after() {
-        /*try (Connection connection = getConnection()) {
-            connection.createStatement().execute("TRUNCATE SCHEMA ecosystem RESTART IDENTITY AND COMMIT NO CHECK");
+        clearData();
+        server.shutdown();
+    }
+
+    public void clearData() {
+        try (Connection connection = getConnection()) {
+            connection.createStatement().execute("TRUNCATE SCHEMA public RESTART IDENTITY AND COMMIT NO CHECK");
         } catch (Exception ex) {
             throw new RuntimeException("Unable to empty db", ex);
-        }*/
-
-        server.shutdown();
+        }
     }
 
     public Connection getConnection() {
