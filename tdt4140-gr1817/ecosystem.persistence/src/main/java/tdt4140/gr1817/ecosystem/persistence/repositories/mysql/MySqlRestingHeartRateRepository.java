@@ -69,15 +69,15 @@ public class MySqlRestingHeartRateRepository implements RestingHeartRateReposito
         int heartRate = item.getHeartRate();
         User measuredBy = item.getMeasuredBy();
 
-        String updateHeartRateSql = "UPDATE restingheartrate SET date = ?, heartRate = ?, measuredBy = ?";
+        String updateHeartRateSql = "UPDATE restingheartrate SET date = ?, heartRate = ?, measuredBy = ? WHERE id = ?";
         try (
                 Connection connection = this.connection.get();
                 PreparedStatement pst = connection.prepareStatement(updateHeartRateSql)
         ) {
-            setParameters(pst, measuredAt, heartRate, measuredBy);
+            setParameters(pst, measuredAt, heartRate, measuredBy.getId(), item.getId());
             pst.execute();
         } catch (SQLException e) {
-            throw new RuntimeException("Update not successful");
+            throw new RuntimeException("Updating resting heart rate failed", e);
         }
 
     }
@@ -106,7 +106,10 @@ public class MySqlRestingHeartRateRepository implements RestingHeartRateReposito
 
     @Override
     public void remove(Specification specification) {
-        throw new UnsupportedOperationException("Not implemented");
+        final List<RestingHeartRate> heartRates = query(specification);
+        for (RestingHeartRate heartRate : heartRates) {
+            remove(heartRate);
+        }
     }
 
     @Override
