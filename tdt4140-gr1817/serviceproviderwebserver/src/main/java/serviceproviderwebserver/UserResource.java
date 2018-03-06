@@ -17,17 +17,6 @@ public class UserResource {
     UserRepository repository;
     private Gson gson;
 
-    /*public class User {
-        public int id;
-        public String firstName;
-        public String lastName;
-        public float height;
-        public Date birthDate;
-        public String username;
-        public String password;
-        public String email;
-    }*/
-
     @Inject
     public UserResource(UserRepository repository, Gson gson) {
         this.repository = repository;
