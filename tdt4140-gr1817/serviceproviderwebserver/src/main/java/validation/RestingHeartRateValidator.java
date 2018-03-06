@@ -3,6 +3,7 @@ package validation;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import tdt4140.gr1817.ecosystem.persistence.data.RestingHeartRate;
+import tdt4140.gr1817.ecosystem.persistence.data.User;
 
 import java.util.Date;
 
@@ -21,9 +22,10 @@ public class RestingHeartRateValidator implements Validator {
 
             return (isValidHeartRate(restingHeartRate.getHeartRate()) &&
                     isValidDate(restingHeartRate.getMeasuredAt()) &&
-                    isValidID(restingHeartRate.getId()));
+                    isValidID(restingHeartRate.getId()) &&
+                    isValidUser(restingHeartRate.getMeasuredBy()));
 
-        } catch (JsonSyntaxException e) {
+        } catch (JsonSyntaxException | NullPointerException e) {
             return false;
         }
     }
@@ -56,5 +58,15 @@ public class RestingHeartRateValidator implements Validator {
      */
     private boolean isValidDate(Date date) {
         return date.before(new Date());
+    }
+
+    /**
+     * Checks that the user exists (is not null).
+     *
+     * @param user The user to be checked.
+     * @return If the user is valid.
+     */
+    private boolean isValidUser(User user) {
+        return user != null;
     }
 }

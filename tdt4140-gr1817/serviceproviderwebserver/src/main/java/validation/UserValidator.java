@@ -26,7 +26,7 @@ public class UserValidator implements Validator {
                     isValidHeight(user.getHeight()) &&
                     isValidID(user.getId()));
 
-        } catch (JsonSyntaxException e) {
+        } catch (JsonSyntaxException | NullPointerException e) {
             return false;
         }
     }

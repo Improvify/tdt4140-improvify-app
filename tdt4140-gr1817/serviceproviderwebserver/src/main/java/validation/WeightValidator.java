@@ -2,6 +2,7 @@ package validation;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+import tdt4140.gr1817.ecosystem.persistence.data.User;
 import tdt4140.gr1817.ecosystem.persistence.data.Weight;
 
 import java.util.Date;
@@ -21,9 +22,10 @@ public class WeightValidator implements Validator {
 
             return (isValidWeight(weight.getCurrentWeight()) &&
                     isValidDate(weight.getDate()) &&
-                    isValidID(weight.getId()));
+                    isValidID(weight.getId()) &&
+                    isValidUser(weight.getUser()));
 
-        } catch (JsonSyntaxException e) {
+        } catch (JsonSyntaxException | NullPointerException e) {
             return false;
         }
     }
@@ -56,5 +58,16 @@ public class WeightValidator implements Validator {
      */
     private boolean isValidDate(Date date) {
         return date.before(new Date());
+    }
+
+
+    /**
+     * Checks that the user exists (is not null).
+     *
+     * @param user The user to be checked.
+     * @return If the user is valid.
+     */
+    private boolean isValidUser(User user) {
+        return user != null;
     }
 }
