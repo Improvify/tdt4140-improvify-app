@@ -1,28 +1,21 @@
 package tdt4140.gr1817.ecosystem.persistence.repositories.mysql;
 
-import lombok.extern.slf4j.Slf4j;
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
-import org.hsqldb.jdbcDriver;
-import org.hsqldb.server.Server;
-import org.junit.*;
+import org.junit.Rule;
+import org.junit.Test;
 import org.mockito.Mockito;
-import org.slf4j.LoggerFactory;
 import tdt4140.gr1817.ecosystem.persistence.data.User;
 import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.util.HsqldbRule;
 
-import java.io.PrintWriter;
-import java.sql.*;
-import java.util.Calendar;
+import java.sql.Connection;
+import java.sql.ResultSet;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
 
-@Slf4j
 public class MySqlUserRepositoryTest {
 
     @Rule
