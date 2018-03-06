@@ -4,14 +4,20 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.Mockito;
 import tdt4140.gr1817.ecosystem.persistence.data.User;
+import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.specification.GetUserByIdSpecification;
+import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.specification.SqlSpecification;
 import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.util.HsqldbRule;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
@@ -54,12 +60,29 @@ public class MySqlUserRepositoryTest {
         }
     }
 
+    @Test
+    public void shouldQueryUsingSpecification() throws Exception {
+        // Given
+        SqlSpecification specification = new GetUserByIdSpecification(1);
+        final MySqlUserRepository repository = new MySqlUserRepository(() -> hsqldb.getConnection());
+        final User user = createUser().build();
+
+        // When
+        repository.add(user);
+        final List<User> users = repository.query(specification);
+
+        // Then
+        assertThat(users, hasSize(1));
+        assertThat(users, hasItem(user));
+    }
+
     private static User.UserBuilder createUser() {
+        final Date birthDate = new GregorianCalendar(1995, Calendar.AUGUST, 25).getTime();
         return User.builder()
                 .id(1)
                 .firstName("Test")
                 .lastName("Person")
-                .birthDate(new Date())
+                .birthDate(birthDate)
                 .username("testuser")
                 .password("123")
                 .email("test@test.com")
