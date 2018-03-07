@@ -77,7 +77,7 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `WorkoutSession` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `time` TIMESTAMP NOT NULL,
-  `intensity` INT(10) NOT NULL,
+  `intensity` INT NOT NULL,
   `KCal` DECIMAL NOT NULL,
   `AvgHeartRate` INT NOT NULL,
   `MaxHeartRate` INT NOT NULL,
