@@ -1,4 +1,5 @@
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -35,6 +36,18 @@ public class UserResourceTest {
         // Then
         verify(rep).add(Mockito.eq(user));;
         verifyNoMoreInteractions(rep);
+    }
+
+    @Test(expected = JsonSyntaxException.class)
+    public void shouldFailToAddUser() {
+        // Given
+        Gson gson = new Gson();
+        UserResource userResource = new UserResource(rep, gson);
+        User user = createUser();
+        String s = user.toString();
+
+        // When
+        userResource.createUser(s);
     }
 
     private static User createUser() {

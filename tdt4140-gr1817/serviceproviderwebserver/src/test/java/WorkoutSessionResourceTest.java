@@ -1,13 +1,11 @@
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
-import serviceproviderwebserver.GoalResource;
 import serviceproviderwebserver.WorkoutSessionResource;
-import tdt4140.gr1817.ecosystem.persistence.data.Goal;
 import tdt4140.gr1817.ecosystem.persistence.data.User;
 import tdt4140.gr1817.ecosystem.persistence.data.WorkoutSession;
-import tdt4140.gr1817.ecosystem.persistence.repositories.GoalRepository;
 import tdt4140.gr1817.ecosystem.persistence.repositories.WorkoutSessionRepository;
 
 import java.util.Calendar;
@@ -41,7 +39,7 @@ public class WorkoutSessionResourceTest {
         verifyNoMoreInteractions(rep);
     }
 
-    @Test
+    @Test(expected = JsonSyntaxException.class)
     public void shouldFailToAddWorkoutSession(){
         // Given
         Gson gson = new Gson();
@@ -51,10 +49,6 @@ public class WorkoutSessionResourceTest {
 
         // When
         workoutSessionResource.createWorkoutSession(s);
-
-        // Then
-        verify(rep).add(Mockito.eq(workoutSession));
-        verifyNoMoreInteractions(rep);
     }
 
     private static WorkoutSession createWorkoutSession() {
