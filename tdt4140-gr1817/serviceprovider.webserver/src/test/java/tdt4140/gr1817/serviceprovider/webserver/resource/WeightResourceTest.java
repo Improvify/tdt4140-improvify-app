@@ -25,7 +25,7 @@ public class WeightResourceTest {
     @Before
     public void setUp() throws Exception {
         rep = Mockito.mock(WeightRepository.class);
-        final WeightValidator validator = new WeightValidator();
+        final WeightValidator validator = new WeightValidator(gson);
         weightResource = new WeightResource(rep, gson, validator);
     }
 

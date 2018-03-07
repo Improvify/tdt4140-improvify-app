@@ -24,7 +24,7 @@ public class UserResourceTest {
     @Before
     public void setUp() throws Exception {
         rep = Mockito.mock(UserRepository.class);
-        final UserValidator validator = new UserValidator();
+        final UserValidator validator = new UserValidator(gson);
 
         userResource = new UserResource(rep, gson, validator);
     }

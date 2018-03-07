@@ -8,10 +8,10 @@ import java.util.Date;
 
 public class UserValidator implements Validator {
 
-    private Gson gson;
+    private final Gson gson;
 
-    public UserValidator() {
-        this.gson = new Gson();
+    public UserValidator(Gson gson) {
+        this.gson = gson;
     }
 
     @Override

@@ -8,10 +8,10 @@ import java.util.Date;
 
 public class RestingHeartRateValidator implements Validator {
 
-    private Gson gson;
+    private final Gson gson;
 
-    public RestingHeartRateValidator() {
-        this.gson = new Gson();
+    public RestingHeartRateValidator(Gson gson) {
+        this.gson = gson;
     }
 
     @Override

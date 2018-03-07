@@ -1,5 +1,7 @@
 package tdt4140.gr1817.serviceprovider.webserver.validation;
 
+import com.google.gson.Gson;
+import org.junit.Before;
 import org.junit.Test;
 
 import static org.hamcrest.Matchers.is;
@@ -7,7 +9,12 @@ import static org.junit.Assert.assertThat;
 
 public class WeightValidatorTest {
 
-    private Validator validator = new WeightValidator();
+    private WeightValidator validator;
+
+    @Before
+    public void setUp() throws Exception {
+        validator = new WeightValidator(new Gson());
+    }
 
     @Test
     public void shouldBeLegalWeight() throws Exception {

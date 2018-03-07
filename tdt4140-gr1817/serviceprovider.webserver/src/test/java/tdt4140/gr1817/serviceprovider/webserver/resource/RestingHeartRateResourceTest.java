@@ -25,7 +25,7 @@ public class RestingHeartRateResourceTest {
     @Before
     public void setUp() throws Exception {
         rep = Mockito.mock(RestingHeartRateRepository.class);
-        final RestingHeartRateValidator validator = new RestingHeartRateValidator();
+        final RestingHeartRateValidator validator = new RestingHeartRateValidator(gson);
         restingHeartRateResource = new RestingHeartRateResource(rep, gson, validator);
     }
 

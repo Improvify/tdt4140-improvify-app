@@ -8,10 +8,10 @@ import java.util.Date;
 
 public class WeightValidator implements Validator {
 
-    private Gson gson;
+    private final Gson gson;
 
-    public WeightValidator() {
-        this.gson = new Gson();
+    public WeightValidator(Gson gson) {
+        this.gson = gson;
     }
 
     @Override

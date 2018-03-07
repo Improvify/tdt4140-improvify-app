@@ -1,5 +1,7 @@
 package tdt4140.gr1817.serviceprovider.webserver.validation;
 
+import com.google.gson.Gson;
+import org.junit.Before;
 import org.junit.Test;
 
 import static org.hamcrest.Matchers.is;
@@ -7,7 +9,13 @@ import static org.junit.Assert.assertThat;
 
 public class RestingHeartRateValidatorTest {
 
-    private Validator validator = new RestingHeartRateValidator();
+    private RestingHeartRateValidator validator;
+
+    @Before
+    public void setUp() throws Exception {
+        final Gson gson = new Gson();
+        validator = new RestingHeartRateValidator(gson);
+    }
 
     @Test
     public void shouldBeLegalRestingHeartRate() throws Exception {

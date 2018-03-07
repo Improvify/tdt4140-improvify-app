@@ -25,7 +25,7 @@ public class WorkoutSessionResourceTest {
     @Before
     public void setUp() throws Exception {
         rep = Mockito.mock(WorkoutSessionRepository.class);
-        final WorkoutSessionValidator validator = new WorkoutSessionValidator();
+        final WorkoutSessionValidator validator = new WorkoutSessionValidator(gson);
         workoutSessionResource = new WorkoutSessionResource(rep, gson, validator);
     }
 

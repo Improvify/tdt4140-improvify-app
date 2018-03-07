@@ -6,10 +6,10 @@ import tdt4140.gr1817.ecosystem.persistence.data.Goal;
 
 public class GoalValidator implements Validator {
 
-    private Gson gson;
+    private final Gson gson;
 
-    public GoalValidator() {
-        this.gson = new Gson();
+    public GoalValidator(Gson gson) {
+        this.gson = gson;
     }
 
     @Override

@@ -25,7 +25,7 @@ public class GoalResourceTest {
     @Before
     public void setUp() throws Exception {
         rep = Mockito.mock(GoalRepository.class);
-        final GoalValidator validator = new GoalValidator();
+        final GoalValidator validator = new GoalValidator(gson);
         goalResource = new GoalResource(rep, gson, validator);
     }
 
@@ -52,6 +52,8 @@ public class GoalResourceTest {
 
         // When
         goalResource.createGoal(s);
+
+        // NOTE: because these rely on the validator to fail, these tests are rather integration tests than unit tests.
     }
 
     private static Goal createGoal() {

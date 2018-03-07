@@ -8,10 +8,10 @@ import java.util.Date;
 
 public class WorkoutSessionValidator implements Validator {
 
-    private Gson gson;
+    private final Gson gson;
 
-    public WorkoutSessionValidator() {
-        this.gson = new Gson();
+    public WorkoutSessionValidator(Gson gson) {
+        this.gson = gson;
     }
 
     @Override
