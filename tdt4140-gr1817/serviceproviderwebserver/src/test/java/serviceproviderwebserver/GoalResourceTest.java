@@ -1,15 +1,14 @@
+package serviceproviderwebserver;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import serviceproviderwebserver.GoalResource;
-import serviceproviderwebserver.WeightResource;
 import tdt4140.gr1817.ecosystem.persistence.data.Goal;
 import tdt4140.gr1817.ecosystem.persistence.data.User;
-import tdt4140.gr1817.ecosystem.persistence.data.Weight;
 import tdt4140.gr1817.ecosystem.persistence.repositories.GoalRepository;
-import tdt4140.gr1817.ecosystem.persistence.repositories.WeightRepository;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -18,47 +17,47 @@ import java.util.GregorianCalendar;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
-public class WeightResourceTest {
-    WeightRepository rep;
+public class GoalResourceTest {
+    GoalRepository rep;
 
     @Before
     public void setUp() throws Exception {
-        rep = Mockito.mock(WeightRepository.class);
+        rep = Mockito.mock(GoalRepository.class);
     }
 
     @Test
-    public void shouldAddWeight() {
+    public void shouldAddGoal() {
         // Given
         Gson gson = new Gson();
-        WeightResource weightResource = new WeightResource(rep, gson);
-        Weight weight = createWeight();
-        String json = gson.toJson(weight);
+        GoalResource goalResource = new GoalResource(rep, gson);
+        Goal goal = createGoal();
+        String json = gson.toJson(goal);
 
         // When
-        weightResource.createWeight(json);
+        goalResource.createGoal(json);
 
         // Then
-        verify(rep).add(Mockito.eq(weight));
+        verify(rep).add(Mockito.eq(goal));
         verifyNoMoreInteractions(rep);
     }
 
     @Test(expected = JsonSyntaxException.class)
-    public void shouldFailToAddWeight(){
+    public void shouldFailToAddGoal(){
         // Given
         Gson gson = new Gson();
-        WeightResource weightResource = new WeightResource(rep, gson);
-        Weight weight = createWeight();
-        String s = weight.toString();
+        GoalResource goalResource = new GoalResource(rep, gson);
+        Goal goal = createGoal();
+        String s = goal.toString();
 
         // When
-        weightResource.createWeight(s);
+        goalResource.createGoal(s);
     }
 
-    private static Weight createWeight() {
+    private static Goal createGoal() {
         Calendar calendar = new GregorianCalendar();
         calendar.set(Calendar.MILLISECOND, 0); // JSON doesnt serialize milliseconds
         Date date = calendar.getTime();
         User user = new User(1,"hei", "bu", 2.5f, date, "hellu", "hshs", "123@hotmail.com");
-        return new Weight(1, 140.4f, date, user);
+        return new Goal(1, user, "bu", true, false);
     }
 }

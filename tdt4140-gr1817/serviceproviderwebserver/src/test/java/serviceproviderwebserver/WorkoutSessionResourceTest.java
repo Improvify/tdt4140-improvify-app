@@ -1,3 +1,5 @@
+package serviceproviderwebserver;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import org.junit.Before;
