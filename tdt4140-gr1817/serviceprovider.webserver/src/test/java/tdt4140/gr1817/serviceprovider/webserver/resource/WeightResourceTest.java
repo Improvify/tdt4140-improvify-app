@@ -1,16 +1,12 @@
-package serviceproviderwebserver;
+package tdt4140.gr1817.serviceprovider.webserver.resource;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
-import serviceproviderwebserver.GoalResource;
-import serviceproviderwebserver.WeightResource;
-import tdt4140.gr1817.ecosystem.persistence.data.Goal;
 import tdt4140.gr1817.ecosystem.persistence.data.User;
 import tdt4140.gr1817.ecosystem.persistence.data.Weight;
-import tdt4140.gr1817.ecosystem.persistence.repositories.GoalRepository;
 import tdt4140.gr1817.ecosystem.persistence.repositories.WeightRepository;
 
 import java.util.Calendar;

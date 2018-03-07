@@ -1,4 +1,4 @@
-package validation;
+package tdt4140.gr1817.serviceprovider.webserver.validation;
 
 /**
  * A general validation interface, specifying the validate method.

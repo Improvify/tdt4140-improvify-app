@@ -1,4 +1,4 @@
-package serviceproviderwebserver;
+package tdt4140.gr1817.serviceprovider.webserver;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
@@ -105,7 +105,7 @@ public class App {
         // Enable Jersey and our resources
 
         ResourceConfig config = new ResourceConfig();
-        config.packages("serviceproviderwebserver");
+        config.packages("tdt4140.gr1817.serviceprovider.webserver.resource");
         config.register((Feature) context -> {
             // Jersey uses HK2 for dependency injection in resources. We replace that with Guice here,
             // since we don't want more frameworks for doing the same, and other modules use Guice.

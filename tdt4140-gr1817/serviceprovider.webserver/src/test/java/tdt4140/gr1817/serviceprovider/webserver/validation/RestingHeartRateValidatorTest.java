@@ -1,18 +1,18 @@
-package validation;
+package tdt4140.gr1817.serviceprovider.webserver.validation;
 
 import org.junit.Test;
 
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
-public class WeightValidatorTest {
+public class RestingHeartRateValidatorTest {
 
-    private Validator validator = new WeightValidator();
+    private Validator validator = new RestingHeartRateValidator();
 
     @Test
-    public void shouldBeLegalWeight() throws Exception {
+    public void shouldBeLegalRestingHeartRate() throws Exception {
         //Given
-        String json = "{\"id\": 1, \"currentWeight\": 88, \"date\": \"2018-01-09\"}";
+        String json = "{\"id\": 1, \"measuredAt\": \"2018-02-15\", \"heartRate\": 66}";
 
         //When
         boolean outcome = validator.validate(json);
@@ -24,7 +24,7 @@ public class WeightValidatorTest {
     @Test
     public void shouldLackRequiredFields() throws Exception {
         //Given
-        String json = "{\"id\": 1, \"date\": \"2018-01-09\"}";
+        String json = "{\"measuredAt\": \"2018-02-15\", \"heartRate\": 66}";
 
         //When
         boolean outcome = validator.validate(json);
@@ -46,33 +46,33 @@ public class WeightValidatorTest {
     }
 
     @Test
-    public void shouldHaveIllegalID() throws Exception {
-        //Given
-        String json = "{\"id\": -1, \"currentWeight\": 88, \"date\": \"2018-01-09\"}";
-
-        //When
-        boolean outcome = validator.validate(json);
-
-        //Then
-        assertThat(outcome, is(false));
-    }
-
-    @Test
-    public void shouldHaveIllegalWeight() throws Exception {
-        //Given
-        String json = "{\"id\": 1, \"currentWeight\": -10, \"date\": \"2018-01-09\"}";
-
-        //When
-        boolean outcome = validator.validate(json);
-
-        //Then
-        assertThat(outcome, is(false));
-    }
-
-    @Test
     public void shouldHaveIllegalDate() throws Exception {
         //Given
-        String json = "{\"id\": 1, \"currentWeight\": 10, \"date\": \"4000-04-04\"}";
+        String json = "{\"id\": 1, \"measuredAt\": \"3018-02-15\", \"heartRate\": 66}";
+
+        //When
+        boolean outcome = validator.validate(json);
+
+        //Then
+        assertThat(outcome, is(false));
+    }
+
+    @Test
+    public void shouldHaveIllegalID() throws Exception {
+        //Given
+        String json = "{\"id\": -2, \"measuredAt\": \"2018-02-15\", \"heartRate\": 66}";
+
+        //When
+        boolean outcome = validator.validate(json);
+
+        //Then
+        assertThat(outcome, is(false));
+    }
+
+    @Test
+    public void shouldHaveIllegalHeartRate() throws Exception {
+        //Given
+        String json = "{\"id\": 1, \"measuredAt\": \"2018-02-15\", \"heartRate\": -1}";
 
         //When
         boolean outcome = validator.validate(json);

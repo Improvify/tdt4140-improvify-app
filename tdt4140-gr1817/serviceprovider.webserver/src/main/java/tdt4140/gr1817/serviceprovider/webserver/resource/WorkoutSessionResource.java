@@ -1,10 +1,10 @@
-package serviceproviderwebserver;
+package tdt4140.gr1817.serviceprovider.webserver.resource;
 
 import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
 import tdt4140.gr1817.ecosystem.persistence.data.WorkoutSession;
 import tdt4140.gr1817.ecosystem.persistence.repositories.WorkoutSessionRepository;
-import validation.WorkoutSessionValidator;
+import tdt4140.gr1817.serviceprovider.webserver.validation.WorkoutSessionValidator;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;

@@ -1,4 +1,4 @@
-package validation;
+package tdt4140.gr1817.serviceprovider.webserver.validation;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;

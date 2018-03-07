@@ -1,9 +1,9 @@
-package validation;
+package tdt4140.gr1817.serviceprovider.webserver.validation;
 
 import org.junit.Test;
 
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
 public class UserValidatorTest {
 
