@@ -57,6 +57,7 @@
         <module>app.ui</module>
         <module>reporting</module>
         <module>ecosystem.persistence</module>
+        <module>serviceprovider.webserver</module>
     </modules>
 
 
@@ -83,6 +84,12 @@
                 <artifactId>guice</artifactId>
                 <version>4.1.0</version>
             </dependency>
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-classic</artifactId>
+                <version>1.2.3</version>
+            </dependency>
+
 
             <dependency>
                 <groupId>junit</groupId>
