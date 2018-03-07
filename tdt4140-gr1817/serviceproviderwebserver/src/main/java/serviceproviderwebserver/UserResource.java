@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
 import tdt4140.gr1817.ecosystem.persistence.data.User;
 import tdt4140.gr1817.ecosystem.persistence.repositories.UserRepository;
+import validation.UserValidator;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -27,9 +28,12 @@ public class UserResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public String createUser(String json) {
         User user = gson.fromJson(json, User.class);
-        //UserValidator validator = new UserValidator();
-        //validator.validate(json);
-        repository.add(user);
-        return "User added";
+        UserValidator validator = new UserValidator();
+        if (validator.validate(json)) {
+            repository.add(user);
+            return "User added";
+        } else {
+            return "Failed to add user";
+        }
     }
 }

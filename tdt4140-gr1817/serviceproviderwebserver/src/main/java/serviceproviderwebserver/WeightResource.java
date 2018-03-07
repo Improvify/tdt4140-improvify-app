@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
 import tdt4140.gr1817.ecosystem.persistence.data.Weight;
 import tdt4140.gr1817.ecosystem.persistence.repositories.WeightRepository;
+import validation.WeightValidator;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -27,9 +28,12 @@ public class WeightResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public String createWeight(String json) {
         Weight weight = gson.fromJson(json, Weight.class);
-        //WeightValidator validator = new WeightValidator();
-        //validator.validate(json);
-        repository.add(weight);
-        return "Weight added";
+        WeightValidator validator = new WeightValidator();
+        if (validator.validate(json)) {
+            repository.add(weight);
+            return "Weight added";
+        } else {
+            return "Failed to add weight";
+        }
     }
 }
