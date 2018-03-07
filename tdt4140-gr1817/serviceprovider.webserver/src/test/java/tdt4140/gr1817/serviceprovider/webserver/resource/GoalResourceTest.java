@@ -8,6 +8,7 @@ import org.mockito.Mockito;
 import tdt4140.gr1817.ecosystem.persistence.data.Goal;
 import tdt4140.gr1817.ecosystem.persistence.data.User;
 import tdt4140.gr1817.ecosystem.persistence.repositories.GoalRepository;
+import tdt4140.gr1817.serviceprovider.webserver.validation.GoalValidator;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -18,17 +19,20 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 public class GoalResourceTest {
     GoalRepository rep;
+    private Gson gson = new Gson();
+    private GoalResource goalResource;
 
     @Before
     public void setUp() throws Exception {
         rep = Mockito.mock(GoalRepository.class);
+        final GoalValidator validator = new GoalValidator();
+        goalResource = new GoalResource(rep, gson, validator);
     }
 
     @Test
     public void shouldAddGoal() {
         // Given
-        Gson gson = new Gson();
-        GoalResource goalResource = new GoalResource(rep, gson);
+
         Goal goal = createGoal();
         String json = gson.toJson(goal);
 
@@ -43,8 +47,6 @@ public class GoalResourceTest {
     @Test(expected = JsonSyntaxException.class)
     public void shouldFailToAddGoal(){
         // Given
-        Gson gson = new Gson();
-        GoalResource goalResource = new GoalResource(rep, gson);
         Goal goal = createGoal();
         String s = goal.toString();
 

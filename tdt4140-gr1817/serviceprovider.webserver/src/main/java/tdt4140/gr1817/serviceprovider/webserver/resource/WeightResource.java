@@ -15,20 +15,22 @@ import javax.ws.rs.core.MediaType;
 @Slf4j
 @Path("weight")
 public class WeightResource {
-    WeightRepository repository;
-    private Gson gson;
+
+    private final Gson gson;
+    private final WeightRepository repository;
+    private final WeightValidator validator;
 
     @Inject
-    public WeightResource(WeightRepository repository, Gson gson) {
+    public WeightResource(WeightRepository repository, Gson gson, WeightValidator validator) {
         this.repository = repository;
         this.gson = gson;
+        this.validator = validator;
     }
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public String createWeight(String json) {
         Weight weight = gson.fromJson(json, Weight.class);
-        WeightValidator validator = new WeightValidator();
         if (validator.validate(json)) {
             repository.add(weight);
             return "Weight added";

@@ -7,6 +7,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import tdt4140.gr1817.ecosystem.persistence.data.User;
 import tdt4140.gr1817.ecosystem.persistence.repositories.UserRepository;
+import tdt4140.gr1817.serviceprovider.webserver.validation.UserValidator;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -17,17 +18,20 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 public class UserResourceTest {
     UserRepository rep;
+    private UserResource userResource;
+    private Gson gson = new Gson();
 
     @Before
     public void setUp() throws Exception {
         rep = Mockito.mock(UserRepository.class);
+        final UserValidator validator = new UserValidator();
+
+        userResource = new UserResource(rep, gson, validator);
     }
 
     @Test
     public void shouldAddUser() {
         // Given
-        Gson gson = new Gson();
-        UserResource userResource = new UserResource(rep, gson);
         User user = createUser();
         String json = gson.toJson(user);
 
@@ -42,13 +46,11 @@ public class UserResourceTest {
     @Test(expected = JsonSyntaxException.class)
     public void shouldFailToAddUser() {
         // Given
-        Gson gson = new Gson();
-        UserResource userResource = new UserResource(rep, gson);
         User user = createUser();
-        String s = user.toString();
+        String invalidJson = user.toString();
 
         // When
-        userResource.createUser(s);
+        userResource.createUser(invalidJson);
     }
 
     private static User createUser() {

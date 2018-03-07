@@ -8,6 +8,7 @@ import org.mockito.Mockito;
 import tdt4140.gr1817.ecosystem.persistence.data.User;
 import tdt4140.gr1817.ecosystem.persistence.data.WorkoutSession;
 import tdt4140.gr1817.ecosystem.persistence.repositories.WorkoutSessionRepository;
+import tdt4140.gr1817.serviceprovider.webserver.validation.WorkoutSessionValidator;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -18,17 +19,19 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 public class WorkoutSessionResourceTest {
     WorkoutSessionRepository rep;
+    private final Gson gson = new Gson();
+    private WorkoutSessionResource workoutSessionResource;
 
     @Before
     public void setUp() throws Exception {
         rep = Mockito.mock(WorkoutSessionRepository.class);
+        final WorkoutSessionValidator validator = new WorkoutSessionValidator();
+        workoutSessionResource = new WorkoutSessionResource(rep, gson, validator);
     }
 
     @Test
     public void shouldAddWorkoutSession() {
         // Given
-        Gson gson = new Gson();
-        WorkoutSessionResource workoutSessionResource = new WorkoutSessionResource(rep, gson);
         WorkoutSession workoutSession = createWorkoutSession();
         String json = gson.toJson(workoutSession);
 
@@ -43,8 +46,6 @@ public class WorkoutSessionResourceTest {
     @Test(expected = JsonSyntaxException.class)
     public void shouldFailToAddWorkoutSession(){
         // Given
-        Gson gson = new Gson();
-        WorkoutSessionResource workoutSessionResource = new WorkoutSessionResource(rep, gson);
         WorkoutSession workoutSession = createWorkoutSession();
         String s = workoutSession.toString();
 

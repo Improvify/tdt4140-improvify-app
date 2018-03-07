@@ -15,20 +15,22 @@ import javax.ws.rs.core.MediaType;
 @Slf4j
 @Path("user")
 public class UserResource {
-    UserRepository repository;
+
     private Gson gson;
+    private final UserRepository repository;
+    private final UserValidator validator;
 
     @Inject
-    public UserResource(UserRepository repository, Gson gson) {
+    public UserResource(UserRepository repository, Gson gson, UserValidator validator) {
         this.repository = repository;
         this.gson = gson;
+        this.validator = validator;
     }
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public String createUser(String json) {
         User user = gson.fromJson(json, User.class);
-        UserValidator validator = new UserValidator();
         if (validator.validate(json)) {
             repository.add(user);
             return "User added";

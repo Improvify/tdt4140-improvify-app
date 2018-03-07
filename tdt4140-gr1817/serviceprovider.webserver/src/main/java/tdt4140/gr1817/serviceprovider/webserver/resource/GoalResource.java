@@ -15,20 +15,22 @@ import javax.ws.rs.core.MediaType;
 @Slf4j
 @Path("goal")
 public class GoalResource {
-    GoalRepository repository;
-    private Gson gson;
+
+    private final Gson gson;
+    private final GoalRepository repository;
+    private final GoalValidator validator;
 
     @Inject
-    public GoalResource(GoalRepository repository, Gson gson) {
+    public GoalResource(GoalRepository repository, Gson gson, GoalValidator validator) {
         this.repository = repository;
         this.gson = gson;
+        this.validator = validator;
     }
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public String createGoal(String json) {
         Goal goal = gson.fromJson(json, Goal.class);
-        GoalValidator validator = new GoalValidator();
         if (validator.validate(json)) {
             repository.add(goal);
             return "Goal added";

@@ -15,20 +15,23 @@ import javax.ws.rs.core.MediaType;
 @Slf4j
 @Path("restingheartrate")
 public class RestingHeartRateResource {
-    RestingHeartRateRepository repository;
-    private Gson gson;
+
+    private final Gson gson;
+    private final RestingHeartRateRepository repository;
+    private final RestingHeartRateValidator validator;
 
     @Inject
-    public RestingHeartRateResource(RestingHeartRateRepository repository, Gson gson) {
+    public RestingHeartRateResource(RestingHeartRateRepository repository, Gson gson,
+                                    RestingHeartRateValidator validator) {
         this.repository = repository;
         this.gson = gson;
+        this.validator = validator;
     }
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public String createRestingHeartRate(String json) {
         RestingHeartRate restingHeartRate = gson.fromJson(json, RestingHeartRate.class);
-        RestingHeartRateValidator validator = new RestingHeartRateValidator();
         if (validator.validate(json)) {
             repository.add(restingHeartRate);
             return "Resting heart rate added";

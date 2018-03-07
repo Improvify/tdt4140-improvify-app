@@ -8,6 +8,7 @@ import org.mockito.Mockito;
 import tdt4140.gr1817.ecosystem.persistence.data.RestingHeartRate;
 import tdt4140.gr1817.ecosystem.persistence.data.User;
 import tdt4140.gr1817.ecosystem.persistence.repositories.RestingHeartRateRepository;
+import tdt4140.gr1817.serviceprovider.webserver.validation.RestingHeartRateValidator;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -18,17 +19,20 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 public class RestingHeartRateResourceTest {
     RestingHeartRateRepository rep;
+    private Gson gson = new Gson();
+    private RestingHeartRateResource restingHeartRateResource;
 
     @Before
     public void setUp() throws Exception {
         rep = Mockito.mock(RestingHeartRateRepository.class);
+        final RestingHeartRateValidator validator = new RestingHeartRateValidator();
+        restingHeartRateResource = new RestingHeartRateResource(rep, gson, validator);
     }
 
     @Test
     public void shouldAddRestingHeartRate() {
         // Given
-        Gson gson = new Gson();
-        RestingHeartRateResource restingHeartRateResource = new RestingHeartRateResource(rep, gson);
+
         RestingHeartRate restingHeartRate = createRestingHeartRate();
         String json = gson.toJson(restingHeartRate);
 
@@ -43,8 +47,6 @@ public class RestingHeartRateResourceTest {
     @Test(expected = JsonSyntaxException.class)
     public void shouldFailToAddRestingHeartRate(){
         // Given
-        Gson gson = new Gson();
-        RestingHeartRateResource restingHeartRateResource = new RestingHeartRateResource(rep, gson);
         RestingHeartRate restingHeartRate = createRestingHeartRate();
         String s = restingHeartRate.toString();
 

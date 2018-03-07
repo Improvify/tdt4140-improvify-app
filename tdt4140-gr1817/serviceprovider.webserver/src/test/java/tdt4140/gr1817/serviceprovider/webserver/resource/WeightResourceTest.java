@@ -8,6 +8,7 @@ import org.mockito.Mockito;
 import tdt4140.gr1817.ecosystem.persistence.data.User;
 import tdt4140.gr1817.ecosystem.persistence.data.Weight;
 import tdt4140.gr1817.ecosystem.persistence.repositories.WeightRepository;
+import tdt4140.gr1817.serviceprovider.webserver.validation.WeightValidator;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -18,17 +19,19 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 public class WeightResourceTest {
     WeightRepository rep;
+    private Gson gson = new Gson();
+    private WeightResource weightResource;
 
     @Before
     public void setUp() throws Exception {
         rep = Mockito.mock(WeightRepository.class);
+        final WeightValidator validator = new WeightValidator();
+        weightResource = new WeightResource(rep, gson, validator);
     }
 
     @Test
     public void shouldAddWeight() {
         // Given
-        Gson gson = new Gson();
-        WeightResource weightResource = new WeightResource(rep, gson);
         Weight weight = createWeight();
         String json = gson.toJson(weight);
 
@@ -43,13 +46,11 @@ public class WeightResourceTest {
     @Test(expected = JsonSyntaxException.class)
     public void shouldFailToAddWeight(){
         // Given
-        Gson gson = new Gson();
-        WeightResource weightResource = new WeightResource(rep, gson);
         Weight weight = createWeight();
-        String s = weight.toString();
+        String invalidJson = weight.toString();
 
         // When
-        weightResource.createWeight(s);
+        weightResource.createWeight(invalidJson);
     }
 
     private static Weight createWeight() {

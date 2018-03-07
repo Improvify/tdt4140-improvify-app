@@ -15,20 +15,22 @@ import javax.ws.rs.core.MediaType;
 @Slf4j
 @Path("workoutsession")
 public class WorkoutSessionResource {
-    WorkoutSessionRepository repository;
-    private Gson gson;
+
+    private final Gson gson;
+    private final WorkoutSessionRepository repository;
+    private final WorkoutSessionValidator validator;
 
     @Inject
-    public WorkoutSessionResource(WorkoutSessionRepository repository, Gson gson) {
+    public WorkoutSessionResource(WorkoutSessionRepository repository, Gson gson, WorkoutSessionValidator validator) {
         this.repository = repository;
         this.gson = gson;
+        this.validator = validator;
     }
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public String createWorkoutSession(String json) {
         WorkoutSession workoutSession = gson.fromJson(json, WorkoutSession.class);
-        WorkoutSessionValidator validator = new WorkoutSessionValidator();
         if (validator.validate(json)) {
             repository.add(workoutSession);
             return "Workoutsession added";
