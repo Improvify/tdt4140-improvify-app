@@ -107,7 +107,7 @@ public final class GpsFileHandler {
         return gpsPoints;
     }
 
-    public static void main(String args[]){
+    public static void main(String[] args) {
 
         GpsFile file = GpsFileHandler.generateGpsFile("C:\\Users\\Henrik\\Desktop\\GPXFOLDER\\Trondheim10K.gpx  ");
         System.out.println(file);

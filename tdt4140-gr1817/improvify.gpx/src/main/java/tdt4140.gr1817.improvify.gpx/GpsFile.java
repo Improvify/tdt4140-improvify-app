@@ -48,8 +48,8 @@ public class GpsFile {
     }
 
     private int calculateDuration(ArrayList<GpsPoint> pointList) {
-        System.out.println(pointList.get(pointList.size()-1));
-        LocalDateTime endTime = pointList.get(pointList.size()-1).getTime();
+        System.out.println(pointList.get(pointList.size() - 1));
+        LocalDateTime endTime = pointList.get(pointList.size() - 1).getTime();
         int deltaT = 0;
         deltaT += (endTime.getSecond() - this.startTime.getSecond());
         deltaT += secondsInMinute * (endTime.getMinute() - this.startTime.getMinute());
