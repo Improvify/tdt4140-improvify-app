@@ -13,8 +13,9 @@ import javax.ws.rs.core.MediaType;
 @Slf4j
 @Path("goal")
 public class GoalResource {
-    GoalRepository repository;
-    private Gson gson;
+
+    private final GoalRepository repository;
+    private final Gson gson;
 
     @Inject
     public GoalResource(GoalRepository repository, Gson gson) {
