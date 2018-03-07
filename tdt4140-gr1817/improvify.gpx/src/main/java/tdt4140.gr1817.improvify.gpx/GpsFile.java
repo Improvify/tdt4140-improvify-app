@@ -33,8 +33,6 @@ public class GpsFile {
 
         //find time difference between first trackpoint and last.
         this.duration = calculateDuration(pointList);
-        System.out.println(this.duration);
-
     }
 
     private static int calculateTotalDistance(ArrayList<GpsPoint> pointList) {
@@ -50,19 +48,15 @@ public class GpsFile {
     }
 
     private int calculateDuration(ArrayList<GpsPoint> pointList) {
-
-        LocalDateTime endTime = pointList.get(pointList.size() - 1).getTime();
-        System.out.println(this.startTime);
-        System.out.println(endTime);
+        System.out.println(pointList.get(pointList.size()-1));
+        LocalDateTime endTime = pointList.get(pointList.size()-1).getTime();
         int deltaT = 0;
-
-        deltaT += (endTime.getSecond() - startTime.getSecond());
-        System.out.println(deltaT);
-        deltaT += secondsInMinute * (endTime.getMinute() - startTime.getMinute());
-        System.out.println(endTime.getMinute());
-        System.out.println(startTime.getMinute());
-        deltaT += secondsInMinute * minutesInHour * (endTime.getHour() - startTime.getHour());
-
+        deltaT += (endTime.getSecond() - this.startTime.getSecond());
+        deltaT += secondsInMinute * (endTime.getMinute() - this.startTime.getMinute());
+        deltaT += secondsInMinute * minutesInHour * (endTime.getHour() - this.startTime.getHour());
+        if (deltaT < 0) {
+            throw new IllegalStateException("Activity time was somehow negative");
+        }
         return deltaT;
     }
 

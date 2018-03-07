@@ -89,7 +89,7 @@ public final class GpsFileHandler {
 
             } else if (line.trim().startsWith("<ele>")) {
 
-                String ele = line.trim().substring(5, 8);
+                String ele = line.trim().substring(5, 10).split("[.<]")[0];
                 gpsPoint.setElevation(Integer.parseInt(ele));
                 //add elevation
             } else if (line.trim().startsWith("<ns3:hr")) {
@@ -105,6 +105,12 @@ public final class GpsFileHandler {
         gpsPoints.remove(0);
 
         return gpsPoints;
+    }
+
+    public static void main(String args[]){
+
+        GpsFile file = GpsFileHandler.generateGpsFile("C:\\Users\\Henrik\\Desktop\\GPXFOLDER\\Trondheim10K.gpx  ");
+        System.out.println(file);
     }
 
 }

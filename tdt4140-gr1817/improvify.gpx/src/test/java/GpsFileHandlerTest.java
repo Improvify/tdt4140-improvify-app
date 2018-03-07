@@ -23,12 +23,6 @@ public class GpsFileHandlerTest {
         }
     }
 
-
-    @Test
-    public void shouldSimplyPass() {
-        assertEquals(0, 0);
-    }
-
     @Test
     public void shouldSuccessfullyCreateGpsFile(){
         //
@@ -38,6 +32,4 @@ public class GpsFileHandlerTest {
         assertEquals(164,gpsFile.getMaxHeartRate());
         assertEquals(9111,gpsFile.getDistanceRun());
     }
-
-
 }
