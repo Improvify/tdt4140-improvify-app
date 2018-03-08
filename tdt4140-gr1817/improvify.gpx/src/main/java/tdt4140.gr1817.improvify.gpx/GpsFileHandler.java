@@ -55,7 +55,6 @@ public final class GpsFileHandler {
             if (line.startsWith("      <trkpt")) {
                 //Make new Trackpoint
                 gpsPoints.add(gpsPoint);
-                System.out.println(gpsPoint);
                 gpsPoint = new GpsPoint();
 
 
