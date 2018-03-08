@@ -58,6 +58,7 @@
         <module>reporting</module>
         <module>ecosystem.persistence</module>
         <module>serviceprovider.webserver</module>
+        <module>improvify.gpx</module>
     </modules>
 
 
