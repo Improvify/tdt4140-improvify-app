@@ -257,7 +257,7 @@
                             <transformers>
                                 <!-- add Main-Class to manifest file -->
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>tdt4140.gr1817.app.ui.FxApp</mainClass>
+                                    <mainClass>tdt4140.gr1817.app.ui.Main</mainClass>
                                 </transformer>
                             </transformers>
                         </configuration>

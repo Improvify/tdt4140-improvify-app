@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.Pane?>
+<Pane xmlns:fx="http://javafx.com/fxml"
+      fx:controller="tdt4140.gr1817.app.ui.feature.workout.CreateWorkoutController"
+      prefHeight="750" prefWidth="1000">
+</Pane>
