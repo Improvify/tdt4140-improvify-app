@@ -17,7 +17,7 @@ public class MainGuiIT extends ApplicationTest {
     @Override
     public void start(Stage stage) throws Exception {
         this.stage = stage;
-        new FxApp().start(this.stage);
+        new Main().start(this.stage);
         stage.show();
     }
 
