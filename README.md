@@ -17,6 +17,10 @@ Goal oriented training application
 For more management-centered stuff, and less developer/code-centered,
 check out our gitlab wiki.
 
+## Architecture
+
+![](docs/System architecture/Package overview.png)
+
 ## Plugins
 
 * Checkstyle
