@@ -78,6 +78,7 @@ Jacoco | Test coverage
 Maven Shade | Combine all dependencies to a single executable JAR
 Error-prone | Look for possible mistakes in the code
 Checkstyle | Enforce code style (Ours is in [checkstyle.xml](/tdt4140-gr1817/checkstyle.xml))
+Build helper | Configures `src/it/java` as integration test source
 
 
 ### General issues 
