@@ -4,12 +4,15 @@ import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
 import tdt4140.gr1817.ecosystem.persistence.data.WorkoutSession;
 import tdt4140.gr1817.ecosystem.persistence.repositories.WorkoutSessionRepository;
+import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.specification.improvify.GetWorkoutSessionByIdSpecification;
 import tdt4140.gr1817.serviceprovider.webserver.validation.WorkoutSessionValidator;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 
 @Slf4j
@@ -37,6 +40,12 @@ public class WorkoutSessionResource {
         } else {
             return "Failed to add workoutsession";
         }
+    }
 
+    @DELETE
+    @Path("{id}")
+    public String deleteGoal(@PathParam("id") int id) {
+        repository.remove(new GetWorkoutSessionByIdSpecification(id));
+        return "Workout session removed";
     }
 }
