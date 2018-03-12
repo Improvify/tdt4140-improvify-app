@@ -31,8 +31,8 @@ public class RestingHeartRateResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public String createRestingHeartRate(String json) {
-        RestingHeartRate restingHeartRate = gson.fromJson(json, RestingHeartRate.class);
         if (validator.validate(json)) {
+            RestingHeartRate restingHeartRate = gson.fromJson(json, RestingHeartRate.class);
             repository.add(restingHeartRate);
             return "Resting heart rate added";
         } else {

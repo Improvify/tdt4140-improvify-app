@@ -30,8 +30,8 @@ public class WorkoutSessionResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public String createWorkoutSession(String json) {
-        WorkoutSession workoutSession = gson.fromJson(json, WorkoutSession.class);
         if (validator.validate(json)) {
+            WorkoutSession workoutSession = gson.fromJson(json, WorkoutSession.class);
             repository.add(workoutSession);
             return "Workoutsession added";
         } else {

@@ -30,8 +30,8 @@ public class UserResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public String createUser(String json) {
-        User user = gson.fromJson(json, User.class);
         if (validator.validate(json)) {
+            User user = gson.fromJson(json, User.class);
             repository.add(user);
             return "User added";
         } else {

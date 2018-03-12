@@ -30,13 +30,12 @@ public class GoalResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public String createGoal(String json) {
-        Goal goal = gson.fromJson(json, Goal.class);
         if (validator.validate(json)) {
+            Goal goal = gson.fromJson(json, Goal.class);
             repository.add(goal);
             return "Goal added";
         } else {
             return "Failed to add goal";
         }
-
     }
 }

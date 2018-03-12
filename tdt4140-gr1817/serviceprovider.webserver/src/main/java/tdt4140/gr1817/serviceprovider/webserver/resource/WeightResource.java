@@ -30,8 +30,8 @@ public class WeightResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public String createWeight(String json) {
-        Weight weight = gson.fromJson(json, Weight.class);
         if (validator.validate(json)) {
+            Weight weight = gson.fromJson(json, Weight.class);
             repository.add(weight);
             return "Weight added";
         } else {
