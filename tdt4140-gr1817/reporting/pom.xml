@@ -44,6 +44,12 @@
             <artifactId>tdt4140-gr1817.serviceprovider.webserver</artifactId>
             <version>${project.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>tdt4140-gr1817</groupId>
+            <artifactId>tdt4140-gr1817.improvify.gpx</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
     <build>
