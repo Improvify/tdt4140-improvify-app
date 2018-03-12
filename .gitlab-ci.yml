@@ -7,7 +7,6 @@ cache:
   key: "$CI_BUILD_REF_NAME"
 
 variables:
-  HEADLESS_TESTFX: "-Djava.awt.headless=true -Dtestfx.robot=glass -Dtestfx.headless=true -Dglass.platform=Monocle -Dmonocle.platform=Headless -Dprism.order=sw -Dprism.text=t2k -Dtestfx.setup.timeout=2500 -Dprism.verbose=true"
   MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository -Djava.awt.headless=true"
   MAVEN_CLI_OPTS: "--batch-mode --errors --fail-at-end --show-version"
 
@@ -21,7 +20,7 @@ unittest-job:
   dependencies:
     - build-job
   script:
-    - "mvn verify -f tdt4140-gr1817/pom.xml $MAVEN_CLI_OPTS -P unit-test -DskipDev=true -DargLine=\"$HEADLESS_TESTFX\""
+    - "mvn verify -f tdt4140-gr1817/pom.xml $MAVEN_CLI_OPTS -P unit-test,headless -DskipDev=true"
     - "cat tdt4140-gr1817/reporting/target/site/jacoco-aggregate/index.html 2>/dev/null"
 
 integrationtest-job:
@@ -30,4 +29,4 @@ integrationtest-job:
     - build-job
   script:
     # surefire blocks propagation of properties that are not set inside argLine
-    - "mvn verify -f tdt4140-gr1817/pom.xml $MAVEN_CLI_OPTS -P integration-test -DskipDev=true -DargLine=\"$HEADLESS_TESTFX\""
+    - "mvn verify -f tdt4140-gr1817/pom.xml $MAVEN_CLI_OPTS -P integration-test,headless -DskipDev=true"
