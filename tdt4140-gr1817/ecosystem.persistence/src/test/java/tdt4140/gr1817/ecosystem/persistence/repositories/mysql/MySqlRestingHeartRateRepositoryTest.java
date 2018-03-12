@@ -8,17 +8,20 @@ import tdt4140.gr1817.ecosystem.persistence.data.RestingHeartRate;
 import tdt4140.gr1817.ecosystem.persistence.data.User;
 import tdt4140.gr1817.ecosystem.persistence.repositories.UserRepository;
 import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.specification.GetAllRestingHeartRatesSpecification;
-import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.specification.GetRestingHeartRateById;
+import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.specification.GetRestingHeartRateByIdSpecification;
 import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.util.BuilderFactory;
 import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.util.HsqldbRule;
 
-import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.hasItems;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
 
 public class MySqlRestingHeartRateRepositoryTest {
 
@@ -52,7 +55,7 @@ public class MySqlRestingHeartRateRepositoryTest {
 
         // When
         repository.add(restingHeartRate);
-        final List<RestingHeartRate> heartRates = repository.query(new GetRestingHeartRateById(1));
+        final List<RestingHeartRate> heartRates = repository.query(new GetRestingHeartRateByIdSpecification(1));
 
         // Then
         assertThat(heartRates, hasSize(1));
@@ -88,7 +91,7 @@ public class MySqlRestingHeartRateRepositoryTest {
         repository.add(heartRate);
         repository.update(updatedHeartRate);
 
-        final List<RestingHeartRate> heartRates = repository.query(new GetRestingHeartRateById(heartRate.getId()));
+        final List<RestingHeartRate> heartRates = repository.query(new GetRestingHeartRateByIdSpecification(heartRate.getId()));
 
         // Then
         assertThat(heartRates, hasSize(1));
@@ -105,7 +108,7 @@ public class MySqlRestingHeartRateRepositoryTest {
 
         // When
         repository.add(Arrays.asList(heartRate1, heartRate2, heartRate3));
-        final List<RestingHeartRate> heartRates = repository.query(new GetRestingHeartRateById(heartRate2.getId()));
+        final List<RestingHeartRate> heartRates = repository.query(new GetRestingHeartRateByIdSpecification(heartRate2.getId()));
 
         // Then
         assertThat(heartRates, hasSize(1));
@@ -154,7 +157,7 @@ public class MySqlRestingHeartRateRepositoryTest {
 
         // When
         repository.add(Arrays.asList(heartRate1, heartRate2, heartRate3));
-        repository.remove(new GetRestingHeartRateById(3));
+        repository.remove(new GetRestingHeartRateByIdSpecification(3));
 
         final List<RestingHeartRate> heartRates = repository.query(new GetAllRestingHeartRatesSpecification());
 

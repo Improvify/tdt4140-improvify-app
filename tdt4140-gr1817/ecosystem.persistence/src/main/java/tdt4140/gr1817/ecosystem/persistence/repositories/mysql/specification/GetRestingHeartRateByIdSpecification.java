@@ -4,17 +4,17 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-public class GetWeightByIdSpecification implements SqlSpecification {
+public class GetRestingHeartRateByIdSpecification implements SqlSpecification {
 
     private final int id;
 
-    public GetWeightByIdSpecification(int id) {
+    public GetRestingHeartRateByIdSpecification(int id) {
         this.id = id;
     }
 
     @Override
     public PreparedStatement toStatement(Connection connection) throws SQLException {
-        final String sql = "SELECT * FROM weight WHERE id = ?";
+        final String sql = "SELECT * FROM restingheartrate WHERE id = ?";
         final PreparedStatement preparedStatement = connection.prepareStatement(sql);
         preparedStatement.setInt(1, id);
         return preparedStatement;

@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
 import tdt4140.gr1817.ecosystem.persistence.data.RestingHeartRate;
 import tdt4140.gr1817.ecosystem.persistence.repositories.RestingHeartRateRepository;
-import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.specification.GetRestingHeartRateById;
+import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.specification.GetRestingHeartRateByIdSpecification;
 import tdt4140.gr1817.serviceprovider.webserver.validation.RestingHeartRateValidator;
 
 import javax.inject.Inject;
@@ -46,7 +46,7 @@ public class RestingHeartRateResource {
     @DELETE
     @Path("{id}")
     public String deleteGoal(@PathParam("id") int id) {
-        repository.remove(new GetRestingHeartRateById(id));
+        repository.remove(new GetRestingHeartRateByIdSpecification(id));
         return "Resting heart rate removed";
     }
 }
