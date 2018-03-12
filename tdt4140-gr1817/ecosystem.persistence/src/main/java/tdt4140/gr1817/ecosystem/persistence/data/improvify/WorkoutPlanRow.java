@@ -1,5 +1,4 @@
 package tdt4140.gr1817.ecosystem.persistence.data.improvify;
-
 import lombok.Data;
 
 /**
@@ -34,4 +33,31 @@ public class WorkoutPlanRow {
      * The {@link WorkoutPlan} where this row exists in.
      */
     private WorkoutPlan workoutPlan;
+
+    public void setDurationSeconds(String stringFromField) {
+        //Enforce hh:mm:ss format
+        //Enforce max of 23:59:59 in any field
+
+
+        //Convert human-readable string to ISO-8601 standard
+        String initialTimeArray[] = stringFromField.split(":");
+
+        String timeArray[] = {"00","00","00"};
+
+        if (initialTimeArray.length == 1) {
+             timeArray[2] = initialTimeArray[0];
+        } else if (initialTimeArray.length == 2) {
+            timeArray[2] = initialTimeArray[1];
+            timeArray[1] = initialTimeArray[0];
+        } else {
+            timeArray = initialTimeArray;
+        }
+
+
+        this.durationSeconds = Integer.parseInt(timeArray[0])
+                *3600+Integer.parseInt(timeArray[1])
+                *60+Integer.parseInt(timeArray[2]);
+
+    }
+
 }
