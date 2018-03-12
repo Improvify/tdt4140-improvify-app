@@ -1,7 +1,6 @@
 package tdt4140.gr1817.serviceprovider.webserver.resource;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -18,7 +17,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 public class GoalResourceTest {
-    GoalRepository rep;
+    private GoalRepository rep;
     private Gson gson = new Gson();
     private GoalResource goalResource;
 
@@ -30,7 +29,7 @@ public class GoalResourceTest {
     }
 
     @Test
-    public void shouldAddGoal() {
+    public void shouldAddGoal() throws Exception {
         // Given
 
         Goal goal = createGoal();
@@ -44,23 +43,24 @@ public class GoalResourceTest {
         verifyNoMoreInteractions(rep);
     }
 
-    @Test(expected = JsonSyntaxException.class)
-    public void shouldFailToAddGoal(){
+    @Test
+    public void shouldNotAddWhenInvalidGoal() throws Exception {
         // Given
         Goal goal = createGoal();
-        String s = goal.toString();
+        String invalidJson = goal.toString();
 
         // When
-        goalResource.createGoal(s);
+        goalResource.createGoal(invalidJson);
 
-        // NOTE: because these rely on the validator to fail, these tests are rather integration tests than unit tests.
+        // Then
+        verifyNoMoreInteractions(rep);
     }
 
     private static Goal createGoal() {
         Calendar calendar = new GregorianCalendar();
         calendar.set(Calendar.MILLISECOND, 0); // JSON doesnt serialize milliseconds
         Date date = calendar.getTime();
-        User user = new User(1,"hei", "bu", 2.5f, date, "hellu", "hshs", "123@hotmail.com");
+        User user = new User(1, "hei", "bu", 2.5f, date, "hellu", "hshs", "123@hotmail.com");
         return new Goal(1, user, "bu", true, false);
     }
 }

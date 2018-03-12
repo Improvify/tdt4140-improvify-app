@@ -1,7 +1,6 @@
 package tdt4140.gr1817.serviceprovider.webserver.resource;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -18,7 +17,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 public class RestingHeartRateResourceTest {
-    RestingHeartRateRepository rep;
+    private RestingHeartRateRepository rep;
     private Gson gson = new Gson();
     private RestingHeartRateResource restingHeartRateResource;
 
@@ -30,7 +29,7 @@ public class RestingHeartRateResourceTest {
     }
 
     @Test
-    public void shouldAddRestingHeartRate() {
+    public void shouldAddRestingHeartRate() throws Exception {
         // Given
 
         RestingHeartRate restingHeartRate = createRestingHeartRate();
@@ -44,21 +43,24 @@ public class RestingHeartRateResourceTest {
         verifyNoMoreInteractions(rep);
     }
 
-    @Test(expected = JsonSyntaxException.class)
-    public void shouldFailToAddRestingHeartRate(){
+    @Test
+    public void shouldNotAddWhenInvalidRestingHeartRate() throws Exception {
         // Given
         RestingHeartRate restingHeartRate = createRestingHeartRate();
-        String s = restingHeartRate.toString();
+        String invalidJson = restingHeartRate.toString();
 
         // When
-        restingHeartRateResource.createRestingHeartRate(s);
+        restingHeartRateResource.createRestingHeartRate(invalidJson);
+
+        // Then
+        verifyNoMoreInteractions(rep);
     }
 
     private static RestingHeartRate createRestingHeartRate() {
         Calendar calendar = new GregorianCalendar();
         calendar.set(Calendar.MILLISECOND, 0); // JSON doesnt serialize milliseconds
         Date date = calendar.getTime();
-        User user = new User(1,"hei", "bu", 2.5f, date, "hellu", "hshs", "123@hotmail.com");
+        User user = new User(1, "hei", "bu", 2.5f, date, "hellu", "hshs", "123@hotmail.com");
         return new RestingHeartRate(1, date, 140, user);
     }
 }

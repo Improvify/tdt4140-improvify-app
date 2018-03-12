@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-
 public class GetUserByIdSpecification implements SqlSpecification {
 
     private final int id;
@@ -15,10 +14,9 @@ public class GetUserByIdSpecification implements SqlSpecification {
 
     @Override
     public PreparedStatement toStatement(Connection connection) throws SQLException {
-        String sql = "SELECT * FROM useraccount WHERE ID = ?";
-        PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        final String sql = "SELECT * FROM useraccount WHERE ID = ?";
+        final PreparedStatement preparedStatement = connection.prepareStatement(sql);
         preparedStatement.setInt(1, id);
-
         return preparedStatement;
     }
 }

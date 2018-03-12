@@ -4,18 +4,19 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-public class GetRestingHeartRateById implements SqlSpecification {
+public class GetGoalByIdSpecification implements SqlSpecification {
 
     private final int id;
 
-    public GetRestingHeartRateById(int id) {
+    public GetGoalByIdSpecification(int id) {
         this.id = id;
     }
 
     @Override
     public PreparedStatement toStatement(Connection connection) throws SQLException {
-        final PreparedStatement statement = connection.prepareStatement("SELECT * FROM restingheartrate WHERE id = ?");
-        statement.setInt(1, id);
-        return statement;
+        final String sql = "SELECT * FROM goal WHERE id = ?";
+        final PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        preparedStatement.setInt(1, id);
+        return preparedStatement;
     }
 }

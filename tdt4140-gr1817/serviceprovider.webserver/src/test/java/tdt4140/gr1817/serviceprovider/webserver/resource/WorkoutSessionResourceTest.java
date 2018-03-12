@@ -1,7 +1,6 @@
 package tdt4140.gr1817.serviceprovider.webserver.resource;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -18,7 +17,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 public class WorkoutSessionResourceTest {
-    WorkoutSessionRepository rep;
+    private WorkoutSessionRepository rep;
     private final Gson gson = new Gson();
     private WorkoutSessionResource workoutSessionResource;
 
@@ -30,7 +29,7 @@ public class WorkoutSessionResourceTest {
     }
 
     @Test
-    public void shouldAddWorkoutSession() {
+    public void shouldAddWorkoutSession() throws Exception {
         // Given
         WorkoutSession workoutSession = createWorkoutSession();
         String json = gson.toJson(workoutSession);
@@ -43,21 +42,24 @@ public class WorkoutSessionResourceTest {
         verifyNoMoreInteractions(rep);
     }
 
-    @Test(expected = JsonSyntaxException.class)
-    public void shouldFailToAddWorkoutSession(){
+    @Test
+    public void shouldNotAddWhenInvalidWorkoutSession() throws Exception {
         // Given
         WorkoutSession workoutSession = createWorkoutSession();
-        String s = workoutSession.toString();
+        String invalidJson = workoutSession.toString();
 
         // When
-        workoutSessionResource.createWorkoutSession(s);
+        workoutSessionResource.createWorkoutSession(invalidJson);
+
+        //Then
+        verifyNoMoreInteractions(rep);
     }
 
     private static WorkoutSession createWorkoutSession() {
         Calendar calendar = new GregorianCalendar();
         calendar.set(Calendar.MILLISECOND, 0); // JSON doesnt serialize milliseconds
         Date date = calendar.getTime();
-        User user = new User(1,"hei", "bu", 2.5f, date, "hellu", "hshs", "123@hotmail.com");
+        User user = new User(1, "hei", "bu", 2.5f, date, "hellu", "hshs", "123@hotmail.com");
         return new WorkoutSession(1, date, 1, 12.5f, 140.4f, 170.3f, 12.3f, user);
     }
 }
