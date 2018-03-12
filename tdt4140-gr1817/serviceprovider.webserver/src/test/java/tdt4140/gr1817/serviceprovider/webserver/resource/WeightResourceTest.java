@@ -1,7 +1,6 @@
 package tdt4140.gr1817.serviceprovider.webserver.resource;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -18,7 +17,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 public class WeightResourceTest {
-    WeightRepository rep;
+    private WeightRepository rep;
     private Gson gson = new Gson();
     private WeightResource weightResource;
 
@@ -30,7 +29,7 @@ public class WeightResourceTest {
     }
 
     @Test
-    public void shouldAddWeight() {
+    public void shouldAddWeight() throws Exception {
         // Given
         Weight weight = createWeight();
         String json = gson.toJson(weight);
@@ -43,21 +42,24 @@ public class WeightResourceTest {
         verifyNoMoreInteractions(rep);
     }
 
-    @Test(expected = JsonSyntaxException.class)
-    public void shouldFailToAddWeight(){
+    @Test
+    public void shouldNotAddWhenInvalidWeight() throws Exception {
         // Given
         Weight weight = createWeight();
         String invalidJson = weight.toString();
 
         // When
         weightResource.createWeight(invalidJson);
+
+        // Then
+        verifyNoMoreInteractions(rep);
     }
 
     private static Weight createWeight() {
         Calendar calendar = new GregorianCalendar();
         calendar.set(Calendar.MILLISECOND, 0); // JSON doesnt serialize milliseconds
         Date date = calendar.getTime();
-        User user = new User(1,"hei", "bu", 2.5f, date, "hellu", "hshs", "123@hotmail.com");
+        User user = new User(1, "hei", "bu", 2.5f, date, "hellu", "hshs", "123@hotmail.com");
         return new Weight(1, 140.4f, date, user);
     }
 }
