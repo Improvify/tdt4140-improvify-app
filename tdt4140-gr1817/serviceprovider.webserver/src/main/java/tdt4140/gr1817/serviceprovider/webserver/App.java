@@ -18,10 +18,12 @@ import org.glassfish.jersey.servlet.ServletContainer;
 import org.jvnet.hk2.guice.bridge.api.GuiceBridge;
 import org.jvnet.hk2.guice.bridge.api.GuiceIntoHK2Bridge;
 import org.slf4j.LoggerFactory;
+import tdt4140.gr1817.ecosystem.persistence.repositories.GoalRepository;
 import tdt4140.gr1817.ecosystem.persistence.repositories.RestingHeartRateRepository;
 import tdt4140.gr1817.ecosystem.persistence.repositories.UserRepository;
 import tdt4140.gr1817.ecosystem.persistence.repositories.WeightRepository;
 import tdt4140.gr1817.ecosystem.persistence.repositories.WorkoutSessionRepository;
+import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.MySqlGoalRepository;
 import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.MySqlRestingHeartRateRepository;
 import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.MySqlUserRepository;
 import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.MySqlWeightRepository;
@@ -60,6 +62,7 @@ public class App {
                         bind(UserRepository.class).to(MySqlUserRepository.class);
                         bind(WeightRepository.class).to(MySqlWeightRepository.class);
                         bind(WorkoutSessionRepository.class).to(MySqlWorkoutSessionRepository.class);
+                        bind(GoalRepository.class).to(MySqlGoalRepository.class);
                     }
                 },
                 new AbstractModule() {

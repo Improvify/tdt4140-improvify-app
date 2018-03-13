@@ -1,6 +1,7 @@
 package tdt4140.gr1817.ecosystem.persistence.repositories.mysql.guice;
 
 import com.google.inject.AbstractModule;
+import tdt4140.gr1817.ecosystem.persistence.repositories.GoalRepository;
 import tdt4140.gr1817.ecosystem.persistence.repositories.RestingHeartRateRepository;
 import tdt4140.gr1817.ecosystem.persistence.repositories.ServiceProviderPermissionsRepository;
 import tdt4140.gr1817.ecosystem.persistence.repositories.ServiceProviderRepository;
@@ -10,6 +11,7 @@ import tdt4140.gr1817.ecosystem.persistence.repositories.WorkoutSessionRepositor
 import tdt4140.gr1817.ecosystem.persistence.repositories.improvify.PeriodPlanRepository;
 import tdt4140.gr1817.ecosystem.persistence.repositories.improvify.TrainerRepository;
 import tdt4140.gr1817.ecosystem.persistence.repositories.improvify.WorkoutPlanRepository;
+import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.MySqlGoalRepository;
 import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.MySqlRestingHeartRateRepository;
 import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.MySqlUserRepository;
 import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.MySqlWeightRepository;
@@ -32,6 +34,7 @@ public class MySqlRepositoryModule extends AbstractModule {
         bind(PeriodPlanRepository.class).to(todo());
         bind(TrainerRepository.class).to(todo());
         bind(WorkoutPlanRepository.class).to(todo());
+        bind(GoalRepository.class).to(MySqlGoalRepository.class);
     }
 
     /**
