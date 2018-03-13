@@ -4,12 +4,14 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import tdt4140.gr1817.ecosystem.persistence.data.RestingHeartRate;
 
+import javax.inject.Inject;
 import java.util.Date;
 
 public class RestingHeartRateValidator implements Validator {
 
     private final Gson gson;
 
+    @Inject
     public RestingHeartRateValidator(Gson gson) {
         this.gson = gson;
     }

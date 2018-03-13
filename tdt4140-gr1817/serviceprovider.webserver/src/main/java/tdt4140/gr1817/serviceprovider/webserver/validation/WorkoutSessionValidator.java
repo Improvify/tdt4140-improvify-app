@@ -4,12 +4,14 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import tdt4140.gr1817.ecosystem.persistence.data.WorkoutSession;
 
+import javax.inject.Inject;
 import java.util.Date;
 
 public class WorkoutSessionValidator implements Validator {
 
     private final Gson gson;
 
+    @Inject
     public WorkoutSessionValidator(Gson gson) {
         this.gson = gson;
     }

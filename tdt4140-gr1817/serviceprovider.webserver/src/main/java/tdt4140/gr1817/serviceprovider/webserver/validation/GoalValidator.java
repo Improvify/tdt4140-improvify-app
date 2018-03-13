@@ -4,10 +4,13 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import tdt4140.gr1817.ecosystem.persistence.data.Goal;
 
+import javax.inject.Inject;
+
 public class GoalValidator implements Validator {
 
     private final Gson gson;
 
+    @Inject
     public GoalValidator(Gson gson) {
         this.gson = gson;
     }

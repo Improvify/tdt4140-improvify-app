@@ -4,12 +4,14 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import tdt4140.gr1817.ecosystem.persistence.data.Weight;
 
+import javax.inject.Inject;
 import java.util.Date;
 
 public class WeightValidator implements Validator {
 
     private final Gson gson;
 
+    @Inject
     public WeightValidator(Gson gson) {
         this.gson = gson;
     }
