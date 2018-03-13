@@ -1,0 +1,9 @@
+POST http://localhost:2222/user
+Accept: */*
+Cache-Control: no-cache
+Content-Type: application/json
+
+{"firstName": "Kristian",   "lastName": "rekstad",   "height": 1.85,   "birthDate": "1995-08-08",
+   "username": "krissrex",   "password": "123",   "email": "krirek@stud.ntnu.no" }
+
+###

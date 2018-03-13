@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 
 public class UserValidatorTest {
@@ -53,7 +53,7 @@ public class UserValidatorTest {
     }
 
     @Test
-    public void shouldHaveIllegalID() throws Exception {
+    public void shouldIgnoreIllegalID() throws Exception {
         //Given
         String json = "{\"id\": -1, \"firstName\": \"Sam\", \"lastName\": \"Smith\", \"height\": 182.5, \"birthDate\": \"1999-09-09\", \"username\": \"yolo\", \"password\": \"secret\", \"email\": \"email@domain.no\"}";
 
@@ -61,7 +61,7 @@ public class UserValidatorTest {
         boolean outcome = validator.validate(json);
 
         //Then
-        assertThat(outcome, is(false));
+        assertThat(outcome, is(true));
     }
 
     @Test

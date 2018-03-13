@@ -4,12 +4,14 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import tdt4140.gr1817.ecosystem.persistence.data.User;
 
+import javax.inject.Inject;
 import java.util.Date;
 
 public class UserValidator implements Validator {
 
     private final Gson gson;
 
+    @Inject
     public UserValidator(Gson gson) {
         this.gson = gson;
     }
@@ -24,7 +26,8 @@ public class UserValidator implements Validator {
                     && isValidEmail(user.getEmail())
                     && isValidBirthDate(user.getBirthDate())
                     && isValidHeight(user.getHeight())
-                    && isValidID(user.getId()));
+//                    && isValidID(user.getId())
+            );
 
         } catch (JsonSyntaxException | NullPointerException | NumberFormatException e) {
             return false;
