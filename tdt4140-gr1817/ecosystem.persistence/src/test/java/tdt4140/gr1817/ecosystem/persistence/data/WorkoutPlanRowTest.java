@@ -47,5 +47,6 @@ public class WorkoutPlanRowTest {
         row.setDuration("asdf");
         row.setDuration(":00");
         row.setDuration("10:28:29:");
+        row.setDuration("NOTICE ME STUDASS SENPAI!");
     }
 }
