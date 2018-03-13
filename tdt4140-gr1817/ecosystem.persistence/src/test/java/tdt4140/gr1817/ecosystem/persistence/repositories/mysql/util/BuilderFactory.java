@@ -1,5 +1,6 @@
 package tdt4140.gr1817.ecosystem.persistence.repositories.mysql.util;
 
+import tdt4140.gr1817.ecosystem.persistence.data.Goal;
 import tdt4140.gr1817.ecosystem.persistence.data.RestingHeartRate;
 import tdt4140.gr1817.ecosystem.persistence.data.User;
 import tdt4140.gr1817.ecosystem.persistence.data.Weight;
@@ -58,5 +59,17 @@ public class BuilderFactory {
                 .heartRate(60)
                 .measuredAt(date)
                 .measuredBy(user);
+    }
+
+    public static Goal.GoalBuilder createGoal() {
+
+        final User user = createUser().id(1).build();
+
+        return Goal.builder()
+                .id(1)
+                .description("test")
+                .isCompleted(false)
+                .isCurrent(true)
+                .user(user);
     }
 }

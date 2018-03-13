@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 
 public class GoalValidatorTest {
@@ -29,7 +29,7 @@ public class GoalValidatorTest {
     }
 
     @Test
-    public void shouldLackRequiredFields() throws Exception {
+    public void shouldNotRequireId() throws Exception {
         //Given
         String json = "{\"description\": \"Run 3 km in 10 minutes.\", \"isCompleted\": false, \"isCurrent\": true}";
 
@@ -37,7 +37,7 @@ public class GoalValidatorTest {
         boolean outcome = validator.validate(json);
 
         //Then
-        assertThat(outcome, is(false));
+        assertThat(outcome, is(true));
     }
 
     @Test
@@ -53,7 +53,7 @@ public class GoalValidatorTest {
     }
 
     @Test
-    public void shouldHaveIllegalID() throws Exception {
+    public void shouldIgnoreIllegalID() throws Exception {
         //Given
         String json = "{\"id\": -5, \"description\": \"Run 3 km in 10 minutes.\", \"isCompleted\": false, \"isCurrent\": true}";
 
@@ -61,6 +61,6 @@ public class GoalValidatorTest {
         boolean outcome = validator.validate(json);
 
         //Then
-        assertThat(outcome, is(false));
+        assertThat(outcome, is(true));
     }
 }

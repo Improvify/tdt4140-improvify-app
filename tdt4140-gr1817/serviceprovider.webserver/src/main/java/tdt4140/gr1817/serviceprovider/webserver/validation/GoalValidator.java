@@ -20,7 +20,7 @@ public class GoalValidator implements Validator {
         try {
             Goal goal = gson.fromJson(json, Goal.class);
 
-            return isValidID(goal.getId());
+            return true; //isValidID(goal.getId());
 
         } catch (JsonSyntaxException | NullPointerException | NumberFormatException e) {
             return false;

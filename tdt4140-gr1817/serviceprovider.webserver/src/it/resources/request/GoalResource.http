@@ -1,0 +1,13 @@
+POST http://localhost:2222/goal
+Accept: */*
+Cache-Control: no-cache
+Content-Type: application/json
+
+{
+  "description": "I want to run faster",
+  "isCompleted": false,
+  "isCurrent": true,
+  "user": {"id": 1}
+}
+
+###
