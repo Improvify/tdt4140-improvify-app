@@ -1,0 +1,16 @@
+POST http://localhost:2222/workoutsession
+Accept: */*
+Cache-Control: no-cache
+Content-Type: application/json
+
+{
+  "time": "2018-03-13T09:05:58.647Z",
+  "intensity": 5,
+  "kiloCalories": 750.5,
+  "averageHeartRate": 175.3,
+  "maxHeartRate": 198,
+  "distanceRun": 1337.69,
+  "user": {"id": 1}
+}
+
+###

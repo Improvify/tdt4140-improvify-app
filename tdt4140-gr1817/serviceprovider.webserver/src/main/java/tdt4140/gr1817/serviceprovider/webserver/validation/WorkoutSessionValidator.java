@@ -2,11 +2,13 @@ package tdt4140.gr1817.serviceprovider.webserver.validation;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+import lombok.extern.slf4j.Slf4j;
 import tdt4140.gr1817.ecosystem.persistence.data.WorkoutSession;
 
 import javax.inject.Inject;
 import java.util.Date;
 
+@Slf4j
 public class WorkoutSessionValidator implements Validator {
 
     private final Gson gson;
@@ -22,7 +24,7 @@ public class WorkoutSessionValidator implements Validator {
             WorkoutSession workoutSession = gson.fromJson(json, WorkoutSession.class);
 
             return (isValidDistance(workoutSession.getDistanceRun())
-                    && isValidID(workoutSession.getId())
+//                    && isValidID(workoutSession.getId())
                     && isValidKCal(workoutSession.getKiloCalories())
                     && isValidHeartRate(workoutSession.getAverageHeartRate())
                     && isValidHeartRate(workoutSession.getMaxHeartRate())
@@ -30,6 +32,7 @@ public class WorkoutSessionValidator implements Validator {
                     && isValidIntensity(workoutSession.getIntensity()));
 
         } catch (JsonSyntaxException | NullPointerException | NumberFormatException e) {
+            log.info("Json was invalid: \"{}\"", json, e);
             return false;
         }
     }
