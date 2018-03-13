@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 
 public class WeightValidatorTest {
@@ -53,7 +53,7 @@ public class WeightValidatorTest {
     }
 
     @Test
-    public void shouldHaveIllegalID() throws Exception {
+    public void shouldIgnoreIllegalID() throws Exception {
         //Given
         String json = "{\"id\": -1, \"currentWeight\": 88, \"date\": \"2018-01-09\"}";
 
@@ -61,7 +61,7 @@ public class WeightValidatorTest {
         boolean outcome = validator.validate(json);
 
         //Then
-        assertThat(outcome, is(false));
+        assertThat(outcome, is(true));
     }
 
     @Test

@@ -23,7 +23,8 @@ public class WeightValidator implements Validator {
 
             return (isValidWeight(weight.getCurrentWeight())
                     && isValidDate(weight.getDate())
-                    && isValidID(weight.getId()));
+//                    && isValidID(weight.getId())
+            );
 
         } catch (JsonSyntaxException | NullPointerException | NumberFormatException e) {
             return false;
