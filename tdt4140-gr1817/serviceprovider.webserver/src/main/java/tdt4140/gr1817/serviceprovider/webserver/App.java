@@ -75,7 +75,7 @@ public class App {
     private final Server server;
     private final Injector injector;
 
-    private App(int port, @NonNull Injector injector) {
+    App(int port, @NonNull Injector injector) {
         server = new Server(port);
         this.injector = injector;
     }
