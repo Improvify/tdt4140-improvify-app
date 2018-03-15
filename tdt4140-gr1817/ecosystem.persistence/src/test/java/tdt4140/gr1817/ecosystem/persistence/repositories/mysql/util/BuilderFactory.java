@@ -9,9 +9,11 @@ import tdt4140.gr1817.ecosystem.persistence.data.WorkoutSession;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Random;
 
 public class BuilderFactory {
 
+    public static final Random random = new Random();
 
     public static User.UserBuilder createUser() {
         final Date birthDate = new GregorianCalendar(1995, Calendar.AUGUST, 25).getTime();
@@ -20,7 +22,7 @@ public class BuilderFactory {
                 .firstName("Test")
                 .lastName("Person")
                 .birthDate(birthDate)
-                .username("testuser")
+                .username("testuser-" + random.nextInt()) // Unique value per user
                 .password("123")
                 .email("test@test.com")
                 .height(175.5f);
@@ -31,7 +33,8 @@ public class BuilderFactory {
         final Date time = new GregorianCalendar(2018, Calendar.JANUARY, 4).getTime();
         return WorkoutSession.builder()
                 .id(1)
-                .time(time)
+                .startTime(time)
+                .durationSeconds(60*30)
                 .intensity(2)
                 .kiloCalories(700)
                 .averageHeartRate(180)

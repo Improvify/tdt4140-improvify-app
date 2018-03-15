@@ -19,7 +19,7 @@ public class WorkoutSessionValidatorTest {
     @Test
     public void shouldBeLegalWorkoutSession() throws Exception {
         //Given
-        String json = "{\"id\": 1, \"time\": \"2018-01-09T13:04:23.000Z\", \"intensity\": 6, \"kiloCalories\": 451.5, \"averageHeartRate\": 155, \"maxHeartRate\": 177, \"distanceRun\": 7.8}";
+        String json = "{\"id\": 1, \"startTime\": \"2018-01-09T13:04:23.000Z\", \"intensity\": 6, \"kiloCalories\": 451.5, \"averageHeartRate\": 155, \"maxHeartRate\": 177, \"distanceRun\": 7.8, \"durationSeconds\": 3600}";
 
         //When
         boolean outcome = validator.validate(json);
@@ -31,7 +31,7 @@ public class WorkoutSessionValidatorTest {
     @Test
     public void shouldLackRequiredFields() throws Exception {
         //Given
-        String json = "{\"id\": 1, \"intensity\": 6, \"kiloCalories\": 451.5, \"averageHeartRate\": 155, \"maxHeartRate\": 177, \"distanceRun\": 7.8}";
+        String json = "{\"id\": 1, \"intensity\": 6, \"kiloCalories\": 451.5, \"averageHeartRate\": 155, \"maxHeartRate\": 177, \"distanceRun\": 7.8, \"durationSeconds\": 3600}";
 
         //When
         boolean outcome = validator.validate(json);
@@ -55,7 +55,7 @@ public class WorkoutSessionValidatorTest {
     @Test
     public void shouldIgnoreIllegalID() throws Exception {
         //Given
-        String json = "{\"id\": -1, \"time\": \"2018-01-09T13:04:23.000Z\", \"intensity\": 6, \"kiloCalories\": 451.5, \"averageHeartRate\": 155, \"maxHeartRate\": 177, \"distanceRun\": 7.8}";
+        String json = "{\"id\": -1, \"startTime\": \"2018-01-09T13:04:23.000Z\", \"intensity\": 6, \"kiloCalories\": 451.5, \"averageHeartRate\": 155, \"maxHeartRate\": 177, \"distanceRun\": 7.8, \"durationSeconds\": 3600}";
 
         //When
         boolean outcome = validator.validate(json);
@@ -67,7 +67,7 @@ public class WorkoutSessionValidatorTest {
     @Test
     public void shouldHaveIllegalTime() throws Exception {
         //Given
-        String json = "{\"id\": 1, \"time\": \"3018-01-09T13:04:23.000Z\", \"intensity\": 6, \"kiloCalories\": 451.5, \"averageHeartRate\": 155, \"maxHeartRate\": 177, \"distanceRun\": 7.8}";
+        String json = "{\"id\": 1, \"startTime\": \"3018-01-09T13:04:23.000Z\", \"intensity\": 6, \"kiloCalories\": 451.5, \"averageHeartRate\": 155, \"maxHeartRate\": 177, \"distanceRun\": 7.8, \"durationSeconds\": 3600}";
 
         //When
         boolean outcome = validator.validate(json);
@@ -79,8 +79,8 @@ public class WorkoutSessionValidatorTest {
     @Test
     public void shouldHaveIllegalIntensity() throws Exception {
         //Given
-        String tooLowIntensityJson = "{\"id\": 1, \"time\": \"2018-01-09T13:04:23.000Z\", \"intensity\": -4, \"kiloCalories\": 451.5, \"averageHeartRate\": 155, \"maxHeartRate\": 177, \"distanceRun\": 7.8}";
-        String tooBigIntensityJson = "{\"id\": 1, \"time\": \"2018-01-09T13:04:23.000Z\", \"intensity\": 9000, \"kiloCalories\": 451.5, \"averageHeartRate\": 155, \"maxHeartRate\": 177, \"distanceRun\": 7.8}";
+        String tooLowIntensityJson = "{\"id\": 1, \"startTime\": \"2018-01-09T13:04:23.000Z\", \"intensity\": -4, \"kiloCalories\": 451.5, \"averageHeartRate\": 155, \"maxHeartRate\": 177, \"distanceRun\": 7.8, \"durationSeconds\": 3600}";
+        String tooBigIntensityJson = "{\"id\": 1, \"startTime\": \"2018-01-09T13:04:23.000Z\", \"intensity\": 9000, \"kiloCalories\": 451.5, \"averageHeartRate\": 155, \"maxHeartRate\": 177, \"distanceRun\": 7.8, \"durationSeconds\": 3600}";
 
         //When
         boolean outcomeTooLowIntensity = validator.validate(tooLowIntensityJson);
@@ -94,7 +94,7 @@ public class WorkoutSessionValidatorTest {
     @Test
     public void shouldHaveIllegalKcal() throws Exception {
         //Given
-        String json = "{\"id\": 1, \"time\": \"2018-01-09T13:04:23.000Z\", \"intensity\": 6, \"kiloCalories\": -1, \"averageHeartRate\": 155, \"maxHeartRate\": 177, \"distanceRun\": 7.8}";
+        String json = "{\"id\": 1, \"startTime\": \"2018-01-09T13:04:23.000Z\", \"intensity\": 6, \"kiloCalories\": -1, \"averageHeartRate\": 155, \"maxHeartRate\": 177, \"distanceRun\": 7.8, \"durationSeconds\": 3600}";
 
         //When
         boolean outcome = validator.validate(json);
@@ -106,8 +106,8 @@ public class WorkoutSessionValidatorTest {
     @Test
     public void shouldHaveIllegalHeartRate() throws Exception {
         //Given
-        String averageHeartRateJson = "{\"id\": 1, \"time\": \"2018-01-09T13:04:23.000Z\", \"intensity\": 6, \"kiloCalories\": 451.5, \"averageHeartRate\": -155, \"maxHeartRate\": 177, \"distanceRun\": 7.8}";
-        String maxHeartRateJson = "{\"id\": 1, \"time\": \"2018-01-09T13:04:23.000Z\", \"intensity\": 6, \"kiloCalories\": 451.5, \"averageHeartRate\": 155, \"maxHeartRate\": -177, \"distanceRun\": 7.8}";
+        String averageHeartRateJson = "{\"id\": 1, \"startTime\": \"2018-01-09T13:04:23.000Z\", \"intensity\": 6, \"kiloCalories\": 451.5, \"averageHeartRate\": -155, \"maxHeartRate\": 177, \"distanceRun\": 7.8, \"durationSeconds\": 3600}";
+        String maxHeartRateJson = "{\"id\": 1, \"startTime\": \"2018-01-09T13:04:23.000Z\", \"intensity\": 6, \"kiloCalories\": 451.5, \"averageHeartRate\": 155, \"maxHeartRate\": -177, \"distanceRun\": 7.8, \"durationSeconds\": 3600}";
 
         //When
         boolean outcomeAverageHeartRate = validator.validate(averageHeartRateJson);
@@ -121,7 +121,7 @@ public class WorkoutSessionValidatorTest {
     @Test
     public void shouldHaveIllegalDistance() throws Exception {
         //Given
-        String json = "{\"id\": 1, \"time\": \"2018-01-09T13:04:23.000Z\", \"intensity\": 6, \"kiloCalories\": 451.5, \"averageHeartRate\": 155, \"maxHeartRate\": 177, \"distanceRun\": -1}";
+        String json = "{\"id\": 1, \"startTime\": \"2018-01-09T13:04:23.000Z\", \"intensity\": 6, \"kiloCalories\": 451.5, \"averageHeartRate\": 155, \"maxHeartRate\": 177, \"distanceRun\": -1, \"durationSeconds\": 3600}";
 
         //When
         boolean outcome = validator.validate(json);

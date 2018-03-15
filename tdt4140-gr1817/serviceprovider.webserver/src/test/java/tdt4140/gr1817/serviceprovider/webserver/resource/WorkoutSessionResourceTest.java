@@ -75,6 +75,6 @@ public class WorkoutSessionResourceTest {
         calendar.set(Calendar.MILLISECOND, 0); // JSON doesnt serialize milliseconds
         Date date = calendar.getTime();
         User user = new User(1, "hei", "bu", 2.5f, date, "hellu", "hshs", "123@hotmail.com");
-        return new WorkoutSession(1, date, 1, 12.5f, 140.4f, 170.3f, 12.3f, user);
+        return new WorkoutSession(1, date, 1, 12.5f, 140.4f, 170.3f, 12.3f, 60*30, user);
     }
 }
