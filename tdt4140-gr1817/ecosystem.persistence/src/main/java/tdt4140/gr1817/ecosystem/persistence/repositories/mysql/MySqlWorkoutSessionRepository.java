@@ -40,18 +40,18 @@ public class MySqlWorkoutSessionRepository implements WorkoutSessionRepository {
         This code is ugly, please find a cleaner way to do this.
          */
         try {
-            String insertSql = "INSERT INTO workoutsession(id, time, intensity, KCal, "
-                    + "avgheartrate, maxheartrate, distancerun, loggedBy) "
-                    + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            String insertSql = "INSERT INTO workoutsession(id, startTime, intensity, KCal, "
+                    + "avgheartrate, maxheartrate, distancerun, loggedBy, durationSeconds) "
+                    + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
             try (
                     Connection connection = this.connection.get();
                     PreparedStatement preparedStatement = connection.prepareStatement(insertSql)
             ) {
-                setParameters(preparedStatement, workoutSession.getId(), workoutSession.getTime(),
+                setParameters(preparedStatement, workoutSession.getId(), workoutSession.getStartTime(),
                         workoutSession.getIntensity(), workoutSession.getKiloCalories(),
                         workoutSession.getAverageHeartRate(), workoutSession.getMaxHeartRate(),
-                        workoutSession.getDistanceRun(), workoutSession.getUser().getId());
-
+                        workoutSession.getDistanceRun(), workoutSession.getUser().getId(),
+                        workoutSession.getDurationSeconds());
                 preparedStatement.execute();
             }
         } catch (SQLException e) {
@@ -68,23 +68,24 @@ public class MySqlWorkoutSessionRepository implements WorkoutSessionRepository {
 
     @Override
     public void update(WorkoutSession session) {
-        Date time = session.getTime();
+        Date startTime = session.getStartTime();
         int intensity = session.getIntensity();
         float kiloCalories = session.getKiloCalories();
         float averageHeartRate = session.getAverageHeartRate();
         float maxHeartRate = session.getMaxHeartRate();
         float distanceRun = session.getDistanceRun();
+        int durationSeconds = session.getDurationSeconds();
         User user = session.getUser();
 
-        String updateWorkoutSession = "UPDATE Workoutsession SET time = ?, intensity = ?, kCal = ?, avgHeartRate = ?,"
-                + " maxHeartRate = ?, distanceRun = ?, loggedBy = ?"
+        String updateWorkoutSession = "UPDATE Workoutsession SET startTime = ?, intensity = ?, kCal = ?,"
+                + " avgHeartRate = ?, maxHeartRate = ?, distanceRun = ?, loggedBy = ?, durationSeconds = ?"
                 + "WHERE id = ?";
         try (
                 Connection connection = this.connection.get();
                 PreparedStatement pst = connection.prepareStatement(updateWorkoutSession)
         ) {
-            setParameters(pst, time, intensity, kiloCalories, averageHeartRate, maxHeartRate, distanceRun,
-                    session.getUser().getId(), session.getId());
+            setParameters(pst, startTime, intensity, kiloCalories, averageHeartRate, maxHeartRate, distanceRun,
+                    user.getId(), durationSeconds, session.getId());
             pst.execute();
         } catch (SQLException e) {
             throw new RuntimeException("Update of workout session failed", e);
@@ -144,17 +145,19 @@ public class MySqlWorkoutSessionRepository implements WorkoutSessionRepository {
     private static WorkoutSession createWorkoutSessionFromResult(ResultSet resultSet, UserRepository userRepository)
             throws SQLException {
         int id = resultSet.getInt("id");
-        Date time = new Date(resultSet.getDate("time").getTime());
+        Date startTime = new Date(resultSet.getDate("startTime").getTime());
         final int intensity = resultSet.getInt("intensity");
         final float kcal = resultSet.getFloat("kcal");
         final int avgHeartRate = resultSet.getInt("avgHeartRate");
         final int maxHeartRate = resultSet.getInt("maxHeartRate");
         final int distanceRun = resultSet.getInt("distanceRun");
         final int loggedByUserId = resultSet.getInt("loggedBy");
+        int durationSeconds = resultSet.getInt("durationSeconds");
 
         final User user = userRepository.query(new GetUserByIdSpecification(loggedByUserId)).get(0);
 
-        return new WorkoutSession(id, time, intensity, kcal, avgHeartRate, maxHeartRate, distanceRun, user);
+        return new WorkoutSession(id, startTime, intensity, kcal, avgHeartRate, maxHeartRate,
+                distanceRun, durationSeconds, user);
     }
 
     private static void setParameters(PreparedStatement statement, Object... parameters) throws SQLException {

@@ -17,20 +17,22 @@ public class WorkoutSession {
     public static final int INTENSITY_MAXIMUM = 10;
 
     private int id;
-    private Date time;
+    private Date startTime;
     private int intensity;
     private float kiloCalories;
     private float averageHeartRate;
     private float maxHeartRate;
     private float distanceRun;
+    private int durationSeconds;
     private User user;
 
     public WorkoutSession(int id, Date time, int intensity, float kiloCalories, float averageHeartRate,
-                          float maxHeartRate, float distanceRun, User user) {
+                          float maxHeartRate, float distanceRun, int durationSeconds, User user) {
         validateIntensity(intensity);
 
         this.id = id;
-        this.time = time;
+        this.startTime = time;
+        this.durationSeconds = durationSeconds;
         this.intensity = intensity;
         this.kiloCalories = kiloCalories;
         this.averageHeartRate = averageHeartRate;

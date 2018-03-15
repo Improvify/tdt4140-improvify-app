@@ -28,7 +28,8 @@ public class WorkoutSessionValidator implements Validator {
                     && isValidKCal(workoutSession.getKiloCalories())
                     && isValidHeartRate(workoutSession.getAverageHeartRate())
                     && isValidHeartRate(workoutSession.getMaxHeartRate())
-                    && isValidDate(workoutSession.getTime())
+                    && isValidDate(workoutSession.getStartTime())
+                    && isValidDuration(workoutSession.getDurationSeconds())
                     && isValidIntensity(workoutSession.getIntensity()));
 
         } catch (JsonSyntaxException | NullPointerException | NumberFormatException e) {
@@ -55,6 +56,16 @@ public class WorkoutSessionValidator implements Validator {
      */
     private boolean isValidID(int id) {
         return id > 0;
+    }
+
+    /**
+     * Checks that the duration is positive.
+     *
+     * @param durationSeconds The duration to be checked.
+     * @return If the duration is valid.
+     */
+    private boolean isValidDuration(int durationSeconds) {
+        return durationSeconds > 0;
     }
 
     /**

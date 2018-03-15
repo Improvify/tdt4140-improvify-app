@@ -190,6 +190,7 @@ public class HsqldbRule extends ExternalResource {
                             .replace("TIMESTAMP NOT NULL DEFAULT NOW()", "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
                             .replace("TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP", "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
                             .replace("BOOLEAN NOT NULL DEFAULT 0", "BOOLEAN DEFAULT FALSE")
+                            .replace("UNIQUE INDEX username_UNIQUE (username ASC)", "CONSTRAINT username_UNIQUE UNIQUE (username)")
                             .replaceAll("FLOAT\\(\\d+,\\d+\\)", "FLOAT")
                             .replaceAll("COMMENT (= )*'[^']*'", "");
                 });
