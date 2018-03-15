@@ -18,7 +18,6 @@ public class WorkoutPlanRowTest {
 
         row.setDuration("17:15:37");
         assertEquals("PT17H15M37S", row.getDuration().toString());
-
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -49,4 +48,5 @@ public class WorkoutPlanRowTest {
         row.setDuration("10:28:29:");
         row.setDuration("NOTICE ME STUDASS SENPAI!");
     }
+
 }

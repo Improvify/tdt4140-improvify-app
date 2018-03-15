@@ -15,4 +15,12 @@ public class WorkoutPlan {
     private int id;
     private String description;
     private User createdForUser;
+    private PeriodPlan parentPlan;
+    private List<WorkoutPlanRow> rows;
+
+
+    public void addRow(WorkoutPlanRow row) {
+        rows.add(row);
+    }
+
 }

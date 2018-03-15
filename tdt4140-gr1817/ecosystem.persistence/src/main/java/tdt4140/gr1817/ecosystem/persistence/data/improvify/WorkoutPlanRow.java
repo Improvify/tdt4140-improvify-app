@@ -30,21 +30,8 @@ public class WorkoutPlanRow {
     private String intensity;
     private String comment;
 
-    public void setIntensity(String stringFromField) {
-        if (stringFromField.startsWith("p")) {
-            setPace(stringFromField);
-        } else if (stringFromField.startsWith("h")) {
-            setHeartRateZone(stringFromField);
-        }
-    }
 
-    private void setPace(String stringFromField) {
 
-    }
-
-    private void setHeartRateZone(String stringFromField) {
-
-    }
 
     public void setDuration(String stringFromField) {
     /**
