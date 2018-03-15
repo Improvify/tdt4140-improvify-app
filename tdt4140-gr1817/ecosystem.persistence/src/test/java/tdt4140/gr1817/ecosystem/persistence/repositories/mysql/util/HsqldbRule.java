@@ -6,7 +6,8 @@ import org.hsqldb.server.Server;
 import org.junit.Rule;
 import org.junit.rules.ExternalResource;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -73,23 +74,6 @@ public class HsqldbRule extends ExternalResource {
      */
     @Override
     protected void before() throws Throwable {
-        server = new Server();
-        if (!logStatements) {
-            server.setLogWriter(new PrintWriter(new OutputStream() {
-                @Override
-                public void write(int b) throws IOException {
-                    // no-op
-                }
-            }));
-        }
-        server.setTrace(logStatements);
-
-        server.setAddress(host);
-        server.setPort(port);
-        server.setDatabaseName(0, "ecosystem");
-        server.setDatabasePath(0, "mem:ecosystem"); // in-memory database
-        server.start();
-
         loadSchema();
     }
 
@@ -99,7 +83,6 @@ public class HsqldbRule extends ExternalResource {
     @Override
     protected void after() {
         clearData();
-        server.shutdown();
     }
 
     public void clearData() {
@@ -112,12 +95,17 @@ public class HsqldbRule extends ExternalResource {
 
     public Connection getConnection() {
         try {
-            return DriverManager.getConnection(String.format("jdbc:hsqldb:hsql://%s:%s/ecosystem", host, port),
-                    HSQLDB_DEFAULT_USER, HSQLDB_DEFAULT_PASSWORD);
+            String url = "jdbc:hsqldb:mem:ecosystem;sql.syntax_mys=true";
+            if (logStatements) {
+                url += ";hsqldb.sqllog=3";
+            }
+            return DriverManager.getConnection(url, HSQLDB_DEFAULT_USER, HSQLDB_DEFAULT_PASSWORD);
         } catch (SQLException e) {
             throw new RuntimeException("Unable to get HSQLDB connection", e);
         }
     }
+
+    private static String[] statementCache = null;
 
     /**
      * Loads the databse schema into the database
@@ -127,9 +115,12 @@ public class HsqldbRule extends ExternalResource {
                 Connection connection = getConnection();
                 Statement statement = connection.createStatement()
         ) {
-            final String sql = readSchemaSql();
-            final String[] statements = sql.split(";");
-            for (String statementSql : statements) {
+            if (statementCache == null) {
+                final String sql = readSchemaSql();
+                final String[] statements = sql.split(";");
+                statementCache = statements;
+            }
+            for (String statementSql : statementCache) {
 //                System.out.println("Executing statement: " + statementSql);
                 statement.execute(statementSql);
             }
@@ -197,6 +188,7 @@ public class HsqldbRule extends ExternalResource {
                             .replace("TINYINT(1)", "BOOLEAN")
                             .replace("TEXT", "LONGVARCHAR")
                             .replace("TIMESTAMP NOT NULL DEFAULT NOW()", "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+                            .replace("TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP", "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
                             .replace("BOOLEAN NOT NULL DEFAULT 0", "BOOLEAN DEFAULT FALSE")
                             .replaceAll("FLOAT\\(\\d+,\\d+\\)", "FLOAT")
                             .replaceAll("COMMENT (= )*'[^']*'", "");
