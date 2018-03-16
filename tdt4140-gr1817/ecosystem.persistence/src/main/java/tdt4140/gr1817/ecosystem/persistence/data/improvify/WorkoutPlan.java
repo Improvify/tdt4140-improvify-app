@@ -23,4 +23,8 @@ public class WorkoutPlan {
         rows.add(row);
     }
 
+    public void removeRow(int index) {
+        rows.remove(index);
+    }
+
 }
