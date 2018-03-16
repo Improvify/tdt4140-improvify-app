@@ -12,9 +12,9 @@ public class GpsFile {
     private static int hoursInDay = 24;
 
     private LocalDateTime startTime;
-    private int averageHeartRate;
-    private int maxHeartRate;
-    private int distanceRun;
+    private float averageHeartRate;
+    private float maxHeartRate;
+    private float distanceRun;
     private int duration; //in seconds
 
     public GpsFile(ArrayList<GpsPoint> pointList) {

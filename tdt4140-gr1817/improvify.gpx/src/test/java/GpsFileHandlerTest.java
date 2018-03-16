@@ -7,7 +7,9 @@ import tdt4140.gr1817.improvify.gpx.GpsFileHandler;
 import java.io.File;
 import java.io.IOException;
 
+import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 public class GpsFileHandlerTest {
     String path;
@@ -28,8 +30,8 @@ public class GpsFileHandlerTest {
         //
         GpsFile gpsFile = GpsFileHandler.generateGpsFile(path);
 
-        assertEquals(141,gpsFile.getAverageHeartRate());
-        assertEquals(164,gpsFile.getMaxHeartRate());
-        assertEquals(9111,gpsFile.getDistanceRun());
+        assertThat((float)141.0,is(gpsFile.getAverageHeartRate()));
+        assertThat((float)164.0,is(gpsFile.getMaxHeartRate()));
+        assertThat((float) 9111,is(gpsFile.getDistanceRun()));
     }
 }

@@ -6,7 +6,9 @@ import tdt4140.gr1817.improvify.gpx.GpsPoint;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
+import static com.sun.org.apache.xerces.internal.util.PropertyState.is;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 public class GpsFileTest {
     ArrayList<GpsPoint> points;
@@ -31,11 +33,12 @@ public class GpsFileTest {
 
     @Test
     public void shouldHaveCorrectAverageHeartRate(){
-        assertEquals(121,file.getAverageHeartRate());
+        assertEquals(121,(int)file.getAverageHeartRate());
     }
     @Test
     public void shouldHaveCorrectMaximumHeartRate(){
-        assertEquals(122,file.getMaxHeartRate());
+
+        assertEquals(122,(int)file.getMaxHeartRate());
     }
     @Test
     public void shouldHaveCorrectDuration(){

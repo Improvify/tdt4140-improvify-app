@@ -1,6 +1,8 @@
 package tdt4140.gr1817.ecosystem.persistence.data;
 
 import org.junit.Test;
+import tdt4140.gr1817.improvify.gpx.GpsFile;
+import tdt4140.gr1817.improvify.gpx.GpsFileHandler;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -43,5 +45,15 @@ public class WorkoutSessionTest {
 
         // Then
         assertThat(session.getIntensity(), is(WorkoutSession.INTENSITY_MAXIMUM));
+    }
+    @Test
+    public void shouldCreateWorkoutSessionFromGpsFile(){
+        //When
+        GpsFile gpsFile = GpsFileHandler.generateGpsFile("src/test/resources/exampleactivity.gpx");
+        WorkoutSession workoutSession = new WorkoutSession(0,5,null,gpsFile);
+
+        //Then
+        assertThat(workoutSession.getDistanceRun(),is(gpsFile.getDistanceRun()));
+        assertThat(workoutSession.getAverageHeartRate(),is(gpsFile.getAverageHeartRate()));
     }
 }

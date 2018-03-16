@@ -45,6 +45,11 @@
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-all</artifactId>
         </dependency>
+        <dependency>
+            <groupId>tdt4140-gr1817</groupId>
+            <artifactId>tdt4140-gr1817.improvify.gpx</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
 
     </dependencies>
 
