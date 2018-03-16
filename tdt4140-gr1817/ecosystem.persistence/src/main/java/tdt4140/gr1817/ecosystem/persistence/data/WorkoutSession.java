@@ -5,7 +5,6 @@ import lombok.Data;
 import tdt4140.gr1817.improvify.gpx.GpsFile;
 
 import java.time.LocalDateTime;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
@@ -50,7 +49,8 @@ public class WorkoutSession {
         //TODO: Handle time conversion
         LocalDateTime fileDate = gpsFile.getStartTime();
 
-        Date date = new GregorianCalendar(fileDate.getYear(),fileDate.getMonthValue(),fileDate.getDayOfMonth()).getTime();
+        Date date = new GregorianCalendar(fileDate.getYear(),
+                fileDate.getMonthValue(), fileDate.getDayOfMonth()).getTime();
         this.startTime = date;
         this.durationSeconds = gpsFile.getDuration();
         this.averageHeartRate = gpsFile.getAverageHeartRate();
