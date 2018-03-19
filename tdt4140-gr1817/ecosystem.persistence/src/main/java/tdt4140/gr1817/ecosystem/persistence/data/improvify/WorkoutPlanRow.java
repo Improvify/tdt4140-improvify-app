@@ -30,26 +30,19 @@ public class WorkoutPlanRow {
     private String intensity;
     private String comment;
 
-
-
-
-    public void setDuration(String stringFromField) {
-    /**
-     * The {@link WorkoutPlan} where this row exists in.
-     */
     private WorkoutPlan workoutPlan;
 
     public void setDurationSeconds(String stringFromField) {
         //Enforce hh:mm:ss format
-        if(!stringFromField.matches("^([0-9][0-9])(:[0-9][0-9]){0,2}$")){
+        if (!stringFromField.matches("^([0-9][0-9])(:[0-9][0-9]){0,2}$")) {
             throw new IllegalArgumentException("Duration input must match hh:mm:ss format");
         }
 
 
         //Convert human-readable string to ISO-8601 standard
-        String initialTimeArray[] = stringFromField.split(":");
+        String[] initialTimeArray = stringFromField.split(":");
 
-        String timeArray[] = {"00", "00", "00"};
+        String[] timeArray = {"00", "00", "00"};
 
         if (initialTimeArray.length == 1) {
             timeArray[2] = initialTimeArray[0];
@@ -72,8 +65,8 @@ public class WorkoutPlanRow {
         }
 
         this.durationSeconds = Integer.parseInt(timeArray[0])
-                *3600+Integer.parseInt(timeArray[1])
-                *60+Integer.parseInt(timeArray[2]);
+                * 3600 + Integer.parseInt(timeArray[1])
+                * 60 + Integer.parseInt(timeArray[2]);
 
     }
 

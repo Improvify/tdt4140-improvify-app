@@ -1,6 +1,5 @@
 package tdt4140.gr1817.ecosystem.persistence.data;
 
-import org.junit.Before;
 import org.junit.Test;
 import tdt4140.gr1817.ecosystem.persistence.data.improvify.WorkoutPlan;
 import tdt4140.gr1817.ecosystem.persistence.data.improvify.WorkoutPlanRow;

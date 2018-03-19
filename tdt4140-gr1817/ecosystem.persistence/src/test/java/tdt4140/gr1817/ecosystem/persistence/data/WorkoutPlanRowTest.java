@@ -13,40 +13,40 @@ public class WorkoutPlanRowTest {
     public void shouldSuccessfullySetDuration() {
 
         WorkoutPlanRow row = new WorkoutPlanRow();
-        row.setDuration("15:00");
-        assertEquals("PT15M", row.getDuration().toString());
+        row.setDurationSeconds("15:00");
+        assertEquals(15*60, row.getDurationSeconds());
 
-        row.setDuration("17:15:37");
-        assertEquals("PT17H15M37S", row.getDuration().toString());
+        row.setDurationSeconds("17:15:37");
+        assertEquals(17*3600+15*60+37, row.getDurationSeconds());
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void durationSetterShouldFailWhenMoreThan59Seconds() {
 
         WorkoutPlanRow row = new WorkoutPlanRow();
-        row.setDuration("75");
+        row.setDurationSeconds("75");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void durationSetterShouldFailWhenMoreThan59Minutes() {
         WorkoutPlanRow row = new WorkoutPlanRow();
-        row.setDuration("75:00");
+        row.setDurationSeconds("75:00");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void durationSetterShouldFailWhenMoreThan23Hours() {
         WorkoutPlanRow row = new WorkoutPlanRow();
-        row.setDuration("34:33:15");
+        row.setDurationSeconds("34:33:15");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void durationSetterShouldFailWhenIncorrectFormat()
     {
         WorkoutPlanRow row = new WorkoutPlanRow();
-        row.setDuration("asdf");
-        row.setDuration(":00");
-        row.setDuration("10:28:29:");
-        row.setDuration("NOTICE ME STUDASS SENPAI!");
+        row.setDurationSeconds("asdf");
+        row.setDurationSeconds(":00");
+        row.setDurationSeconds("10:28:29:");
+        row.setDurationSeconds("NOTICE ME STUDASS SENPAI!");
     }
 
 }
