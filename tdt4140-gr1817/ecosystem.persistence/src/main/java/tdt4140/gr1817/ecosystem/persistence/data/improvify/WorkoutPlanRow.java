@@ -30,8 +30,44 @@ public class WorkoutPlanRow {
     private String intensity;
     private String comment;
 
-    /**
-     * The {@link WorkoutPlan} where this row exists in.
-     */
     private WorkoutPlan workoutPlan;
+
+    public void setDurationSeconds(String stringFromField) {
+        //Enforce hh:mm:ss format
+        if (!stringFromField.matches("^([0-9][0-9])(:[0-9][0-9]){0,2}$")) {
+            throw new IllegalArgumentException("Duration input must match hh:mm:ss format");
+        }
+
+
+        //Convert human-readable string to ISO-8601 standard
+        String[] initialTimeArray = stringFromField.split(":");
+
+        String[] timeArray = {"00", "00", "00"};
+
+        if (initialTimeArray.length == 1) {
+            timeArray[2] = initialTimeArray[0];
+        } else if (initialTimeArray.length == 2) {
+            timeArray[2] = initialTimeArray[1];
+            timeArray[1] = initialTimeArray[0];
+        } else {
+            timeArray = initialTimeArray;
+        }
+
+        //Check that slot values are within 23:59:59 bounds
+        if (Integer.parseInt(timeArray[0]) > 23) {
+            throw new IllegalArgumentException("Duration hour field cannot be more than 23");
+        }
+        if (Integer.parseInt(timeArray[1]) > 59) {
+            throw new IllegalArgumentException("Duration minute field cannot be more than 59");
+        }
+        if (Integer.parseInt(timeArray[2]) > 59) {
+            throw new IllegalArgumentException("Duration second field cannot be more than 59");
+        }
+
+        this.durationSeconds = Integer.parseInt(timeArray[0])
+                * 3600 + Integer.parseInt(timeArray[1])
+                * 60 + Integer.parseInt(timeArray[2]);
+
+    }
+
 }
