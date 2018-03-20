@@ -2,6 +2,8 @@ package tdt4140.gr1817.ecosystem.persistence.repositories.mysql.util;
 
 import tdt4140.gr1817.ecosystem.persistence.data.Goal;
 import tdt4140.gr1817.ecosystem.persistence.data.RestingHeartRate;
+import tdt4140.gr1817.ecosystem.persistence.data.ServiceProvider;
+import tdt4140.gr1817.ecosystem.persistence.data.ServiceProviderPermissions;
 import tdt4140.gr1817.ecosystem.persistence.data.User;
 import tdt4140.gr1817.ecosystem.persistence.data.Weight;
 import tdt4140.gr1817.ecosystem.persistence.data.WorkoutSession;
@@ -95,5 +97,28 @@ public class BuilderFactory {
                 .intensity("0.8 MAX hr")
                 .comment("Don't let your dreams be memes")
                 .workoutPlan(workoutPlan);
+    }
+
+    public static ServiceProvider.ServiceProviderBuilder createServiceProvider() {
+        return ServiceProvider.builder()
+                .id(1)
+                .name("test");
+    }
+
+    public static ServiceProviderPermissions.ServiceProviderPermissionsBuilder createServiceProviderPermissions() {
+        final User user = createUser().id(1).build();
+        final ServiceProvider serviceProvider = createServiceProvider().id(1).build();
+
+        return ServiceProviderPermissions.builder()
+                .user(user)
+                .serviceProvider(serviceProvider)
+                .weight(false)
+                .height(false)
+                .email(false)
+                .name(false)
+                .username(false)
+                .restingHeartRate(false)
+                .workoutSession(false)
+                .birthDate(false);
     }
 }

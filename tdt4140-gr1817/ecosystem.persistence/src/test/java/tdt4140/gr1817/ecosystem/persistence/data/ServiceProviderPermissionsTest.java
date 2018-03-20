@@ -14,7 +14,7 @@ public class ServiceProviderPermissionsTest {
 
     @Test(expected = NullPointerException.class)
     public void constructorShouldThrowOnNullUser() throws Exception {
-        ServiceProvider serviceProvider = new ServiceProvider("");
+        ServiceProvider serviceProvider = new ServiceProvider(1, "");
         new ServiceProviderPermissions(null, serviceProvider);
     }
 
