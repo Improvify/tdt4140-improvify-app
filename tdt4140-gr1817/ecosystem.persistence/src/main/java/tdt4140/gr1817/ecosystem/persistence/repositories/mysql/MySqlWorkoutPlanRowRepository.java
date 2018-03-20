@@ -2,16 +2,21 @@ package tdt4140.gr1817.ecosystem.persistence.repositories.mysql;
 
 import lombok.extern.slf4j.Slf4j;
 import tdt4140.gr1817.ecosystem.persistence.Specification;
+import tdt4140.gr1817.ecosystem.persistence.data.improvify.WorkoutPlan;
 import tdt4140.gr1817.ecosystem.persistence.data.improvify.WorkoutPlanRow;
 
 import tdt4140.gr1817.ecosystem.persistence.repositories.WorkoutPlanRowRepository;
+import tdt4140.gr1817.ecosystem.persistence.repositories.improvify.WorkoutPlanRepository;
+import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.specification.GetWorkoutPlanByIdSpecification;
+import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.specification.SqlSpecification;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -19,17 +24,19 @@ import java.util.List;
 public class MySqlWorkoutPlanRowRepository implements WorkoutPlanRowRepository {
 
     private Provider<Connection> connection;
+    private WorkoutPlanRepository workoutPlanRepository;
 
     @Inject
-    public MySqlWorkoutPlanRowRepository(Provider<Connection> connection) {
+    public MySqlWorkoutPlanRowRepository(Provider<Connection> connection, WorkoutPlanRepository workoutPlanRepository) {
         this.connection = connection;
+        this.workoutPlanRepository = workoutPlanRepository;
     }
 
     @Override
     public void add(WorkoutPlanRow workoutPlanRow) {
 
         try {
-            String insertSql = "INSERT INTO workoutplanrow(id, description, durationSeconds, intensity, `comment`,"
+            String insertSql = "INSERT INTO workoutplanrow(id, description, durationSeconds, intensity, comment,"
                     + " workoutplan_id)"
                     + "VALUES(?,?,?,?,?,?)";
             try (
@@ -37,8 +44,8 @@ public class MySqlWorkoutPlanRowRepository implements WorkoutPlanRowRepository {
                     PreparedStatement preparedStatement = connection.prepareStatement(insertSql)) {
 
                 setParameters(preparedStatement, workoutPlanRow.getId(), workoutPlanRow.getDescription(),
-                        workoutPlanRow.getDuration(), workoutPlanRow.getIntensity(), workoutPlanRow.getComment(),
-                        workoutPlanRow.getWorkoutplanID());
+                        workoutPlanRow.getDurationSeconds(), workoutPlanRow.getIntensity(), workoutPlanRow.getComment(),
+                        workoutPlanRow.getWorkoutPlan().getId());
 
                 preparedStatement.execute();
             }
@@ -58,10 +65,10 @@ public class MySqlWorkoutPlanRowRepository implements WorkoutPlanRowRepository {
     @Override
     public void update(WorkoutPlanRow item) {
         String description = item.getDescription();
-        Duration duration = item.getDuration();
+        int duration = item.getDurationSeconds();
         String intensity = item.getIntensity();
         String comment = item.getComment();
-        int workoutplanID = item.getWorkoutplanID();
+        int workoutplanID = item.getWorkoutPlan().getId();
 
         String updateWorkoutPlanRowSql = "UPDATE workoutplanrow SET description = ?,"
                 + " durationseconds= ?, intensity = ?, `comment` = ?, workoutplan_id = ?";
@@ -101,12 +108,40 @@ public class MySqlWorkoutPlanRowRepository implements WorkoutPlanRowRepository {
 
     @Override
     public void remove(Specification specification) {
-
+        List<WorkoutPlanRow> toRemove = query(specification);
+        remove(toRemove);
     }
 
     @Override
     public List<WorkoutPlanRow> query(Specification specification) {
-        return null;
+        SqlSpecification sqlSpecification = (SqlSpecification) specification;
+        try (
+                Connection connection = this.connection.get();
+                PreparedStatement preparedStatement = sqlSpecification.toStatement(connection);
+                ResultSet resultSet = preparedStatement.executeQuery()
+        ) {
+            ArrayList<WorkoutPlanRow> results = new ArrayList<>();
+            while (resultSet.next()) {
+                WorkoutPlanRow workoutPlanRow = createFromResultSet(resultSet, workoutPlanRepository);
+                results.add(workoutPlanRow);
+            }
+            return results;
+        } catch (Exception ex) {
+            throw new RuntimeException("Failed to query workoutplanrow", ex);
+        }
+    }
+
+    private static WorkoutPlanRow createFromResultSet(ResultSet resultSet, WorkoutPlanRepository repository) throws
+            SQLException {
+        int rowid = resultSet.getInt("id");
+        int id = resultSet.getInt("userid");
+        String description = resultSet.getString("description");
+        int duration = resultSet.getInt("duration");
+        String intensity = resultSet.getString("intensity");
+        String comment = resultSet.getString("comment");
+        WorkoutPlan workoutPlan = repository.query(new GetWorkoutPlanByIdSpecification(id)).get(0);
+        return new WorkoutPlanRow(id, description, duration, intensity, comment, workoutPlan);
+
     }
 
     private static void setParameters(PreparedStatement statement, Object... parameters) throws SQLException {
