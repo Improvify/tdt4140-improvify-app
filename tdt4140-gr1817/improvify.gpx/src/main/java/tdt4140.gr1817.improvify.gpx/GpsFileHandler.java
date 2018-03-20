@@ -1,9 +1,10 @@
 package tdt4140.gr1817.improvify.gpx;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
@@ -31,13 +32,14 @@ public final class GpsFileHandler {
 
         ArrayList<String> fileArr = new ArrayList<>(1000);
 
-        FileReader inputStream = new FileReader(path);
-        BufferedReader reader = new BufferedReader(inputStream);
-        String l;
-        while ((l = reader.readLine()) != null) {
-            fileArr.add(l);
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(
+                new FileInputStream(path), "utf-8")
+        )) {
+            String l;
+            while ((l = reader.readLine()) != null) {
+                fileArr.add(l);
+            }
         }
-        reader.close();
 
         return fileArr;
     }
