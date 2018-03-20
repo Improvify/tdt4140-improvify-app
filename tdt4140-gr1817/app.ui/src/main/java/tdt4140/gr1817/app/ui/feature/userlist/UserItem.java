@@ -7,13 +7,13 @@ import javafx.scene.control.TableView;
 /**
  * Just holds data about a user for the {@link TableView}.
  */
-class UserItem {
+public class UserItem {
     private SimpleStringProperty firstName;
     private SimpleStringProperty lastName;
     private SimpleStringProperty email;
     private SimpleIntegerProperty age;
 
-    UserItem(String firstName, String lastName, String email, int age) {
+    public UserItem(String firstName, String lastName, String email, int age) {
         this.firstName = new SimpleStringProperty(firstName);
         this.lastName = new SimpleStringProperty(lastName);
         this.email = new SimpleStringProperty(email);

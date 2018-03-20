@@ -52,7 +52,7 @@ public class SeeUsersControllerTest {
         assertThat(controller.userItemList, hasSize(2));
     }
 
-    private User createUser(int i, int age) {
+    private static User createUser(int i, int age) {
         final GregorianCalendar calendar = new GregorianCalendar();
         calendar.add(Calendar.YEAR, -age);
         final Date birthDate = calendar.getTime();
