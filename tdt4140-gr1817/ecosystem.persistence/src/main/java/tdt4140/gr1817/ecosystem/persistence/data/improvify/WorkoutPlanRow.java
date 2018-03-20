@@ -1,5 +1,9 @@
+
 package tdt4140.gr1817.ecosystem.persistence.data.improvify;
 
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 
 /**
@@ -17,6 +21,8 @@ import lombok.Data;
  * @author Kristian Rekstad
  */
 @Data
+@AllArgsConstructor
+@Builder
 public class WorkoutPlanRow {
     private int id;
     /**

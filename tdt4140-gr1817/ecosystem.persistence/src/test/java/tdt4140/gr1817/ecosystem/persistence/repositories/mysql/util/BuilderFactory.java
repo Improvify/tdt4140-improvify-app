@@ -5,6 +5,8 @@ import tdt4140.gr1817.ecosystem.persistence.data.RestingHeartRate;
 import tdt4140.gr1817.ecosystem.persistence.data.User;
 import tdt4140.gr1817.ecosystem.persistence.data.Weight;
 import tdt4140.gr1817.ecosystem.persistence.data.WorkoutSession;
+import tdt4140.gr1817.ecosystem.persistence.data.improvify.WorkoutPlan;
+import tdt4140.gr1817.ecosystem.persistence.data.improvify.WorkoutPlanRow;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -74,5 +76,24 @@ public class BuilderFactory {
                 .isCompleted(false)
                 .isCurrent(true)
                 .user(user);
+    }
+
+    public static WorkoutPlan.WorkoutPlanBuilder createWorkoutPlan() {
+        final User user = createUser().id(1).build();
+        return WorkoutPlan.builder()
+                .id(1)
+                .description(" kappa ")
+                .createdForUser(user);
+    }
+
+    public static WorkoutPlanRow.WorkoutPlanRowBuilder createWorkoutPlanRow() {
+        final WorkoutPlan workoutPlan = createWorkoutPlan().id(1).build();
+        return WorkoutPlanRow.builder()
+                .id(1)
+                .description("It's like my father used to say: 'Jet fuel can't melt steel beems'")
+                .durationSeconds(420)
+                .intensity("0.8 MAX hr")
+                .comment("Don't let your dreams be memes")
+                .workoutPlan(workoutPlan);
     }
 }

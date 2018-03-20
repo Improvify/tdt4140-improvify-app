@@ -40,21 +40,21 @@ public class MySqlWeightRepository implements WeightRepository {
         This code is ugly, please find a cleaner way to do this.
          */
         try {
-        String insertSql = "INSERT INTO weight(id, currentweight, date, measuredBy) "
-                + "VALUES (?, ?, ?, ?)";
-        try (
-                Connection connection = this.connection.get();
-                PreparedStatement preparedStatement = connection.prepareStatement(insertSql)
-        ) {
-            setParameters(preparedStatement, weight.getId(), weight.getCurrentWeight(), weight.getDate(),
-                    weight.getUser().getId());
-            /*                                   Usikker på om det her burde være .getUserAccount_ID()*/
-            preparedStatement.execute();
+            String insertSql = "INSERT INTO weight(id, currentweight, date, measuredBy) "
+                    + "VALUES (?, ?, ?, ?)";
+            try (
+                    Connection connection = this.connection.get();
+                    PreparedStatement preparedStatement = connection.prepareStatement(insertSql)
+            ) {
+                setParameters(preparedStatement, weight.getId(), weight.getCurrentWeight(), weight.getDate(),
+                        weight.getUser().getId());
+                /*                                   Usikker på om det her burde være .getUserAccount_ID()*/
+                preparedStatement.execute();
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to add workout session", e);
         }
-    } catch (SQLException e) {
-        throw new RuntimeException("Failed to add workout session", e);
     }
-}
 
     @Override
     public void add(Iterable<Weight> items) {
@@ -65,19 +65,19 @@ public class MySqlWeightRepository implements WeightRepository {
 
     @Override
     public void update(Weight weight) {
-           float currentWeight = weight.getCurrentWeight();
-           Date date = weight.getDate();
-           User user = weight.getUser();
+        float currentWeight = weight.getCurrentWeight();
+        Date date = weight.getDate();
+        User user = weight.getUser();
 
-           String updateWeightSql = "UPDATE Weight SET currentWeight= ?, date = ?, measuredBy = ? WHERE id = ?";
-           try (Connection connection = this.connection.get();
-                PreparedStatement pst = connection.prepareStatement(updateWeightSql)
-           ) {
-               setParameters(pst, currentWeight, date, user.getId(), weight.getId());
-               pst.execute();
-           } catch (SQLException e) {
-               throw new RuntimeException("Updating weight failed", e);
-           }
+        String updateWeightSql = "UPDATE Weight SET currentWeight= ?, date = ?, measuredBy = ? WHERE id = ?";
+        try (Connection connection = this.connection.get();
+             PreparedStatement pst = connection.prepareStatement(updateWeightSql)
+        ) {
+            setParameters(pst, currentWeight, date, user.getId(), weight.getId());
+            pst.execute();
+        } catch (SQLException e) {
+            throw new RuntimeException("Updating weight failed", e);
+        }
 
     }
 
