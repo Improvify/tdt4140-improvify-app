@@ -25,7 +25,7 @@ public class Navigator {
     /**
      * Base path to fxml files in resources.
      */
-    private static final String BASE_PACKAGE = "/tdt4140/gr1817/app/ui/fxml/";
+    public static final String BASE_PACKAGE = "/tdt4140/gr1817/app/ui/fxml/";
 
     private final Stage stage;
     private ResourceBundle titleBundle;

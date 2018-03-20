@@ -7,31 +7,41 @@ import java.util.ResourceBundle;
  */
 public enum Page {
 
-    CREATE_WORKOUT {
-        @Override
-        public String fxmlPath() {
-            return "create_workout.fxml";
-        }
+    CREATE_WORKOUT("create_workout.fxml", "create_workout.title"),
+    SEE_USERS("see_users.fxml", "see_users.title"),
+    ;
 
-        @Override
-        public String titleKey() {
-            return "create_workout.title";
-        }
-    };
+    private final String fxmlFile;
+    private final String titleKey;
+
+    /**
+     * Create a new page.
+     * @param fxmlFile filename of {@code .fxml} file
+     * @param titleKey key in the {@link ResourceBundle} for titles. (Currently {@code resources/UI.properties})
+     */
+    Page(String fxmlFile, String titleKey) {
+        this.fxmlFile = fxmlFile;
+        this.titleKey = titleKey;
+    }
 
     /**
      * Path to fxml file in resources.
      *
      * <p>
-     * Relative to the package where the file is loaded.
-     * Use {@code /} to indicate that the file lies at the root in resources.
+     * Relative to the package where the file is loaded ({@value Navigator#BASE_PACKAGE}).
+     * <br/>
+     * Use {@code /} to separate folders, eg.: {@code users/viewall/view_all_users.fxml}
      * </p>
      */
-    public abstract String fxmlPath();
+    public String fxmlPath() {
+        return fxmlFile;
+    }
 
     /**
      * The key in a {@link ResourceBundle} for the screen title.
      * @see javafx.stage.Stage#setTitle(String)
      */
-    public abstract String titleKey();
+    public String titleKey() {
+        return titleKey;
+    }
 }
