@@ -35,14 +35,14 @@ public class MySqlWorkoutPlanRepository implements WorkoutPlanRepository {
     public void add(WorkoutPlan workoutPlan) {
 
         try {
-            String insertSql = "INSERT INTO workoutplan(id, description, createdForUser)"
+            String insertSql = "INSERT INTO workoutplan(id, description, createdForUserAccount_id)"
                     + "VALUES(?,?,?)";
             try (
                     Connection connection = this.connection.get();
                     PreparedStatement preparedStatement = connection.prepareStatement(insertSql)) {
 
                 setParameters(preparedStatement, workoutPlan.getId(), workoutPlan.getDescription(),
-                        workoutPlan.getCreatedForUser());
+                        workoutPlan.getCreatedForUser().getId());
 
                 preparedStatement.execute();
             }
@@ -64,17 +64,17 @@ public class MySqlWorkoutPlanRepository implements WorkoutPlanRepository {
         User createdforUser = item.getCreatedForUser();
         String description = item.getDescription();
 
-        String updateWorkoutPlanSql = "UPDATE workoutplan SET createdForUser = ?,"
+        String updateWorkoutPlanSql = "UPDATE workoutplan SET createdForUserAccount_id = ?,"
                 + " description = ?";
 
         try (
                 Connection connection = this.connection.get();
                 PreparedStatement pst = connection.prepareStatement(updateWorkoutPlanSql)
         ) {
-            setParameters(pst, createdforUser, description);
+            setParameters(pst, createdforUser.getId(), description);
             pst.execute();
         } catch (SQLException e) {
-            throw new RuntimeException("Update unsuccessful");
+            throw new RuntimeException("Failed to update workout plan", e);
         }
     }
 
@@ -127,7 +127,7 @@ public class MySqlWorkoutPlanRepository implements WorkoutPlanRepository {
     private static WorkoutPlan createWorkoutPlanFromResultSet(ResultSet resultSet, UserRepository userRepository) {
         try {
             int id = resultSet.getInt("id");
-            int createdForUserId = resultSet.getInt("createdForUser");
+            int createdForUserId = resultSet.getInt("createdForUserAccount_id");
             String desc = resultSet.getString("description");
             User user = userRepository.query(new GetUserByIdSpecification(createdForUserId)).get(0);
             return new WorkoutPlan(id, desc, user);
