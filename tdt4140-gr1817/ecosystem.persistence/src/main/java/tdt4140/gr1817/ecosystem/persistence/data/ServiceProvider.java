@@ -1,5 +1,7 @@
 package tdt4140.gr1817.ecosystem.persistence.data;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NonNull;
 
@@ -14,6 +16,8 @@ import lombok.NonNull;
  * @see User
  */
 @Data
+@Builder
+@AllArgsConstructor
 public class ServiceProvider {
     private int id;
     private @NonNull String name;
