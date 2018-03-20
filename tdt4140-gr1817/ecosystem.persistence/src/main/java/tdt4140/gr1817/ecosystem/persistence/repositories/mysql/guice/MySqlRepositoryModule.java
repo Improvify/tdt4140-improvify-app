@@ -11,6 +11,7 @@ import tdt4140.gr1817.ecosystem.persistence.repositories.WorkoutSessionRepositor
 import tdt4140.gr1817.ecosystem.persistence.repositories.improvify.PeriodPlanRepository;
 import tdt4140.gr1817.ecosystem.persistence.repositories.improvify.TrainerRepository;
 import tdt4140.gr1817.ecosystem.persistence.repositories.improvify.WorkoutPlanRepository;
+import tdt4140.gr1817.ecosystem.persistence.repositories.improvify.WorkoutPlanRowRepository;
 import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.MySqlGoalRepository;
 import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.MySqlRestingHeartRateRepository;
 import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.MySqlServiceProviderPermissionsRepository;
@@ -18,6 +19,8 @@ import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.MySqlServiceProvi
 import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.MySqlUserRepository;
 import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.MySqlWeightRepository;
 import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.MySqlWorkoutSessionRepository;
+import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.improvify.MySqlWorkoutPlanRepository;
+import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.improvify.MySqlWorkoutPlanRowRepository;
 
 public class MySqlRepositoryModule extends AbstractModule {
 
@@ -34,9 +37,10 @@ public class MySqlRepositoryModule extends AbstractModule {
         bind(WorkoutSessionRepository.class).to(MySqlWorkoutSessionRepository.class);
         bind(GoalRepository.class).to(MySqlGoalRepository.class);
 
-        bind(PeriodPlanRepository.class).to(todo());
         bind(TrainerRepository.class).to(todo());
-        bind(WorkoutPlanRepository.class).to(todo());
+        bind(PeriodPlanRepository.class).to(todo());
+        bind(WorkoutPlanRepository.class).to(MySqlWorkoutPlanRepository.class);
+        bind(WorkoutPlanRowRepository.class).to(MySqlWorkoutPlanRowRepository.class);
     }
 
     /**

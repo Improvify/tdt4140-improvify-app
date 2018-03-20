@@ -70,7 +70,7 @@ public class MySqlWorkoutPlanRowRepository implements WorkoutPlanRowRepository {
         int workoutplanID = item.getWorkoutPlan().getId();
 
         String updateWorkoutPlanRowSql = "UPDATE workoutplanrow SET description = ?,"
-                + " durationseconds= ?, intensity = ?, `comment` = ?, workoutplan_id = ?";
+                + " durationseconds= ?, intensity = ?, comment = ?, workoutplan_id = ?";
 
         try (
                 Connection connection = this.connection.get();
@@ -80,7 +80,7 @@ public class MySqlWorkoutPlanRowRepository implements WorkoutPlanRowRepository {
                     duration, intensity, comment, workoutplanID);
             pst.execute();
         } catch (SQLException e) {
-            throw new RuntimeException("Update unsuccessful");
+            throw new RuntimeException("Failed to update workout plan row", e);
         }
     }
 
@@ -133,13 +133,13 @@ public class MySqlWorkoutPlanRowRepository implements WorkoutPlanRowRepository {
     private static WorkoutPlanRow createFromResultSet(ResultSet resultSet, WorkoutPlanRepository repository) throws
             SQLException {
         int rowid = resultSet.getInt("id");
-        int id = resultSet.getInt("userid");
         String description = resultSet.getString("description");
-        int duration = resultSet.getInt("duration");
+        int duration = resultSet.getInt("durationSeconds");
         String intensity = resultSet.getString("intensity");
         String comment = resultSet.getString("comment");
-        WorkoutPlan workoutPlan = repository.query(new GetWorkoutPlanByIdSpecification(id)).get(0);
-        return new WorkoutPlanRow(id, description, duration, intensity, comment, workoutPlan);
+        final int workoutPlanId = resultSet.getInt("workoutPlan_id");
+        WorkoutPlan workoutPlan = repository.query(new GetWorkoutPlanByIdSpecification(workoutPlanId)).get(0);
+        return new WorkoutPlanRow(rowid, description, duration, intensity, comment, workoutPlan);
 
     }
 
