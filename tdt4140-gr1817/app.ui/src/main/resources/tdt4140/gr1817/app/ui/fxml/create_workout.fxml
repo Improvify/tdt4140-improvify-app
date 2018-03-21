@@ -19,16 +19,16 @@
       <ChoiceBox layoutX="118.0" layoutY="220.0" prefWidth="150.0" />
       <Label layoutX="118.0" layoutY="128.0" text="User" />
       <Label layoutX="118.0" layoutY="193.0" text="Template" />
-      <TableView layoutX="118.0" layoutY="343.0" prefHeight="254.0" prefWidth="550.0">
+      <TableView fx:id="workoutTable" layoutX="118.0" layoutY="343.0" prefHeight="254.0" prefWidth="550.0">
         <columns>
-          <TableColumn prefWidth="152.0" text="What" />
-          <TableColumn minWidth="0.0" prefWidth="77.0" text="Time" />
-            <TableColumn prefWidth="113.0" text="Intensity" />
-            <TableColumn prefWidth="207.0" text="Comment" />
+          <TableColumn fx:id="whatCol" onEditCommit="#changeWhatEvent" prefWidth="152.0" text="What" />
+          <TableColumn fx:id="timeCol" minWidth="0.0" onEditCommit="#changeTimeEvent" prefWidth="77.0" text="Time" />
+            <TableColumn fx:id="intensityCol" onEditCommit="#changeIntensityEvent" prefWidth="113.0" text="Intensity" />
+            <TableColumn fx:id="commentCol" onEditCommit="#changeCommentEvent" prefWidth="207.0" text="Comment" />
         </columns>
       </TableView>
       <TextField layoutX="118.0" layoutY="292.0" text="Enter workout plan title" />
-      <Button layoutX="527.0" layoutY="287.0" mnemonicParsing="false" text="+" textAlignment="CENTER">
+      <Button fx:id="addButton" layoutX="527.0" layoutY="287.0" mnemonicParsing="false" text="+" textAlignment="CENTER">
          <font>
             <Font name="System Bold" size="20.0" />
          </font>
