@@ -1,6 +1,7 @@
 package tdt4140.gr1817.ecosystem.persistence.repositories.mysql.guice;
 
 import com.google.inject.AbstractModule;
+import lombok.extern.slf4j.Slf4j;
 import tdt4140.gr1817.ecosystem.persistence.repositories.GoalRepository;
 import tdt4140.gr1817.ecosystem.persistence.repositories.RestingHeartRateRepository;
 import tdt4140.gr1817.ecosystem.persistence.repositories.ServiceProviderPermissionsRepository;
@@ -22,6 +23,14 @@ import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.MySqlWorkoutSessi
 import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.improvify.MySqlWorkoutPlanRepository;
 import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.improvify.MySqlWorkoutPlanRowRepository;
 
+import javax.inject.Provider;
+
+/**
+ * Binds interface to concrete implementations that use MySql.
+ *
+ * @see MySqlConnectionModule
+ */
+@Slf4j
 public class MySqlRepositoryModule extends AbstractModule {
 
     @Override
@@ -37,20 +46,24 @@ public class MySqlRepositoryModule extends AbstractModule {
         bind(WorkoutSessionRepository.class).to(MySqlWorkoutSessionRepository.class);
         bind(GoalRepository.class).to(MySqlGoalRepository.class);
 
-        bind(TrainerRepository.class).to(todo());
-        bind(PeriodPlanRepository.class).to(todo());
+        bind(TrainerRepository.class).toProvider(todo(TrainerRepository.class));
+        bind(PeriodPlanRepository.class).toProvider(todo(PeriodPlanRepository.class));
         bind(WorkoutPlanRepository.class).to(MySqlWorkoutPlanRepository.class);
         bind(WorkoutPlanRowRepository.class).to(MySqlWorkoutPlanRowRepository.class);
     }
 
     /**
      * Hack to keep guice happy while keeping all needed classes in code.
-     *
+     * <p>
      * TODO: remove this once all bindings are satisfied.
+     *
      * @param <T>
      * @throws UnsupportedOperationException
      */
-    private static <T extends Class> T todo() {
-        throw new UnsupportedOperationException("Not implemented!");
+    private static <T extends Class, R extends T> Provider<R> todo(T clazz) {
+        log.error("Repository not bound {}", clazz.getName());
+        return () -> {
+            throw new UnsupportedOperationException("Not implemented!");
+        };
     }
 }
