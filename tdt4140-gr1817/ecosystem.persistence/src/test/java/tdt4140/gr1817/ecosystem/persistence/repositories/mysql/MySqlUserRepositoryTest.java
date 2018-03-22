@@ -12,7 +12,11 @@ import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.util.HsqldbRule;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
-import java.util.*;
+import java.sql.Statement;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -43,16 +47,18 @@ public class MySqlUserRepositoryTest {
         verify(connectionSpy).prepareStatement(anyString());
         verify(connectionSpy).close();
 
-        try (Connection connection = hsqldb.getConnection()) {
-            try (ResultSet resultSet = connection.createStatement().executeQuery("SELECT * FROM useraccount WHERE  id = 5")) {
-                while (resultSet.next()) {
-                    assertThat(resultSet.getString("firstname"), is("Test"));
-                    assertThat(resultSet.getString("lastname"), is("Person"));
-                    assertThat(resultSet.getString("email"), is("test@test.com"));
-                    assertThat(resultSet.getString("password"), is("123"));
-                    final long birthDate1 = resultSet.getDate("birthDate").getTime();
-                    assertThat(birthDate1, is(birthDate.getTime()));
-                }
+        try (
+                Connection connection = hsqldb.getConnection();
+                Statement statement = connection.createStatement();
+                ResultSet resultSet = statement.executeQuery("SELECT * FROM useraccount WHERE  id = 5")
+        ) {
+            while (resultSet.next()) {
+                assertThat(resultSet.getString("firstname"), is("Test"));
+                assertThat(resultSet.getString("lastname"), is("Person"));
+                assertThat(resultSet.getString("email"), is("test@test.com"));
+                assertThat(resultSet.getString("password"), is("123"));
+                final long birthDate1 = resultSet.getDate("birthDate").getTime();
+                assertThat(birthDate1, is(birthDate.getTime()));
             }
         }
     }

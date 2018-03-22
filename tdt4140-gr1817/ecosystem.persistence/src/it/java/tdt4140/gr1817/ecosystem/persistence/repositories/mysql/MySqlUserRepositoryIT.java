@@ -7,11 +7,15 @@ import org.junit.Test;
 import tdt4140.gr1817.ecosystem.persistence.data.User;
 
 import javax.inject.Provider;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Date;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 
 @Ignore("CI cant run this without a mysql service")
 public class MySqlUserRepositoryIT {
@@ -61,7 +65,8 @@ public class MySqlUserRepositoryIT {
         // Then
         try (
                 Connection con = connection.get();
-                ResultSet resultSet = con.createStatement().executeQuery("SELECT * FROM useraccount WHERE id = 1")
+                Statement statement = con.createStatement();
+                ResultSet resultSet = statement.executeQuery("SELECT * FROM useraccount WHERE id = 1")
         ) {
 
             String username = null;

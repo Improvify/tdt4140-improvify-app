@@ -86,8 +86,11 @@ public class HsqldbRule extends ExternalResource {
     }
 
     public void clearData() {
-        try (Connection connection = getConnection()) {
-            connection.createStatement().execute("TRUNCATE SCHEMA public RESTART IDENTITY AND COMMIT NO CHECK");
+        try (
+                Connection connection = getConnection();
+                Statement statement = connection.createStatement();
+        ) {
+            statement.execute("TRUNCATE SCHEMA public RESTART IDENTITY AND COMMIT NO CHECK");
         } catch (Exception ex) {
             throw new RuntimeException("Unable to empty db", ex);
         }
@@ -139,7 +142,8 @@ public class HsqldbRule extends ExternalResource {
         final String sqlFile = "/mainDB create ecosystem.sql";
 
         try (
-                BufferedReader reader = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(sqlFile)))
+                BufferedReader reader = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream
+                        (sqlFile), "utf-8"))
         ) {
             Stream<String> lineStream = reader.lines();
             lineStream = convertMysqlToHsqlSchema(lineStream);
@@ -190,7 +194,8 @@ public class HsqldbRule extends ExternalResource {
                             .replace("TIMESTAMP NOT NULL DEFAULT NOW()", "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
                             .replace("TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP", "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
                             .replace("BOOLEAN NOT NULL DEFAULT 0", "BOOLEAN DEFAULT FALSE")
-                            .replace("UNIQUE INDEX username_UNIQUE (username ASC)", "CONSTRAINT username_UNIQUE UNIQUE (username)")
+                            .replace("UNIQUE INDEX username_UNIQUE (username ASC)", "CONSTRAINT username_UNIQUE "
+                                    + "UNIQUE (username)")
                             .replaceAll("FLOAT\\(\\d+,\\d+\\)", "FLOAT")
                             .replaceAll("COMMENT (= )*'[^']*'", "");
                 });
