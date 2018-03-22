@@ -1,5 +1,7 @@
 # Gruppe 17
 
+[![pipeline status](https://gitlab.stud.iie.ntnu.no/tdt4140-2018/17/badges/master/pipeline.svg)](https://gitlab.stud.iie.ntnu.no/tdt4140-2018/17/commits/master)
+[![coverage report](https://gitlab.stud.iie.ntnu.no/tdt4140-2018/17/badges/master/coverage.svg)](https://gitlab.stud.iie.ntnu.no/tdt4140-2018/17/commits/master)
 ## Project Improvify
 
 Goal oriented training application
@@ -14,6 +16,25 @@ Goal oriented training application
 > Kjipern hvis du ikke får satt opp plugins for Eclipse.  
 > Alle plugins vi bruker skal eksistere for Eclipse også.  
 > `Maven verify` skal kjøre uansett.
+
+[[_TOC_]]
+
+## Running
+
+1. Set up a MySql server
+2. Run the [schema in docs](/docs/Database-design/mainDB create ecosystem.sql) in the database
+
+### Web server
+
+1. Open [App](/tdt4140-gr1817/serviceprovider.webserver/src/main/java/tdt4140/gr1817/serviceprovider/webserver/App.java)
+2. Make sure database connection info is correct. By default it connects to `root@localhost:3306`
+3. Start `main` in `App`
+
+### Improvify JavaFX GUI
+
+1. Open [Main](/tdt4140-gr1817/app.ui/src/main/java/tdt4140/gr1817/app/ui/Main.java)
+2. Make sure database connection info is correct. By default it connects to `root@localhost:3306`
+3. Start `main` in `Main`
 
 ## Wiki
 
