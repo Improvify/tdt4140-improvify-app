@@ -3,6 +3,10 @@ package tdt4140.gr1817.app.ui.feature.userlist;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.google.inject.Provider;
+import com.google.inject.Provides;
+import com.google.inject.Singleton;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.TableView;
 import javafx.scene.text.Text;
@@ -15,6 +19,7 @@ import org.testfx.matcher.base.NodeMatchers;
 import tdt4140.gr1817.app.ui.javafx.JavaFxModule;
 import tdt4140.gr1817.app.ui.javafx.Navigator;
 import tdt4140.gr1817.app.ui.javafx.Page;
+import tdt4140.gr1817.app.ui.javafx.SceneFactory;
 import tdt4140.gr1817.ecosystem.persistence.data.User;
 import tdt4140.gr1817.ecosystem.persistence.repositories.UserRepository;
 
@@ -23,6 +28,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.Set;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -36,6 +42,8 @@ import static org.testfx.api.FxAssert.verifyThat;
  */
 public class SeeUsersIT extends ApplicationTest {
 
+    private Navigator navigatorSpy = null;
+
     @Override
     public void start(Stage stage) throws Exception {
         final UserRepository userRepositoryMock = Mockito.mock(UserRepository.class);
@@ -46,9 +54,22 @@ public class SeeUsersIT extends ApplicationTest {
         Mockito.when(userRepositoryMock.query(Mockito.any())).thenReturn(usersList);
 
         final Injector injector = Guice.createInjector(new JavaFxModule(stage),
-                new MockedUserRepositoryModule(userRepositoryMock));
+                new MockedUserRepositoryModule(userRepositoryMock),
+                new AbstractModule() {
+                    @Override
+                    protected void configure() { }
+
+                    @Provides @Singleton
+                    public Navigator provideSpyNavigator(Stage stage1, ResourceBundle bundle, Provider<FXMLLoader> loader, SceneFactory sceneFactory) {
+                        final Navigator navigator = new Navigator(stage1, bundle, loader, sceneFactory);
+                        navigatorSpy = Mockito.spy(navigator);
+                        return navigatorSpy;
+                    }
+                });
+
         final Navigator navigator = injector.getInstance(Navigator.class);
         navigator.navigate(Page.SEE_USERS);
+        Mockito.reset(navigatorSpy);
     }
 
     @Test
@@ -95,6 +116,29 @@ public class SeeUsersIT extends ApplicationTest {
 
         // Then
         verifyThat("#viewSelectedUser", NodeMatchers.isEnabled());
+    }
+
+    @Test
+    public void shouldNavigateWhenGlobalStatisticsIsClicked() throws Exception {
+        // When
+        clickOn("#globalStatistics");
+
+        // Then
+        Mockito.verify(navigatorSpy).navigate(Page.GLOBAL_STATISTICS);
+    }
+
+    @Test
+    public void shouldNavigateWhenViewUserIsClicked() throws Exception {
+        // Given
+        final TableView<UserItem> table = lookup("#userTable").query();
+        table.getSelectionModel().select(0);
+        Assume.assumeThat(table.getSelectionModel().getSelectedItem(), is(notNullValue()));
+
+        // When
+        clickOn("#viewSelectedUser");
+
+        // Then
+        Mockito.verify(navigatorSpy).navigate(Page.VIEW_USER);
     }
 
     private static User.UserBuilder createUser(int i, int age) {
