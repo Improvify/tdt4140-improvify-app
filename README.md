@@ -17,8 +17,6 @@ Goal oriented training application
 > Alle plugins vi bruker skal eksistere for Eclipse også.  
 > `Maven verify` skal kjøre uansett.
 
-[[_TOC_]]
-
 ## Running
 
 1. Set up a MySql server
@@ -26,13 +24,13 @@ Goal oriented training application
 
 ### Web server
 
-1. Open [App](/tdt4140-gr1817/serviceprovider.webserver/src/main/java/tdt4140/gr1817/serviceprovider/webserver/App.java)
+1. Open [App](/tdt4140-gr1817/serviceprovider.webserver/src/main/java/tdt4140/gr1817/serviceprovider/webserver/App.java) in `serviceprovider.webserver`
 2. Make sure database connection info is correct. By default it connects to `root@localhost:3306`
 3. Start `main` in `App`
 
 ### Improvify JavaFX GUI
 
-1. Open [Main](/tdt4140-gr1817/app.ui/src/main/java/tdt4140/gr1817/app/ui/Main.java)
+1. Open [Main](/tdt4140-gr1817/app.ui/src/main/java/tdt4140/gr1817/app/ui/Main.java) in `app.ui`
 2. Make sure database connection info is correct. By default it connects to `root@localhost:3306`
 3. Start `main` in `Main`
 
