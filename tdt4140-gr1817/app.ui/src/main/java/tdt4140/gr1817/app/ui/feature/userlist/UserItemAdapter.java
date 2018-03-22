@@ -18,7 +18,8 @@ public class UserItemAdapter {
         final GregorianCalendar birthDate = new GregorianCalendar();
         birthDate.setTime(user.getBirthDate());
 
-        final LocalDate localBirthDate = LocalDate.of(birthDate.get(Calendar.YEAR), birthDate.get(Calendar.MONTH) + 1, birthDate.get(Calendar.DAY_OF_MONTH));
+        final LocalDate localBirthDate = LocalDate.of(birthDate.get(Calendar.YEAR), birthDate.get(Calendar.MONTH) + 1,
+                birthDate.get(Calendar.DAY_OF_MONTH));
         final int age = (int) ChronoUnit.YEARS.between(localBirthDate, LocalDate.now());
 
         return new UserItem(user.getFirstName(), user.getLastName(), user.getEmail(), age);
