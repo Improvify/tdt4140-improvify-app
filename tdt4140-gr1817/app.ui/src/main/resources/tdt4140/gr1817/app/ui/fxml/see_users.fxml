@@ -8,7 +8,7 @@
 <?import javafx.scene.text.Font?>
 <AnchorPane fx:id="seeUsers" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tdt4140.gr1817.app.ui.feature.userlist.SeeUsersController">
    <children>
-      <Button layoutX="78.0" layoutY="87.0" mnemonicParsing="false" onAction="#showGlobalStatistics" text="Global statistics 📈" />
+      <Button fx:id="globalStatistics" layoutX="78.0" layoutY="87.0" mnemonicParsing="false" onAction="#showGlobalStatistics" text="Global statistics 📈" />
       <Label layoutX="249.0" layoutY="14.0" text="Users">
          <font>
             <Font size="42.0" />

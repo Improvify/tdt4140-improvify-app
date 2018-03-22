@@ -4,6 +4,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import tdt4140.gr1817.app.core.feature.user.GetAllUsers;
+import tdt4140.gr1817.app.ui.javafx.Navigator;
+import tdt4140.gr1817.app.ui.javafx.Page;
 import tdt4140.gr1817.ecosystem.persistence.data.User;
 
 import javax.inject.Provider;
@@ -27,11 +29,16 @@ public class SeeUsersControllerTest {
 
     private GetAllUsers getAllUsersMock;
     private Provider<GetAllUsers> getAllUsersMockProvider;
+    private Navigator navigatorMock;
+    private SeeUsersController controller;
 
     @Before
     public void setUp() throws Exception {
         getAllUsersMock = Mockito.mock(GetAllUsers.class);
         getAllUsersMockProvider = () -> getAllUsersMock;
+        navigatorMock = Mockito.mock(Navigator.class);
+
+        controller = new SeeUsersController(navigatorMock, getAllUsersMockProvider, new UserItemAdapter());
     }
 
     @Test
@@ -42,14 +49,30 @@ public class SeeUsersControllerTest {
         final List<User> allUsers = Arrays.asList(user1, user2);
         when(getAllUsersMock.getAll()).thenReturn(allUsers);
 
-        final SeeUsersController controller = new SeeUsersController(getAllUsersMockProvider, new UserItemAdapter());
-
         // When
         controller.loadUsers();
 
         // Then
         verify(getAllUsersMock).getAll();
         assertThat(controller.userItemList, hasSize(2));
+    }
+
+    @Test
+    public void shouldNavigateToGlobalStatistics() throws Exception {
+        // When
+        controller.showGlobalStatistics();
+
+        // Then
+        verify(navigatorMock).navigate(Page.GLOBAL_STATISTICS);
+    }
+
+    @Test
+    public void shouldNavigateToViewUser() throws Exception {
+        // When
+        controller.showSelectedUser();
+
+        // Then
+        verify(navigatorMock).navigate(Page.VIEW_USER);
     }
 
     private static User createUser(int i, int age) {

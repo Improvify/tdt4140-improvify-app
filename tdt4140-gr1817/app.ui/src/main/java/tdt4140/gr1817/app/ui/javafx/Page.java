@@ -9,6 +9,8 @@ public enum Page {
 
     CREATE_WORKOUT("create_workout.fxml", "create_workout.title"),
     SEE_USERS("see_users.fxml", "see_users.title"),
+    GLOBAL_STATISTICS("", ""),
+    VIEW_USER("", ""),
     ;
 
     private final String fxmlFile;

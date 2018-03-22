@@ -9,6 +9,8 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import lombok.extern.slf4j.Slf4j;
 import tdt4140.gr1817.app.core.feature.user.GetAllUsers;
+import tdt4140.gr1817.app.ui.javafx.Navigator;
+import tdt4140.gr1817.app.ui.javafx.Page;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -26,6 +28,7 @@ public class SeeUsersController {
     final ObservableList<UserItem> userItemList = FXCollections.observableArrayList();
     private final Provider<GetAllUsers> getAllUsersProvider;
     private final UserItemAdapter userItemAdapter;
+    private final Navigator navigator;
 
     @FXML
     private Button viewSelectedUser;
@@ -41,7 +44,8 @@ public class SeeUsersController {
     private TableColumn<UserItem, Integer> ageColumn;
 
     @Inject
-    public SeeUsersController(Provider<GetAllUsers> getAllUsersProvider, UserItemAdapter userItemAdapter) {
+    public SeeUsersController(Navigator navigator, Provider<GetAllUsers> getAllUsersProvider, UserItemAdapter userItemAdapter) {
+        this.navigator = navigator;
         this.getAllUsersProvider = getAllUsersProvider;
         this.userItemAdapter = userItemAdapter;
     }
@@ -71,13 +75,15 @@ public class SeeUsersController {
 
     @FXML
     public void showSelectedUser() {
-        log.debug("Showing {}", userTable.getSelectionModel().getSelectedItem());
-        throw new UnsupportedOperationException("Not implemented");
+        if (userTable != null) {
+            log.debug("Showing {}", userTable.getSelectionModel().getSelectedItem());
+        }
+        navigator.navigate(Page.VIEW_USER);
     }
 
     @FXML
     public void showGlobalStatistics() {
-        throw new UnsupportedOperationException("Not implemented");
+        navigator.navigate(Page.GLOBAL_STATISTICS);
     }
 
 }
