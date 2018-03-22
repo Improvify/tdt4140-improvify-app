@@ -1,0 +1,12 @@
+.table-row-cell:empty .table-cell {
+    -fx-background-color: white;
+    -fx-border-width: 0px;
+}
+
+.table-row-cell:hover{
+    -fx-background-color: rgba(95, 186, 186, 0.57);
+}
+
+.table-row-cell:selected{
+    -fx-background-color: darkcyan;
+}

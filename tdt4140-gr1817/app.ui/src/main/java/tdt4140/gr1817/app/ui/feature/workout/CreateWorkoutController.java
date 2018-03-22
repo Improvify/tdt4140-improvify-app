@@ -86,7 +86,7 @@ public class CreateWorkoutController {
 
         workoutTable.setItems(workoutRowList);
         workoutTable.setEditable(true);
-
+        workoutTable.getStylesheets().add("tdt4140/gr1817/app/ui/stylesheets/tableview_stylesheet.css");
 
         addButton.setOnAction(addButtonHandler);
         deleteButton.setOnAction(deleteButtonHandler);
@@ -120,7 +120,9 @@ public class CreateWorkoutController {
                 @Override
                 public void handle(ActionEvent t) {
                     int selectedIndex = workoutTable.getSelectionModel().getSelectedIndex();
-                    workoutRowList.remove(selectedIndex);
+                    if (selectedIndex < workoutRowList.size() && selectedIndex > -1) {
+                        workoutRowList.remove(selectedIndex);
+                    }
                 }
             };
 
