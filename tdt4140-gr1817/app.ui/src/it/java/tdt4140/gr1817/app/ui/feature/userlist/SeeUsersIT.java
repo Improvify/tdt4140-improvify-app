@@ -43,6 +43,7 @@ import static org.testfx.api.FxAssert.verifyThat;
 public class SeeUsersIT extends ApplicationTest {
 
     private Navigator navigatorSpy = null;
+    private SeeUsersPage seeUsersPage;
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -70,58 +71,52 @@ public class SeeUsersIT extends ApplicationTest {
         final Navigator navigator = injector.getInstance(Navigator.class);
         navigator.navigate(Page.SEE_USERS);
         Mockito.reset(navigatorSpy);
+
+        seeUsersPage = new SeeUsersPage(this);
     }
 
     @Test
     public void shouldSetUserFieldsInTableColumns() throws Exception {
-        final Set<Node> firstnameTexts = from(lookup("#firstnameColumn"))
-                .lookup(NodeMatchers.hasText("Pizza"))
-                .match(node -> node instanceof Text)
-                .queryAll();
+        // Given
+        final Set<Text> firstnameTexts = seeUsersPage.firstnameColumnTextsWithText("Pizza");
+        final Set<Text> lastnameTexts = seeUsersPage.lastnameColumnTextWithText("Topping");
+        final Set<Node> ageTexts = seeUsersPage.ageColumnWithAge(22);
 
-        final Set<Node> lastnameTexts = from(lookup("#lastnameColumn"))
-                .lookup(NodeMatchers.hasText("Topping"))
-                .match(node -> node instanceof Text)
-                .queryAll();
-
-        final Set<Node> ageTexts = from(lookup("#ageColumn"))
-                .lookup("22")
-                .queryAll();
-
+        // Then
         assertThat(firstnameTexts, hasSize(2));
         assertThat(lastnameTexts, hasSize(1));
         assertThat(ageTexts, hasSize(1));
 
-        verifyThat("#userTable", NodeMatchers.isVisible());
+        verifyThat(seeUsersPage.userTable(), NodeMatchers.isVisible());
     }
 
     @Test
     public void shouldDisableViewUserButtonWhenNoUserIsSelected() throws Exception {
         // Given
-        TableView<UserItem> table = lookup("#userTable").query();
+        TableView<UserItem> table = seeUsersPage.userTable();
         Assume.assumeThat(table.getSelectionModel().isEmpty(), is(true));
 
         // Then
-        verifyThat("#viewSelectedUser", NodeMatchers.isDisabled());
+        verifyThat(seeUsersPage.viewSelectedUserButton(), NodeMatchers.isDisabled());
     }
 
     @Test
     public void shouldEnableViewUserButtonWhenUserIsSelected() throws Exception {
         // Given
-        TableView<UserItem> table = lookup("#userTable").query();
+        TableView<UserItem> table = seeUsersPage.userTable();
 
         // When
         table.getSelectionModel().select(0);
         Assume.assumeThat(table.getSelectionModel().isEmpty(), is(false));
 
         // Then
-        verifyThat("#viewSelectedUser", NodeMatchers.isEnabled());
+        verifyThat(seeUsersPage.viewSelectedUserButton(), NodeMatchers.isEnabled());
     }
 
     @Test
     public void shouldNavigateWhenGlobalStatisticsIsClicked() throws Exception {
         // When
-        clickOn("#globalStatistics");
+        clickOn(seeUsersPage.viewGlobalStatistics());
 
         // Then
         Mockito.verify(navigatorSpy).navigate(Page.GLOBAL_STATISTICS);
@@ -130,12 +125,12 @@ public class SeeUsersIT extends ApplicationTest {
     @Test
     public void shouldNavigateWhenViewUserIsClicked() throws Exception {
         // Given
-        final TableView<UserItem> table = lookup("#userTable").query();
+        final TableView<UserItem> table = seeUsersPage.userTable();
         table.getSelectionModel().select(0);
         Assume.assumeThat(table.getSelectionModel().getSelectedItem(), is(notNullValue()));
 
         // When
-        clickOn("#viewSelectedUser");
+        clickOn(seeUsersPage.viewSelectedUserButton());
 
         // Then
         Mockito.verify(navigatorSpy).navigate(Page.VIEW_USER);
