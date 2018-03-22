@@ -44,7 +44,8 @@ public class SeeUsersController {
     private TableColumn<UserItem, Integer> ageColumn;
 
     @Inject
-    public SeeUsersController(Navigator navigator, Provider<GetAllUsers> getAllUsersProvider, UserItemAdapter userItemAdapter) {
+    public SeeUsersController(Navigator navigator, Provider<GetAllUsers> getAllUsersProvider,
+                              UserItemAdapter userItemAdapter) {
         this.navigator = navigator;
         this.getAllUsersProvider = getAllUsersProvider;
         this.userItemAdapter = userItemAdapter;
