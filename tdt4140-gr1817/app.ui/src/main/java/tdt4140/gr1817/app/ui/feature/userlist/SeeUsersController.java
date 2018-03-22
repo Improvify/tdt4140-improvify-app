@@ -1,7 +1,5 @@
 package tdt4140.gr1817.app.ui.feature.userlist;
 
-import javafx.beans.binding.BooleanBinding;
-import javafx.beans.property.ObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -57,7 +55,7 @@ public class SeeUsersController {
 
         userTable.setItems(userItemList);
 
-        viewSelectedUser.disableProperty().bind(new EmptySelectionModelBinding(userTable.selectionModelProperty()));
+        viewSelectedUser.disableProperty().bind(userTable.getSelectionModel().selectedItemProperty().isNull());
 
         loadUsers();
     }
@@ -73,6 +71,7 @@ public class SeeUsersController {
 
     @FXML
     public void showSelectedUser() {
+        log.debug("Showing {}", userTable.getSelectionModel().getSelectedItem());
         throw new UnsupportedOperationException("Not implemented");
     }
 
@@ -81,17 +80,4 @@ public class SeeUsersController {
         throw new UnsupportedOperationException("Not implemented");
     }
 
-    private class EmptySelectionModelBinding extends BooleanBinding {
-        private final ObjectProperty<TableView.TableViewSelectionModel<UserItem>> selectionModelProperty;
-
-        EmptySelectionModelBinding(ObjectProperty<TableView.TableViewSelectionModel<UserItem>> selectionModelProperty) {
-            this.selectionModelProperty = selectionModelProperty;
-            bind(this.selectionModelProperty);
-        }
-
-        @Override
-        protected boolean computeValue() {
-            return selectionModelProperty.get().isEmpty();
-        }
-    }
 }

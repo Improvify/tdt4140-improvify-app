@@ -4,8 +4,10 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import javafx.scene.Node;
+import javafx.scene.control.TableView;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import org.junit.Assume;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.testfx.framework.junit.ApplicationTest;
@@ -28,7 +30,7 @@ import static org.hamcrest.Matchers.*;
 import static org.testfx.api.FxAssert.verifyThat;
 
 /**
- * Created by Kristian Rekstad.
+ * Tests that the {@link SeeUsersController} works correctly.
  *
  * @author Kristian Rekstad
  */
@@ -70,9 +72,30 @@ public class SeeUsersIT extends ApplicationTest {
         assertThat(ageTexts, hasSize(1));
 
         verifyThat("#userTable", NodeMatchers.isVisible());
+    }
+
+    @Test
+    public void shouldDisableViewUserButtonWhenNoUserIsSelected() throws Exception {
+        // Given
+        TableView<UserItem> table = lookup("#userTable").query();
+        Assume.assumeThat(table.getSelectionModel().isEmpty(), is(true));
+
+        // Then
         verifyThat("#viewSelectedUser", NodeMatchers.isDisabled());
     }
 
+    @Test
+    public void shouldEnableViewUserButtonWhenUserIsSelected() throws Exception {
+        // Given
+        TableView<UserItem> table = lookup("#userTable").query();
+
+        // When
+        table.getSelectionModel().select(0);
+        Assume.assumeThat(table.getSelectionModel().isEmpty(), is(false));
+
+        // Then
+        verifyThat("#viewSelectedUser", NodeMatchers.isEnabled());
+    }
 
     private static User.UserBuilder createUser(int i, int age) {
         final GregorianCalendar calendar = new GregorianCalendar();
