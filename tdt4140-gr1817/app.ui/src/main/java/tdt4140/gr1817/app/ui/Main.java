@@ -8,6 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import tdt4140.gr1817.app.ui.javafx.JavaFxModule;
 import tdt4140.gr1817.app.ui.javafx.Navigator;
 import tdt4140.gr1817.app.ui.javafx.Page;
+import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.guice.MySqlConnectionModule;
+import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.guice.MySqlRepositoryModule;
 
 @Slf4j
 public class Main extends Application {
@@ -17,7 +19,10 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        injector = Guice.createInjector(new JavaFxModule(primaryStage));
+        // TODO get database info from argLine or env or a config file.
+        injector = Guice.createInjector(new JavaFxModule(primaryStage),
+                new MySqlConnectionModule("root", "", "localhost", "ecosystem", 3306),
+                new MySqlRepositoryModule());
 
         Navigator navigator = injector.getInstance(Navigator.class);
         navigator.navigate(getInitialPage());

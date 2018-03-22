@@ -1,7 +1,5 @@
 package tdt4140.gr1817.app.ui.feature.userlist;
 
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -9,34 +7,48 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import lombok.extern.slf4j.Slf4j;
+import tdt4140.gr1817.app.core.feature.user.GetAllUsers;
+import tdt4140.gr1817.app.ui.javafx.Navigator;
+import tdt4140.gr1817.app.ui.javafx.Page;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * A screen for showing all users.
  *
  * @author Kristian Rekstad
  */
+@Slf4j
 public class SeeUsersController {
 
-    private final ObservableList<User> userList = FXCollections.observableArrayList();
-
+    final ObservableList<UserItem> userItemList = FXCollections.observableArrayList();
+    private final Provider<GetAllUsers> getAllUsersProvider;
+    private final UserItemAdapter userItemAdapter;
+    private final Navigator navigator;
 
     @FXML
     private Button viewSelectedUser;
     @FXML
-    private TableView<User> userTable;
+    private TableView<UserItem> userTable;
     @FXML
-    private TableColumn<User, String> firstnameColumn;
+    private TableColumn<UserItem, String> firstnameColumn;
     @FXML
-    private TableColumn<User, String> lastnameColumn;
+    private TableColumn<UserItem, String> lastnameColumn;
     @FXML
-    private TableColumn<User, String> emailColumn;
+    private TableColumn<UserItem, String> emailColumn;
     @FXML
-    private TableColumn<User, Integer> ageColumn;
+    private TableColumn<UserItem, Integer> ageColumn;
 
     @Inject
-    public SeeUsersController() {
+    public SeeUsersController(Navigator navigator, Provider<GetAllUsers> getAllUsersProvider,
+                              UserItemAdapter userItemAdapter) {
+        this.navigator = navigator;
+        this.getAllUsersProvider = getAllUsersProvider;
+        this.userItemAdapter = userItemAdapter;
     }
 
     @FXML
@@ -46,74 +58,33 @@ public class SeeUsersController {
         emailColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
         ageColumn.setCellValueFactory(new PropertyValueFactory<>("age"));
 
-        userTable.setItems(userList);
+        userTable.setItems(userItemList);
 
-        viewSelectedUser.disableProperty().bind(userTable.selectionModelProperty().isNull());
+        viewSelectedUser.disableProperty().bind(userTable.getSelectionModel().selectedItemProperty().isNull());
 
-        //loadUsers();
+        loadUsers();
     }
 
-    private void loadUsers() {
-        throw new UnsupportedOperationException("Not implemented");
+    public void loadUsers() {
+        final List<UserItem> userItems = getAllUsersProvider.get().getAll()
+                .stream()
+                .map(userItemAdapter::adapt)
+                .collect(Collectors.toList());
+
+        userItemList.setAll(userItems);
     }
 
     @FXML
     public void showSelectedUser() {
-        throw new UnsupportedOperationException("Not implemented");
+        if (userTable != null) {
+            log.debug("Showing {}", userTable.getSelectionModel().getSelectedItem());
+        }
+        navigator.navigate(Page.VIEW_USER);
     }
 
     @FXML
     public void showGlobalStatistics() {
-        throw new UnsupportedOperationException("Not implemented");
-    }
-
-    /**
-     * Just holds data about a user for the {@link TableView}.
-     */
-    public static class User {
-        private SimpleStringProperty firstName;
-        private SimpleStringProperty lastName;
-        private SimpleStringProperty email;
-        private SimpleIntegerProperty age;
-
-        public User(String firstName, String lastName, String email, int age) {
-            this.firstName = new SimpleStringProperty(firstName);
-            this.lastName = new SimpleStringProperty(lastName);
-            this.email = new SimpleStringProperty(email);
-            this.age = new SimpleIntegerProperty(age);
-        }
-
-        public String getFirstName() {
-            return firstName.get();
-        }
-
-        public SimpleStringProperty firstNameProperty() {
-            return firstName;
-        }
-
-        public String getLastName() {
-            return lastName.get();
-        }
-
-        public SimpleStringProperty lastNameProperty() {
-            return lastName;
-        }
-
-        public String getEmail() {
-            return email.get();
-        }
-
-        public SimpleStringProperty emailProperty() {
-            return email;
-        }
-
-        public int getAge() {
-            return age.get();
-        }
-
-        public SimpleIntegerProperty ageProperty() {
-            return age;
-        }
+        navigator.navigate(Page.GLOBAL_STATISTICS);
     }
 
 }

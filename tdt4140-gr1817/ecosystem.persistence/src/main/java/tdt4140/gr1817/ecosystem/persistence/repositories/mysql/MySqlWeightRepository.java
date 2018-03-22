@@ -83,14 +83,16 @@ public class MySqlWeightRepository implements WeightRepository {
 
     @Override
     public void remove(Weight item) {
-        try {
+        String deleteWeightSql = "DELETE FROM Weight WHERE id = ?";
+        try (
+                Connection connection = this.connection.get();
+                PreparedStatement pst = connection.prepareStatement(deleteWeightSql)
+        ) {
             int id = item.getId();
-            String deleteWeightSql = "DELETE FROM Weight WHERE id = '" + id + "' ";
-            Connection connection = this.connection.get();
-            PreparedStatement pst = connection.prepareStatement(deleteWeightSql);
+            pst.setInt(1, id);
             pst.execute();
         } catch (SQLException e) {
-            throw new RuntimeException("Delete not successful");
+            throw new RuntimeException("Failed to remove weight " + item.getId(), e);
         }
     }
 

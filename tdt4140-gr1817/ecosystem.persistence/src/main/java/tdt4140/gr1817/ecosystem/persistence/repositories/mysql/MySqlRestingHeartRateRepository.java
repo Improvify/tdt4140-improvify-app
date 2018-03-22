@@ -84,15 +84,16 @@ public class MySqlRestingHeartRateRepository implements RestingHeartRateReposito
 
     @Override
     public void remove(RestingHeartRate item) {
-        try {
+        String deleteHeartRateSql = "DELETE FROM RestingHeartRate WHERE id = ?";
+        try (
+                Connection connection = this.connection.get();
+             PreparedStatement pst = connection.prepareStatement((deleteHeartRateSql))
+        ) {
             int id = item.getId();
-            String deleteHeartRateSql = "DELETE FROM RestingHeartRate WHERE id = '" + id + "'";
-            Connection connection = this.connection.get();
-            PreparedStatement pst = connection.prepareStatement((deleteHeartRateSql));
+            pst.setInt(1, id);
             pst.execute();
-
         } catch (SQLException e) {
-            throw new RuntimeException("Delete not successful");
+            throw new RuntimeException("Delete not successful", e);
         }
     }
 
