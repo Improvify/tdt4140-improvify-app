@@ -27,7 +27,7 @@
             <TableColumn fx:id="commentCol" onEditCommit="#changeCommentEvent" prefWidth="207.0" sortable="false" text="Comment" />
         </columns>
       </TableView>
-      <TextField layoutX="118.0" layoutY="292.0" text="Enter workout plan title" />
+      <TextField fx:id="titleField" layoutX="118.0" layoutY="292.0" promptText="Enter workout plan title" />
       <Button fx:id="addButton" layoutX="527.0" layoutY="287.0" mnemonicParsing="false" text="+" textAlignment="CENTER">
          <font>
             <Font name="System Bold" size="20.0" />
@@ -42,7 +42,7 @@
       <Label layoutX="596.0" layoutY="254.0" text="Delete row" />
       <Button layoutX="590.0" layoutY="610.0" mnemonicParsing="false" text="Cancel" />
       <Button layoutX="342.0" layoutY="610.0" mnemonicParsing="false" text="Save as template" />
-      <Button layoutX="517.0" layoutY="610.0" mnemonicParsing="false" text="Save" />
+      <Button fx:id="saveButton" layoutX="517.0" layoutY="610.0" mnemonicParsing="false" text="Save" />
       <Button layoutX="192.0" layoutY="610.0" mnemonicParsing="false" text="Export to PDF" />
    </children>
 </Pane>

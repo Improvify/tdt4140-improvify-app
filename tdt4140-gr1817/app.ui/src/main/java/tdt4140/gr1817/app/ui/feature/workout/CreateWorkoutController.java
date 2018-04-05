@@ -2,15 +2,21 @@ package tdt4140.gr1817.app.ui.feature.workout;
 
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.ClipboardContent;
@@ -24,6 +30,11 @@ import javax.inject.Inject;
 
 /**
  * JavaFX controller for creating workouts.
+ * <p>
+ * Created by Fredrik Jenssen and Pål Fossnes.
+ *
+ * @author Fredrik Jenssen
+ * @author Pål Fossnes
  */
 public class CreateWorkoutController {
 
@@ -34,6 +45,10 @@ public class CreateWorkoutController {
     private Button addButton;
     @FXML
     private Button deleteButton;
+    @FXML
+    private Button saveButton;
+    @FXML
+    private TextField titleField;
     @FXML
     private TableView<WorkoutRow> workoutTable;
     @FXML
@@ -49,24 +64,24 @@ public class CreateWorkoutController {
     public CreateWorkoutController() {
     }
 
-    public void changeWhatEvent(TableColumn.CellEditEvent edittedCell) {
+    public void changeWhatEvent(TableColumn.CellEditEvent editedCell) {
         WorkoutRow workWork = workoutTable.getSelectionModel().getSelectedItem();
-        workWork.setWhat(edittedCell.getNewValue().toString());
+        workWork.setWhat(editedCell.getNewValue().toString());
     }
 
-    public void changeTimeEvent(TableColumn.CellEditEvent edittedCell) {
+    public void changeTimeEvent(TableColumn.CellEditEvent editedCell) {
         WorkoutRow workWork = workoutTable.getSelectionModel().getSelectedItem();
-        workWork.setTime(edittedCell.getNewValue().toString());
+        workWork.setTime(editedCell.getNewValue().toString());
     }
 
-    public void changeIntensityEvent(TableColumn.CellEditEvent edittedCell) {
+    public void changeIntensityEvent(TableColumn.CellEditEvent editedCell) {
         WorkoutRow workWork = workoutTable.getSelectionModel().getSelectedItem();
-        workWork.setIntensity(edittedCell.getNewValue().toString());
+        workWork.setIntensity(editedCell.getNewValue().toString());
     }
 
-    public void changeCommentEvent(TableColumn.CellEditEvent edittedCell) {
+    public void changeCommentEvent(TableColumn.CellEditEvent editedCell) {
         WorkoutRow workWork = workoutTable.getSelectionModel().getSelectedItem();
-        workWork.setComment(edittedCell.getNewValue().toString());
+        workWork.setComment(editedCell.getNewValue().toString());
     }
 
     @FXML
@@ -86,10 +101,22 @@ public class CreateWorkoutController {
 
         workoutTable.setItems(workoutRowList);
         workoutTable.setEditable(true);
+        workoutTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         workoutTable.getStylesheets().add("tdt4140/gr1817/app/ui/stylesheets/tableview_stylesheet.css");
+
+        workoutTable.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if (workoutTable.isFocused()) {
+                    deleteButton.setDisable(false);
+                }
+            }
+        });
 
         addButton.setOnAction(addButtonHandler);
         deleteButton.setOnAction(deleteButtonHandler);
+        deleteButton.setDisable(true);
+        saveButton.setOnAction(saveButtonHandler);
 
         dragRow();
 
@@ -104,7 +131,6 @@ public class CreateWorkoutController {
 
     EventHandler<ActionEvent> addButtonHandler =
             new EventHandler<ActionEvent>() {
-
                 @Override
                 public void handle(ActionEvent t) {
                     WorkoutRow testRow = new WorkoutRow();
@@ -116,15 +142,58 @@ public class CreateWorkoutController {
 
     EventHandler<ActionEvent> deleteButtonHandler =
             new EventHandler<ActionEvent>() {
-
                 @Override
                 public void handle(ActionEvent t) {
-                    int selectedIndex = workoutTable.getSelectionModel().getSelectedIndex();
-                    if (selectedIndex < workoutRowList.size() && selectedIndex > -1) {
-                        workoutRowList.remove(selectedIndex);
+                    workoutRowList.removeAll(workoutTable.getSelectionModel().getSelectedItems());
+                    workoutTable.getSelectionModel().clearSelection();
+                    deleteButton.setDisable(true);
+                }
+            };
+
+    EventHandler<ActionEvent> saveButtonHandler =
+            new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    if (isValid()) {
+                        int i = 0;
                     }
                 }
             };
+
+    private boolean isValid() {
+        Alert emptyTitleAlert
+                = new Alert(Alert.AlertType.ERROR, "Missing workout plan title", ButtonType.OK);
+        Alert emptyWorkoutPlan
+                = new Alert(Alert.AlertType.ERROR, "Your workout plan must contain at least 1 row", ButtonType.OK);
+        Alert missingCellInformation
+                = new Alert(Alert.AlertType.ERROR, "One or more fields are empty");
+
+        //Check first if title or rows are missing
+        if (titleField.getText() == null || titleField.getText().trim().isEmpty()) {
+            emptyTitleAlert.showAndWait();
+            return false;
+        }
+        if (workoutRowList.isEmpty()) {
+            emptyWorkoutPlan.showAndWait();
+            return false;
+        }
+
+        //Iterate over table and see if there are any missing fields
+        for (WorkoutRow row : workoutRowList) {
+            if (row.what == null) {
+                missingCellInformation.showAndWait();
+                return false;
+            } else {
+                String temp = row.what.toString().trim().substring(23, row.what.toString().length() - 1);
+                if (row.intensity == null || row.time == null
+                        || row.what == null || temp.isEmpty() || temp.trim().isEmpty()) {
+                    missingCellInformation.showAndWait();
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 
     public void dragRow() {
         workoutTable.setRowFactory(tv -> {
