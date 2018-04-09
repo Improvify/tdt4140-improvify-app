@@ -62,7 +62,7 @@ public class UserResourceTest {
         int id = 1;
 
         // When
-        userResource.deleteGoal(id);
+        userResource.deleteUser(id);
 
         // Then
         verify(rep).remove(any(Specification.class));

@@ -45,7 +45,7 @@ public class RestingHeartRateResource {
 
     @DELETE
     @Path("{id}")
-    public String deleteGoal(@PathParam("id") int id) {
+    public String deleteRestingHeartRate(@PathParam("id") int id) {
         repository.remove(new GetRestingHeartRateByIdSpecification(id));
         return "Resting heart rate removed";
     }

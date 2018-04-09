@@ -63,7 +63,7 @@ public class WorkoutSessionResourceTest {
         int id = 1;
 
         // When
-        workoutSessionResource.deleteGoal(id);
+        workoutSessionResource.deleteWorkoutSession(id);
 
         // Then
         verify(rep).remove(any(Specification.class));

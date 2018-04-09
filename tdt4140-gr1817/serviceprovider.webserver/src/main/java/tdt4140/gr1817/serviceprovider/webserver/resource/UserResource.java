@@ -44,7 +44,7 @@ public class UserResource {
 
     @DELETE
     @Path("{id}")
-    public String deleteGoal(@PathParam("id") int id) {
+    public String deleteUser(@PathParam("id") int id) {
         repository.remove(new GetUserByIdSpecification(id));
         return "User removed";
     }

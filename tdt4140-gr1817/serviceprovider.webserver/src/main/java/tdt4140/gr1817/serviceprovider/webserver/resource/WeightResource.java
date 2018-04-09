@@ -44,7 +44,7 @@ public class WeightResource {
 
     @DELETE
     @Path("{id}")
-    public String deleteGoal(@PathParam("id") int id) {
+    public String deleteWeight(@PathParam("id") int id) {
         repository.remove(new GetWeightByIdSpecification(id));
         return "Weight removed";
     }
