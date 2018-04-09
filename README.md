@@ -10,7 +10,8 @@ Goal oriented training application
 * [x] Oppgave for 15. februar: Releaseplan  
 * [x] Oppgave for 8.mars: Sprint 1  
 * [x] Oppgave for 15.mars: Demo 1  
-* [ ] Oppgave for 22.mars: Sprint 2  
+* [x] Oppgave for 22.mars: Sprint 2  
+* [ ] Oppgave for 16.april: Sprint 3  
 
 > Hei studass, ingen på gruppa vår bruker Eclipse.  
 > Kjipern hvis du ikke får satt opp plugins for Eclipse.  
