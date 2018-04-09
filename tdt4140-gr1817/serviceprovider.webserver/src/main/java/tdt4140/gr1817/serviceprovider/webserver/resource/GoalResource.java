@@ -23,6 +23,7 @@ import javax.ws.rs.core.Response;
 @Slf4j
 @Path("goal")
 public class GoalResource {
+
     private final Gson gson;
     private final GoalRepository repository;
     private final GoalValidator validator;
@@ -50,7 +51,7 @@ public class GoalResource {
             }
             return Response.status(401).entity("Authorization failed").build();
         }
-        return Response.status(400).entity("Failed to add goal, illegal data for goal").build();
+        return Response.status(400).entity("Failed to add goal, illegal request").build();
     }
 
     @DELETE
@@ -68,7 +69,7 @@ public class GoalResource {
             return Response.status(401).entity("Authorization failed").build();
         } catch (IndexOutOfBoundsException e) {
             // If goal with given id doesn't exist
-            return Response.status(404).entity("Failed to remove goal, goal not found").build();
+            return Response.status(404).entity("Failed to remove goal, not found").build();
         }
     }
 }
