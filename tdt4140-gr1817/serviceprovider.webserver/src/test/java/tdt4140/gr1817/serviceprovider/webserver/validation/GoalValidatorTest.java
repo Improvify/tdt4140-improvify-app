@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
 public class GoalValidatorTest {
@@ -62,5 +62,17 @@ public class GoalValidatorTest {
 
         //Then
         assertThat(outcome, is(true));
+    }
+
+    @Test
+    public void shouldRequireDescription() throws Exception {
+        //Given
+        String json = "{\"id\": -5, \"isCompleted\": false, \"isCurrent\": true}";
+
+        //When
+        boolean outcome = validator.validate(json);
+
+        //Then
+        assertThat(outcome, is(false));
     }
 }
