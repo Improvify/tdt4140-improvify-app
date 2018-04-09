@@ -76,4 +76,17 @@ public class AuthBasicAuthenticatorTest {
         // Then
         assertThat(outcome, is(false));
     }
+
+    @Test
+    public void shouldNotAcceptNoCredentials() {
+        // Given
+        user.setUsername("test");
+        user.setPassword("123");
+
+        // When
+        boolean outcome = authenticator.authenticate(null, user);
+
+        // Then
+        assertThat(outcome, is(false));
+    }
 }
