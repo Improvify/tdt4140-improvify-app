@@ -44,7 +44,7 @@ public class WorkoutSessionResource {
 
     @DELETE
     @Path("{id}")
-    public String deleteGoal(@PathParam("id") int id) {
+    public String deleteWorkoutSession(@PathParam("id") int id) {
         repository.remove(new GetWorkoutSessionByIdSpecification(id));
         return "Workout session removed";
     }

@@ -63,7 +63,7 @@ public class WeightResourceTest {
         int id = 1;
 
         // When
-        weightResource.deleteGoal(id);
+        weightResource.deleteWeight(id);
 
         // Then
         verify(rep).remove(any(Specification.class));

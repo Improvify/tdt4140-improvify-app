@@ -64,7 +64,7 @@ public class RestingHeartRateResourceTest {
         int id = 1;
 
         // When
-        restingHeartRateResource.deleteGoal(id);
+        restingHeartRateResource.deleteRestingHeartRate(id);
 
         // Then
         verify(rep).remove(any(Specification.class));
