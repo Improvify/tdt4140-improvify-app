@@ -22,6 +22,6 @@ public class UserItemAdapter {
                 birthDate.get(Calendar.DAY_OF_MONTH));
         final int age = (int) ChronoUnit.YEARS.between(localBirthDate, LocalDate.now());
 
-        return new UserItem(user.getFirstName(), user.getLastName(), user.getEmail(), age);
+        return new UserItem(user.getId(), user.getFirstName(), user.getLastName(), user.getEmail(), age);
     }
 }
