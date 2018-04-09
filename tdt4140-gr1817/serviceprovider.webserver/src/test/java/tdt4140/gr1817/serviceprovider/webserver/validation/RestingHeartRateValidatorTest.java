@@ -32,7 +32,7 @@ public class RestingHeartRateValidatorTest {
     @Test
     public void shouldLackRequiredFields() throws Exception {
         //Given
-        String json = "{\"measuredAt\": \"2018-02-15\", \"heartRate\": 66}";
+        String json = "{\"heartRate\": 66}";
 
         //When
         boolean outcome = validator.validate(json);
@@ -66,7 +66,7 @@ public class RestingHeartRateValidatorTest {
     }
 
     @Test
-    public void shouldHaveIllegalID() throws Exception {
+    public void shouldIgnoreIllegalID() throws Exception {
         //Given
         String json = "{\"id\": -2, \"measuredAt\": \"2018-02-15\", \"heartRate\": 66}";
 
@@ -74,7 +74,7 @@ public class RestingHeartRateValidatorTest {
         boolean outcome = validator.validate(json);
 
         //Then
-        assertThat(outcome, is(false));
+        assertThat(outcome, is(true));
     }
 
     @Test

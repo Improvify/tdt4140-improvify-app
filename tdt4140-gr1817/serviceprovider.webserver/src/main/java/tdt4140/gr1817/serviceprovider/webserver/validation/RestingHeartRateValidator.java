@@ -22,22 +22,11 @@ public class RestingHeartRateValidator implements Validator {
             RestingHeartRate restingHeartRate = gson.fromJson(json, RestingHeartRate.class);
 
             return (isValidHeartRate(restingHeartRate.getHeartRate())
-                    && isValidDate(restingHeartRate.getMeasuredAt())
-                    && isValidID(restingHeartRate.getId()));
+                    && isValidDate(restingHeartRate.getMeasuredAt()));
 
         } catch (JsonSyntaxException | NullPointerException | NumberFormatException e) {
             return false;
         }
-    }
-
-    /**
-     * Checks that the ID is positive.
-     *
-     * @param id The ID to be checked.
-     * @return If the ID is valid.
-     */
-    private boolean isValidID(int id) {
-        return id > 0;
     }
 
     /**

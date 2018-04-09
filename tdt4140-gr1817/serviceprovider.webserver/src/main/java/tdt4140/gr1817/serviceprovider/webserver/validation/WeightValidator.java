@@ -23,7 +23,6 @@ public class WeightValidator implements Validator {
 
             return (isValidWeight(weight.getCurrentWeight())
                     && isValidDate(weight.getDate())
-//                    && isValidID(weight.getId())
             );
 
         } catch (JsonSyntaxException | NullPointerException | NumberFormatException e) {
@@ -39,16 +38,6 @@ public class WeightValidator implements Validator {
      */
     private boolean isValidWeight(float weight) {
         return weight > 0;
-    }
-
-    /**
-     * Checks that the ID is positive.
-     *
-     * @param id The ID to be checked.
-     * @return If the ID is valid.
-     */
-    private boolean isValidID(int id) {
-        return id > 0;
     }
 
     /**

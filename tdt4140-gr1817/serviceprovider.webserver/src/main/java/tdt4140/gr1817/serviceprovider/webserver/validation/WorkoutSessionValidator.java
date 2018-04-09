@@ -24,7 +24,6 @@ public class WorkoutSessionValidator implements Validator {
             WorkoutSession workoutSession = gson.fromJson(json, WorkoutSession.class);
 
             return (isValidDistance(workoutSession.getDistanceRun())
-//                    && isValidID(workoutSession.getId())
                     && isValidKCal(workoutSession.getKiloCalories())
                     && isValidHeartRate(workoutSession.getAverageHeartRate())
                     && isValidHeartRate(workoutSession.getMaxHeartRate())
@@ -46,16 +45,6 @@ public class WorkoutSessionValidator implements Validator {
      */
     private boolean isValidDistance(float distance) {
         return distance > 0;
-    }
-
-    /**
-     * Checks that the ID is positive.
-     *
-     * @param id The ID to be checked.
-     * @return If the ID is valid.
-     */
-    private boolean isValidID(int id) {
-        return id > 0;
     }
 
     /**

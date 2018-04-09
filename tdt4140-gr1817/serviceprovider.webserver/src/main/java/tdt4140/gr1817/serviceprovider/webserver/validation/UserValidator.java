@@ -26,7 +26,6 @@ public class UserValidator implements Validator {
                     && isValidEmail(user.getEmail())
                     && isValidBirthDate(user.getBirthDate())
                     && isValidHeight(user.getHeight())
-//                    && isValidID(user.getId())
             );
 
         } catch (JsonSyntaxException | NullPointerException | NumberFormatException e) {
@@ -42,16 +41,6 @@ public class UserValidator implements Validator {
      */
     private boolean isValidHeight(float height) {
         return height > 0;
-    }
-
-    /**
-     * Checks that the ID is positive.
-     *
-     * @param id The ID to be checked.
-     * @return If the ID is valid.
-     */
-    private boolean isValidID(int id) {
-        return id > 0;
     }
 
     /**

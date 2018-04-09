@@ -18,8 +18,8 @@ public class GoalValidator implements Validator {
     @Override
     public boolean validate(String json) {
         try {
-            gson.fromJson(json, Goal.class);
-            return true; //isValidID(goal.getId());
+            Goal goal = gson.fromJson(json, Goal.class);
+            return isValidDescription(goal.getDescription());
 
         } catch (JsonSyntaxException | NullPointerException | NumberFormatException e) {
             return false;
@@ -27,12 +27,12 @@ public class GoalValidator implements Validator {
     }
 
     /**
-     * Checks that the ID is positive.
+     * Checks that the description is not null.
      *
-     * @param id The ID to be checked.
-     * @return If the ID is valid.
+     * @param description The description to be checked.
+     * @return If the description is valid.
      */
-    private boolean isValidID(int id) {
-        return id > 0;
+    private boolean isValidDescription(String description) {
+        return description != null;
     }
 }
