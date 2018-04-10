@@ -86,6 +86,19 @@ public class RestingHeartRateResourceTest {
     }
 
     @Test
+    public void shouldNotAddGoalWhenIllegalHeader() {
+        // Given
+        RestingHeartRate restingHeartRate = createRestingHeartRate();
+        String json = gson.toJson(restingHeartRate);
+
+        // When
+        restingHeartRateResource.createRestingHeartRate(json, AuthBasicUtil.HEADER_ILLEGAL);
+
+        // Then
+        verifyNoMoreInteractions(restingHeartRateRepository);
+    }
+
+    @Test
     public void shouldRemoveRestingHeartRate() {
         // Given
         int id = 1;
@@ -106,6 +119,19 @@ public class RestingHeartRateResourceTest {
 
         // When
         restingHeartRateResource.deleteRestingHeartRate(id, AuthBasicUtil.HEADER_DEFAULT);
+
+        // Then
+        verify(restingHeartRateRepository).query(any(Specification.class));
+        verifyNoMoreInteractions(restingHeartRateRepository);
+    }
+
+    @Test
+    public void shouldNotRemoveGoalWhenIllegalHeader() {
+        // Given
+        int id = 1;
+
+        // When
+        restingHeartRateResource.deleteRestingHeartRate(id, AuthBasicUtil.HEADER_ILLEGAL);
 
         // Then
         verify(restingHeartRateRepository).query(any(Specification.class));

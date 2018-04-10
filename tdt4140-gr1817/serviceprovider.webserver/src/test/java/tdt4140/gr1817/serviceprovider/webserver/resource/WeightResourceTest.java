@@ -83,6 +83,19 @@ public class WeightResourceTest {
     }
 
     @Test
+    public void shouldNotAddWeightWhenIllegalHeader() {
+        // Given
+        Weight weight = createWeight();
+        String json = gson.toJson(weight);
+
+        // When
+        weightResource.createWeight(json, AuthBasicUtil.HEADER_ILLEGAL);
+
+        // Then
+        verifyNoMoreInteractions(weightRepository);
+    }
+
+    @Test
     public void shouldRemoveWeight() {
         // Given
         int id = 1;
@@ -103,6 +116,19 @@ public class WeightResourceTest {
 
         // When
         weightResource.deleteWeight(id, AuthBasicUtil.HEADER_DEFAULT);
+
+        // Then
+        verify(weightRepository).query(any(Specification.class));
+        verifyNoMoreInteractions(weightRepository);
+    }
+
+    @Test
+    public void shouldNotRemoveWeightWhenIllegalHeader() {
+        // Given
+        int id = 1;
+
+        // When
+        weightResource.deleteWeight(id, AuthBasicUtil.HEADER_ILLEGAL);
 
         // Then
         verify(weightRepository).query(any(Specification.class));

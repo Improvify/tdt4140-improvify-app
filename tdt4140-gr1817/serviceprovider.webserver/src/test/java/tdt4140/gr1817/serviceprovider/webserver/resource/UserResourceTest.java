@@ -17,6 +17,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -66,6 +67,21 @@ public class UserResourceTest {
     }
 
     @Test
+    public void shouldCallAddAndThrowException() {
+        // Given
+        User user = createUser();
+        String json = gson.toJson(user);
+        doThrow(new RuntimeException()).when(userRepository).add(user);
+
+        // When
+        userResource.createUser(json);
+
+        // Then
+        verify(userRepository).add(any(User.class));
+        verifyNoMoreInteractions(userRepository);
+    }
+
+    @Test
     public void shouldRemoveUser() {
         // Given
         int id = 1;
@@ -86,6 +102,19 @@ public class UserResourceTest {
 
         // When
         userResource.deleteUser(id, AuthBasicUtil.HEADER_DEFAULT);
+
+        // Then
+        verify(userRepository).query(any(Specification.class));
+        verifyNoMoreInteractions(userRepository);
+    }
+
+    @Test
+    public void shouldNotRemoveUserWhenIllegalHeader() {
+        // Given
+        int id = 1;
+
+        // When
+        userResource.deleteUser(id, AuthBasicUtil.HEADER_ILLEGAL);
 
         // Then
         verify(userRepository).query(any(Specification.class));

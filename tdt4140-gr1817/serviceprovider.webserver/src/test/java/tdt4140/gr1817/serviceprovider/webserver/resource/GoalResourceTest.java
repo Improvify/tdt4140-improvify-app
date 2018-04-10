@@ -83,6 +83,19 @@ public class GoalResourceTest {
     }
 
     @Test
+    public void shouldNotAddGoalWhenIllegalHeader() {
+        // Given
+        Goal goal = createGoal();
+        String json = gson.toJson(goal);
+
+        // When
+        goalResource.createGoal(json, AuthBasicUtil.HEADER_ILLEGAL);
+
+        // Then
+        verifyNoMoreInteractions(goalRepository);
+    }
+
+    @Test
     public void shouldRemoveGoal() {
         // Given
         int id = 1;
@@ -103,6 +116,19 @@ public class GoalResourceTest {
 
         // When
         goalResource.deleteGoal(id, AuthBasicUtil.HEADER_DEFAULT);
+
+        // Then
+        verify(goalRepository).query(any(Specification.class));
+        verifyNoMoreInteractions(goalRepository);
+    }
+
+    @Test
+    public void shouldNotRemoveGoalWhenIllegalHeader() {
+        // Given
+        int id = 1;
+
+        // When
+        goalResource.deleteGoal(id, AuthBasicUtil.HEADER_ILLEGAL);
 
         // Then
         verify(goalRepository).query(any(Specification.class));

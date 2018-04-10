@@ -86,6 +86,19 @@ public class ServiceProviderPermissionsResourceTest {
     }
 
     @Test
+    public void shouldNotAddServiceProviderPermissionsWhenIllegalHeader() {
+        // Given
+        ServiceProviderPermissions ServiceProviderPermissions = createServiceProviderPermissions();
+        String json = gson.toJson(ServiceProviderPermissions);
+
+        // When
+        resource.createServiceProviderPermissions(json, AuthBasicUtil.HEADER_ILLEGAL);
+
+        // Then
+        verifyNoMoreInteractions(permissionsRepository);
+    }
+
+    @Test
     public void shouldRemoveServiceProviderPermissions() {
         // Given
         int uid = 1, sid = 1;
@@ -106,6 +119,19 @@ public class ServiceProviderPermissionsResourceTest {
 
         // When
         resource.deleteServiceProviderPermissions(uid, sid, AuthBasicUtil.HEADER_DEFAULT);
+
+        // Then
+        verify(permissionsRepository).query(any(Specification.class));
+        verifyNoMoreInteractions(permissionsRepository);
+    }
+
+    @Test
+    public void shouldNotRemoveServiceProviderPermissionsWhenIllegalHeader() {
+        // Given
+        int uid = 1, sid = 1;
+
+        // When
+        resource.deleteServiceProviderPermissions(uid, sid, AuthBasicUtil.HEADER_ILLEGAL);
 
         // Then
         verify(permissionsRepository).query(any(Specification.class));

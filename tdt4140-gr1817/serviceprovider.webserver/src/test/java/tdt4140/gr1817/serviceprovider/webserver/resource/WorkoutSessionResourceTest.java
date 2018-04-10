@@ -84,6 +84,19 @@ public class WorkoutSessionResourceTest {
     }
 
     @Test
+    public void shouldNotAddGoalWhenIllegalHeader() {
+        // Given
+        WorkoutSession workoutSession = createWorkoutSession();
+        String json = gson.toJson(workoutSession);
+
+        // When
+        workoutSessionResource.createWorkoutSession(json, AuthBasicUtil.HEADER_ILLEGAL);
+
+        // Then
+        verifyNoMoreInteractions(workoutSessionRepository);
+    }
+
+    @Test
     public void shouldRemoveGoal() {
         // Given
         int id = 1;
@@ -104,6 +117,19 @@ public class WorkoutSessionResourceTest {
 
         // When
         workoutSessionResource.deleteWorkoutSession(id, AuthBasicUtil.HEADER_DEFAULT);
+
+        // Then
+        verify(workoutSessionRepository).query(any(Specification.class));
+        verifyNoMoreInteractions(workoutSessionRepository);
+    }
+
+    @Test
+    public void shouldNotRemoveGoalWhenIllegalHeader() {
+        // Given
+        int id = 1;
+
+        // When
+        workoutSessionResource.deleteWorkoutSession(id, AuthBasicUtil.HEADER_ILLEGAL);
 
         // Then
         verify(workoutSessionRepository).query(any(Specification.class));
