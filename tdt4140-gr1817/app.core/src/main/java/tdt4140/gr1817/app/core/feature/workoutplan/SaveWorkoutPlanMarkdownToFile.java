@@ -1,9 +1,11 @@
 package tdt4140.gr1817.app.core.feature.workoutplan;
 
+import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 
 public class SaveWorkoutPlanMarkdownToFile {
 
@@ -11,10 +13,13 @@ public class SaveWorkoutPlanMarkdownToFile {
 
 
     public void writeToFile(File file, String contents) throws IOException {
-        FileWriter fileWriter = new FileWriter(file);
-        PrintWriter printWriter = new PrintWriter(fileWriter);
-        printWriter.print(contents);
-        printWriter.flush();
-        printWriter.close();
+        try (
+                BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file, true),
+                        StandardCharsets.UTF_8))) {
+
+            bw.write(contents);
+        } catch (Exception ex) {
+            throw new RuntimeException("Failed to write to file", ex);
+        }
     }
 }
