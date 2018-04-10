@@ -45,7 +45,7 @@ public class WeightResource {
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
     public Response createWeight(String json, @HeaderParam("Authorization") String credentials) {
         if (validator.validate(json)) {
             Weight weight = gson.fromJson(json, Weight.class);
@@ -56,19 +56,19 @@ public class WeightResource {
 
                 if (authenticator.authenticate(credentials, weight.getUser())) {
                     weightRepository.add(weight);
-                    return Response.status(200).entity("Weight added").build();
+                    return Response.status(200).entity("{\"message\":\"Weight added\"}").build();
                 }
-                return Response.status(401).entity("Authorization failed").build();
+                return Response.status(401).entity("{\"message\":\"Authorization failed\"}").build();
             } catch (RuntimeException e) {
-                return Response.status(401).entity("Authorization failed").build();
+                return Response.status(401).entity("{\"message\":\"Authorization failed\"}").build();
             }
         }
-        return Response.status(400).entity("Failed to add weight, illegal json for weight").build();
+        return Response.status(400).entity("{\"message\":\"Failed to add weight, illegal json for weight\"}").build();
     }
 
     @DELETE
     @Path("{id}")
-    @Produces(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
     public Response deleteWeight(@PathParam("id") int id, @HeaderParam("Authorization") String credentials) {
         Specification specification = new GetWeightByIdSpecification(id);
         try {
@@ -76,11 +76,11 @@ public class WeightResource {
 
             if (authenticator.authenticate(credentials, weight.getUser())) {
                 weightRepository.remove(specification);
-                return Response.status(200).entity("Weight removed").build();
+                return Response.status(200).entity("{\"message\":\"Weight removed\"}").build();
             }
-            return Response.status(401).entity("Authorization failed").build();
+            return Response.status(401).entity("{\"message\":\"Authorization failed\"}").build();
         } catch (RuntimeException e) {
-            return Response.status(401).entity("Authorization failed").build();
+            return Response.status(401).entity("{\"message\":\"Authorization failed\"}").build();
         }
     }
 

@@ -45,7 +45,7 @@ public class GoalResource {
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
     public Response createGoal(String json, @HeaderParam("Authorization") String credentials) {
         if (validator.validate(json)) {
             Goal goal = gson.fromJson(json, Goal.class);
@@ -56,19 +56,19 @@ public class GoalResource {
 
                 if (authenticator.authenticate(credentials, goal.getUser())) {
                     goalRepository.add(goal);
-                    return Response.status(200).entity("Goal added").build();
+                    return Response.status(200).entity("{\"message\":\"Goal added\"}").build();
                 }
-                return Response.status(401).entity("Authorization failed").build();
+                return Response.status(401).entity("{\"message\":\"Authorization failed\"}").build();
             } catch (RuntimeException e) {
-                return Response.status(401).entity("Authorization failed").build();
+                return Response.status(401).entity("{\"message\":\"Authorization failed\"}").build();
             }
         }
-        return Response.status(400).entity("Failed to add goal, illegal json for goal").build();
+        return Response.status(400).entity("{\"message\":\"Failed to add goal, illegal json for goal\"}").build();
     }
 
     @DELETE
     @Path("{id}")
-    @Produces(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
     public Response deleteGoal(@PathParam("id") int id, @HeaderParam("Authorization") String credentials) {
         Specification specification = new GetGoalByIdSpecification(id);
         try {
@@ -76,11 +76,11 @@ public class GoalResource {
 
             if (authenticator.authenticate(credentials, goal.getUser())) {
                 goalRepository.remove(specification);
-                return Response.status(200).entity("Goal removed").build();
+                return Response.status(200).entity("{\"message\":\"Goal removed\"}").build();
             }
-            return Response.status(401).entity("Authorization failed").build();
+            return Response.status(401).entity("{\"message\":\"Authorization failed\"}").build();
         } catch (RuntimeException e) {
-            return Response.status(401).entity("Authorization failed").build();
+            return Response.status(401).entity("{\"message\":\"Authorization failed\"}").build();
         }
     }
 

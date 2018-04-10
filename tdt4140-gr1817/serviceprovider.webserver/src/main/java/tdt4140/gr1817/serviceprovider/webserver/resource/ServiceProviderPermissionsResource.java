@@ -47,7 +47,7 @@ public class ServiceProviderPermissionsResource {
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
     public Response createServiceProviderPermissions(String json, @HeaderParam("Authorization") String credentials) {
         if (validator.validate(json)) {
             ServiceProviderPermissions serviceProviderPermissions = gson.fromJson(json,
@@ -59,20 +59,21 @@ public class ServiceProviderPermissionsResource {
 
                 if (authenticator.authenticate(credentials, serviceProviderPermissions.getUser())) {
                     permissionsRepository.add(serviceProviderPermissions);
-                    return Response.status(200).entity("Service provider permissions added").build();
+                    return Response.status(200).entity("{\"message\":\"Service provider permissions added\"}").build();
                 }
-                return Response.status(401).entity("Authorization failed").build();
+                return Response.status(401).entity("{\"message\":\"Authorization failed\"}").build();
             } catch (RuntimeException e) {
-                return Response.status(401).entity("Authorization failed").build();
+                return Response.status(401).entity("{\"message\":\"Authorization failed\"}").build();
             }
         }
         return Response.status(400)
-                .entity("Failed to add service provider permissions, illegal json for permissions").build();
+                .entity("{\"message\":\"Failed to add service provider permissions, illegal json for permissions\"}")
+                .build();
     }
 
     @DELETE
     @Path("{uid}-{sid}")
-    @Produces(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
     public Response deleteServiceProviderPermissions(@PathParam("uid") int uid, @PathParam("sid") int sid,
                                                      @HeaderParam("Authorization") String credentials) {
         Specification specification = new GetServiceProviderPermissionByIdSpecification(uid, sid);
@@ -81,11 +82,11 @@ public class ServiceProviderPermissionsResource {
 
             if (authenticator.authenticate(credentials, serviceProviderPermissions.getUser())) {
                 permissionsRepository.remove(specification);
-                return Response.status(200).entity("Service provider permissions removed").build();
+                return Response.status(200).entity("{\"message\":\"Service provider permissions removed\"}").build();
             }
-            return Response.status(401).entity("Authorization failed").build();
+            return Response.status(401).entity("{\"message\":\"Authorization failed\"}").build();
         } catch (RuntimeException e) {
-            return Response.status(401).entity("Authorization failed").build();
+            return Response.status(401).entity("{\"message\":\"Authorization failed\"}").build();
         }
     }
 

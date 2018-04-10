@@ -45,7 +45,7 @@ public class WorkoutSessionResource {
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
     public Response createWorkoutSession(String json, @HeaderParam("Authorization") String credentials) {
         if (validator.validate(json)) {
             WorkoutSession workoutSession = gson.fromJson(json, WorkoutSession.class);
@@ -56,19 +56,20 @@ public class WorkoutSessionResource {
 
                 if (authenticator.authenticate(credentials, workoutSession.getUser())) {
                     workoutSessionRepository.add(workoutSession);
-                    return Response.status(200).entity("Workout session added").build();
+                    return Response.status(200).entity("{\"message\":\"Workout session added\"}").build();
                 }
-                return Response.status(401).entity("Authorization failed").build();
+                return Response.status(401).entity("{\"message\":\"Authorization failed\"}").build();
             } catch (RuntimeException e) {
-                return Response.status(401).entity("Authorization failed").build();
+                return Response.status(401).entity("{\"message\":\"Authorization failed\"}").build();
             }
         }
-        return Response.status(400).entity("Failed to add workout session, illegal json for workout session").build();
+        return Response.status(400)
+                .entity("{\"message\":\"Failed to add workout session, illegal json for workout session\"}").build();
     }
 
     @DELETE
     @Path("{id}")
-    @Produces(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
     public Response deleteWorkoutSession(@PathParam("id") int id, @HeaderParam("Authorization") String credentials) {
         Specification specification = new GetWorkoutSessionByIdSpecification(id);
         try {
@@ -76,11 +77,11 @@ public class WorkoutSessionResource {
 
             if (authenticator.authenticate(credentials, workoutSession.getUser())) {
                 workoutSessionRepository.remove(specification);
-                return Response.status(200).entity("Workout session removed").build();
+                return Response.status(200).entity("{\"message\":\"Workout session removed\"}").build();
             }
-            return Response.status(401).entity("Authorization failed").build();
+            return Response.status(401).entity("{\"message\":\"Authorization failed\"}").build();
         } catch (RuntimeException e) {
-            return Response.status(401).entity("Authorization failed").build();
+            return Response.status(401).entity("{\"message\":\"Authorization failed\"}").build();
         }
     }
 

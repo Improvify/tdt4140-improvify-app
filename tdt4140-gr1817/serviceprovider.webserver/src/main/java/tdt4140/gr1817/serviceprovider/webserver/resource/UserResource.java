@@ -40,23 +40,23 @@ public class UserResource {
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
     public Response createUser(String json) {
         if (validator.validate(json)) {
             User user = gson.fromJson(json, User.class);
             try {
                 repository.add(user);
-                return Response.status(200).entity("User added").build();
+                return Response.status(200).entity("{\"message\":\"User added\"}").build();
             } catch (RuntimeException e) {
-                return Response.status(400).entity("Failed to add user, illegal request").build();
+                return Response.status(400).entity("{\"message\":\"Failed to add user, illegal request\"}").build();
             }
         }
-        return Response.status(400).entity("Failed to add user, illegal json for user").build();
+        return Response.status(400).entity("{\"message\":\"Failed to add user, illegal json for user\"}").build();
     }
 
     @DELETE
     @Path("{id}")
-    @Produces(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
     public Response deleteUser(@PathParam("id") int id, @HeaderParam("Authorization") String credentials) {
         Specification specification = new GetUserByIdSpecification(id);
         try {
@@ -64,11 +64,11 @@ public class UserResource {
 
             if (authenticator.authenticate(credentials, user)) {
                 repository.remove(specification);
-                return Response.status(200).entity("User removed").build();
+                return Response.status(200).entity("{\"message\":\"User removed\"}").build();
             }
-            return Response.status(401).entity("Authorization failed").build();
+            return Response.status(401).entity("{\"message\":\"Authorization failed\"}").build();
         } catch (RuntimeException e) {
-            return Response.status(401).entity("Authorization failed").build();
+            return Response.status(401).entity("{\"message\":\"Authorization failed\"}").build();
         }
     }
 }

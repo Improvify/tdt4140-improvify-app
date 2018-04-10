@@ -93,7 +93,7 @@ public class UserResourceTest {
     }
 
     private static User createUser() {
-        Calendar calendar = new GregorianCalendar(2000,1,1);
+        Calendar calendar = new GregorianCalendar(2000, 1, 1);
         calendar.set(Calendar.MILLISECOND, 0); // JSON doesnt serialize milliseconds
         Date date = calendar.getTime();
         return new User(1, "Test", "User", 1.8f, date, "test", "123", "123@hotmail.com");

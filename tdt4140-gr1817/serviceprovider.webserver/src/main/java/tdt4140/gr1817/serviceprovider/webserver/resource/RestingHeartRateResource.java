@@ -46,7 +46,7 @@ public class RestingHeartRateResource {
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
     public Response createRestingHeartRate(String json, @HeaderParam("Authorization") String credentials) {
         if (validator.validate(json)) {
             RestingHeartRate restingHeartRate = gson.fromJson(json, RestingHeartRate.class);
@@ -57,19 +57,21 @@ public class RestingHeartRateResource {
 
                 if (authenticator.authenticate(credentials, restingHeartRate.getMeasuredBy())) {
                     restingHeartRateRepository.add(restingHeartRate);
-                    return Response.status(200).entity("Resting heart rate added").build();
+                    return Response.status(200).entity("{\"message\":\"Resting heart rate added\"}").build();
                 }
-                return Response.status(401).entity("Authorization failed").build();
+                return Response.status(401).entity("{\"message\":\"Authorization failed\"}").build();
             } catch (RuntimeException e) {
-                return Response.status(401).entity("Authorization failed").build();
+                return Response.status(401).entity("{\"message\":\"Authorization failed\"}").build();
             }
         }
-        return Response.status(400).entity("Failed to add resting heart rate, illegal json for heart rate").build();
+        return Response.status(400)
+                .entity("{\"message\":\"Failed to add resting heart rate, illegal json for heart rate\"}")
+                .build();
     }
 
     @DELETE
     @Path("{id}")
-    @Produces(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
     public Response deleteRestingHeartRate(@PathParam("id") int id, @HeaderParam("Authorization") String credentials) {
         Specification specification = new GetRestingHeartRateByIdSpecification(id);
         try {
@@ -77,11 +79,11 @@ public class RestingHeartRateResource {
 
             if (authenticator.authenticate(credentials, restingHeartRate.getMeasuredBy())) {
                 restingHeartRateRepository.remove(specification);
-                return Response.status(200).entity("Resting heart rate removed").build();
+                return Response.status(200).entity("{\"message\":\"Resting heart rate removed\"}").build();
             }
-            return Response.status(401).entity("Authorization failed").build();
+            return Response.status(401).entity("{\"message\":\"Authorization failed\"}").build();
         } catch (RuntimeException e) {
-            return Response.status(401).entity("Authorization failed").build();
+            return Response.status(401).entity("{\"message\":\"Authorization failed\"}").build();
         }
     }
 
