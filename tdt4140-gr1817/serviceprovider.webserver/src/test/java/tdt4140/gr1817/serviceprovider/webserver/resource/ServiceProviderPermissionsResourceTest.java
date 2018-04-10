@@ -9,6 +9,7 @@ import tdt4140.gr1817.ecosystem.persistence.data.ServiceProvider;
 import tdt4140.gr1817.ecosystem.persistence.data.ServiceProviderPermissions;
 import tdt4140.gr1817.ecosystem.persistence.data.User;
 import tdt4140.gr1817.ecosystem.persistence.repositories.ServiceProviderPermissionsRepository;
+import tdt4140.gr1817.ecosystem.persistence.repositories.UserRepository;
 import tdt4140.gr1817.serviceprovider.webserver.validation.AuthBasicAuthenticator;
 import tdt4140.gr1817.serviceprovider.webserver.validation.ServiceProviderPermissionsValidator;
 import tdt4140.gr1817.serviceprovider.webserver.validation.util.AuthBasicUtil;
@@ -25,20 +26,23 @@ import static org.mockito.Mockito.when;
 
 public class ServiceProviderPermissionsResourceTest {
 
-    private ServiceProviderPermissionsRepository rep;
+    private ServiceProviderPermissionsRepository permissionsRepository;
     private Gson gson = new Gson();
     private ServiceProviderPermissionsResource resource;
 
     @Before
     public void setUp() throws Exception {
-        rep = Mockito.mock(ServiceProviderPermissionsRepository.class);
+        permissionsRepository = Mockito.mock(ServiceProviderPermissionsRepository.class);
+        UserRepository userRepository = Mockito.mock(UserRepository.class);
 
         final ServiceProviderPermissions permissions = createServiceProviderPermissions();
-        when(rep.query(Mockito.any())).thenReturn(Collections.singletonList(permissions));
+        when(permissionsRepository.query(Mockito.any())).thenReturn(Collections.singletonList(permissions));
+        when(userRepository.query(Mockito.any())).thenReturn(Collections.singletonList(permissions.getUser()));
 
         final ServiceProviderPermissionsValidator validator = new ServiceProviderPermissionsValidator(gson);
         final AuthBasicAuthenticator authenticator = new AuthBasicAuthenticator();
-        resource = new ServiceProviderPermissionsResource(rep, gson, validator, authenticator);
+        resource = new ServiceProviderPermissionsResource(permissionsRepository, userRepository, gson,
+                validator, authenticator);
     }
 
     @Test
@@ -51,8 +55,8 @@ public class ServiceProviderPermissionsResourceTest {
         resource.createServiceProviderPermissions(json, AuthBasicUtil.HEADER_TEST_123);
 
         // Then
-        verify(rep).add(Mockito.eq(ServiceProviderPermissions));
-        verifyNoMoreInteractions(rep);
+        verify(permissionsRepository).add(Mockito.eq(ServiceProviderPermissions));
+        verifyNoMoreInteractions(permissionsRepository);
     }
 
     @Test
@@ -65,7 +69,7 @@ public class ServiceProviderPermissionsResourceTest {
         resource.createServiceProviderPermissions(invalidJson, AuthBasicUtil.HEADER_TEST_123);
 
         // Then
-        verifyNoMoreInteractions(rep);
+        verifyNoMoreInteractions(permissionsRepository);
     }
 
     @Test
@@ -78,7 +82,7 @@ public class ServiceProviderPermissionsResourceTest {
         resource.createServiceProviderPermissions(json, AuthBasicUtil.HEADER_DEFAULT);
 
         // Then
-        verifyNoMoreInteractions(rep);
+        verifyNoMoreInteractions(permissionsRepository);
     }
 
     @Test
@@ -90,9 +94,9 @@ public class ServiceProviderPermissionsResourceTest {
         resource.deleteServiceProviderPermissions(uid, sid, AuthBasicUtil.HEADER_TEST_123);
 
         // Then
-        verify(rep).query(any(Specification.class));
-        verify(rep).remove(any(Specification.class));
-        verifyNoMoreInteractions(rep);
+        verify(permissionsRepository).query(any(Specification.class));
+        verify(permissionsRepository).remove(any(Specification.class));
+        verifyNoMoreInteractions(permissionsRepository);
     }
 
     @Test
@@ -104,12 +108,12 @@ public class ServiceProviderPermissionsResourceTest {
         resource.deleteServiceProviderPermissions(uid, sid, AuthBasicUtil.HEADER_DEFAULT);
 
         // Then
-        verify(rep).query(any(Specification.class));
-        verifyNoMoreInteractions(rep);
+        verify(permissionsRepository).query(any(Specification.class));
+        verifyNoMoreInteractions(permissionsRepository);
     }
 
     private static ServiceProviderPermissions createServiceProviderPermissions() {
-        Calendar calendar = new GregorianCalendar();
+        Calendar calendar = new GregorianCalendar(2000,1,1);
         calendar.set(Calendar.MILLISECOND, 0); // JSON doesnt serialize milliseconds
         Date date = calendar.getTime();
         User user = new User(1, "Test", "User", 1.8f, date, "test", "123", "123@hotmail.com");

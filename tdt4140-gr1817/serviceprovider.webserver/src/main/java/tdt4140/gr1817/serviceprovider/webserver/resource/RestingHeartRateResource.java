@@ -4,8 +4,11 @@ import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
 import tdt4140.gr1817.ecosystem.persistence.Specification;
 import tdt4140.gr1817.ecosystem.persistence.data.RestingHeartRate;
+import tdt4140.gr1817.ecosystem.persistence.data.User;
 import tdt4140.gr1817.ecosystem.persistence.repositories.RestingHeartRateRepository;
+import tdt4140.gr1817.ecosystem.persistence.repositories.UserRepository;
 import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.specification.GetRestingHeartRateByIdSpecification;
+import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.specification.GetUserByIdSpecification;
 import tdt4140.gr1817.serviceprovider.webserver.validation.AuthBasicAuthenticator;
 import tdt4140.gr1817.serviceprovider.webserver.validation.RestingHeartRateValidator;
 
@@ -25,14 +28,17 @@ import javax.ws.rs.core.Response;
 public class RestingHeartRateResource {
 
     private final Gson gson;
-    private final RestingHeartRateRepository repository;
+    private final RestingHeartRateRepository restingHeartRateRepository;
+    private final UserRepository userRepository;
     private final RestingHeartRateValidator validator;
     private final AuthBasicAuthenticator authenticator;
 
     @Inject
-    public RestingHeartRateResource(RestingHeartRateRepository repository, Gson gson,
-                                    RestingHeartRateValidator validator, AuthBasicAuthenticator authenticator) {
-        this.repository = repository;
+    public RestingHeartRateResource(RestingHeartRateRepository restingHeartRateRepository,
+                                    UserRepository userRepository, Gson gson, RestingHeartRateValidator validator,
+                                    AuthBasicAuthenticator authenticator) {
+        this.restingHeartRateRepository = restingHeartRateRepository;
+        this.userRepository = userRepository;
         this.gson = gson;
         this.validator = validator;
         this.authenticator = authenticator;
@@ -45,13 +51,20 @@ public class RestingHeartRateResource {
         if (validator.validate(json)) {
             RestingHeartRate restingHeartRate = gson.fromJson(json, RestingHeartRate.class);
 
-            if (authenticator.authenticate(credentials, restingHeartRate.getMeasuredBy())) {
-                repository.add(restingHeartRate);
-                return Response.status(200).entity("Resting heart rate added").build();
+            try {
+                User user = getCorrectUserDataFromDatabase(restingHeartRate.getMeasuredBy());
+                restingHeartRate.setMeasuredBy(user);
+
+                if (authenticator.authenticate(credentials, restingHeartRate.getMeasuredBy())) {
+                    restingHeartRateRepository.add(restingHeartRate);
+                    return Response.status(200).entity("Resting heart rate added").build();
+                }
+                return Response.status(401).entity("Authorization failed").build();
+            } catch (RuntimeException e) {
+                return Response.status(401).entity("Authorization failed").build();
             }
-            return Response.status(401).entity("Authorization failed").build();
         }
-        return Response.status(400).entity("Failed to add resting heart rate, illegal request").build();
+        return Response.status(400).entity("Failed to add resting heart rate, illegal json for heart rate").build();
     }
 
     @DELETE
@@ -60,16 +73,20 @@ public class RestingHeartRateResource {
     public Response deleteRestingHeartRate(@PathParam("id") int id, @HeaderParam("Authorization") String credentials) {
         Specification specification = new GetRestingHeartRateByIdSpecification(id);
         try {
-            RestingHeartRate restingHeartRate = repository.query(specification).get(0);
+            RestingHeartRate restingHeartRate = restingHeartRateRepository.query(specification).get(0);
 
             if (authenticator.authenticate(credentials, restingHeartRate.getMeasuredBy())) {
-                repository.remove(specification);
+                restingHeartRateRepository.remove(specification);
                 return Response.status(200).entity("Resting heart rate removed").build();
             }
             return Response.status(401).entity("Authorization failed").build();
-        } catch (IndexOutOfBoundsException e) {
-            // If rate with given id doesn't exist
-            return Response.status(404).entity("Failed to remove resting heart rate, not found").build();
+        } catch (RuntimeException e) {
+            return Response.status(401).entity("Authorization failed").build();
         }
+    }
+
+    private User getCorrectUserDataFromDatabase(User user) {
+        Specification specification = new GetUserByIdSpecification(user.getId());
+        return userRepository.query(specification).get(0);
     }
 }

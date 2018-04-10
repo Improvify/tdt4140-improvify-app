@@ -44,10 +44,14 @@ public class UserResource {
     public Response createUser(String json) {
         if (validator.validate(json)) {
             User user = gson.fromJson(json, User.class);
-            repository.add(user);
-            return Response.status(200).entity("User added").build();
+            try {
+                repository.add(user);
+                return Response.status(200).entity("User added").build();
+            } catch (RuntimeException e) {
+                return Response.status(400).entity("Failed to add user, illegal request").build();
+            }
         }
-        return Response.status(400).entity("Failed to add user, illegal request").build();
+        return Response.status(400).entity("Failed to add user, illegal json for user").build();
     }
 
     @DELETE
@@ -63,9 +67,8 @@ public class UserResource {
                 return Response.status(200).entity("User removed").build();
             }
             return Response.status(401).entity("Authorization failed").build();
-        } catch (IndexOutOfBoundsException e) {
-            // If user with given id doesn't exist
-            return Response.status(404).entity("Failed to remove user, not found").build();
+        } catch (RuntimeException e) {
+            return Response.status(401).entity("Authorization failed").build();
         }
     }
 }

@@ -3,8 +3,11 @@ package tdt4140.gr1817.serviceprovider.webserver.resource;
 import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
 import tdt4140.gr1817.ecosystem.persistence.Specification;
+import tdt4140.gr1817.ecosystem.persistence.data.User;
 import tdt4140.gr1817.ecosystem.persistence.data.Weight;
+import tdt4140.gr1817.ecosystem.persistence.repositories.UserRepository;
 import tdt4140.gr1817.ecosystem.persistence.repositories.WeightRepository;
+import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.specification.GetUserByIdSpecification;
 import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.specification.GetWeightByIdSpecification;
 import tdt4140.gr1817.serviceprovider.webserver.validation.AuthBasicAuthenticator;
 import tdt4140.gr1817.serviceprovider.webserver.validation.WeightValidator;
@@ -25,14 +28,16 @@ import javax.ws.rs.core.Response;
 public class WeightResource {
 
     private final Gson gson;
-    private final WeightRepository repository;
+    private final WeightRepository weightRepository;
+    private final UserRepository userRepository;
     private final WeightValidator validator;
     private final AuthBasicAuthenticator authenticator;
 
     @Inject
-    public WeightResource(WeightRepository repository, Gson gson, WeightValidator validator,
-                          AuthBasicAuthenticator authenticator) {
-        this.repository = repository;
+    public WeightResource(WeightRepository weightRepository, UserRepository userRepository, Gson gson,
+                          WeightValidator validator, AuthBasicAuthenticator authenticator) {
+        this.weightRepository = weightRepository;
+        this.userRepository = userRepository;
         this.gson = gson;
         this.validator = validator;
         this.authenticator = authenticator;
@@ -45,13 +50,20 @@ public class WeightResource {
         if (validator.validate(json)) {
             Weight weight = gson.fromJson(json, Weight.class);
 
-            if (authenticator.authenticate(credentials, weight.getUser())) {
-                repository.add(weight);
-                return Response.status(200).entity("Weight added").build();
+            try {
+                User user = getCorrectUserDataFromDatabase(weight.getUser());
+                weight.setUser(user);
+
+                if (authenticator.authenticate(credentials, weight.getUser())) {
+                    weightRepository.add(weight);
+                    return Response.status(200).entity("Weight added").build();
+                }
+                return Response.status(401).entity("Authorization failed").build();
+            } catch (RuntimeException e) {
+                return Response.status(401).entity("Authorization failed").build();
             }
-            return Response.status(401).entity("Authorization failed").build();
         }
-        return Response.status(400).entity("Failed to add weight, illegal request").build();
+        return Response.status(400).entity("Failed to add weight, illegal json for weight").build();
     }
 
     @DELETE
@@ -60,16 +72,20 @@ public class WeightResource {
     public Response deleteWeight(@PathParam("id") int id, @HeaderParam("Authorization") String credentials) {
         Specification specification = new GetWeightByIdSpecification(id);
         try {
-            Weight weight = repository.query(specification).get(0);
+            Weight weight = weightRepository.query(specification).get(0);
 
             if (authenticator.authenticate(credentials, weight.getUser())) {
-                repository.remove(specification);
+                weightRepository.remove(specification);
                 return Response.status(200).entity("Weight removed").build();
             }
             return Response.status(401).entity("Authorization failed").build();
-        } catch (IndexOutOfBoundsException e) {
-            // If weight with given id doesn't exist
-            return Response.status(404).entity("Failed to remove weight, not found").build();
+        } catch (RuntimeException e) {
+            return Response.status(401).entity("Authorization failed").build();
         }
+    }
+
+    private User getCorrectUserDataFromDatabase(User user) {
+        Specification specification = new GetUserByIdSpecification(user.getId());
+        return userRepository.query(specification).get(0);
     }
 }

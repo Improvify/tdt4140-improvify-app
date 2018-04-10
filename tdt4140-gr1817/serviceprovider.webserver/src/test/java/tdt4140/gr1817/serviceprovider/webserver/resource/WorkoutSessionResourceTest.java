@@ -7,6 +7,7 @@ import org.mockito.Mockito;
 import tdt4140.gr1817.ecosystem.persistence.Specification;
 import tdt4140.gr1817.ecosystem.persistence.data.User;
 import tdt4140.gr1817.ecosystem.persistence.data.WorkoutSession;
+import tdt4140.gr1817.ecosystem.persistence.repositories.UserRepository;
 import tdt4140.gr1817.ecosystem.persistence.repositories.WorkoutSessionRepository;
 import tdt4140.gr1817.serviceprovider.webserver.validation.AuthBasicAuthenticator;
 import tdt4140.gr1817.serviceprovider.webserver.validation.WorkoutSessionValidator;
@@ -23,20 +24,23 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 public class WorkoutSessionResourceTest {
-    private WorkoutSessionRepository rep;
+    private WorkoutSessionRepository workoutSessionRepository;
     private final Gson gson = new Gson();
     private WorkoutSessionResource workoutSessionResource;
 
     @Before
     public void setUp() throws Exception {
-        rep = Mockito.mock(WorkoutSessionRepository.class);
+        workoutSessionRepository = Mockito.mock(WorkoutSessionRepository.class);
+        UserRepository userRepository = Mockito.mock(UserRepository.class);
 
-        WorkoutSession workoutSession = createWorkoutSession();
-        when(rep.query(Mockito.any())).thenReturn(Collections.singletonList(workoutSession));
+        final WorkoutSession workoutSession = createWorkoutSession();
+        when(workoutSessionRepository.query(Mockito.any())).thenReturn(Collections.singletonList(workoutSession));
+        when(userRepository.query(Mockito.any())).thenReturn(Collections.singletonList(workoutSession.getUser()));
 
         final WorkoutSessionValidator validator = new WorkoutSessionValidator(gson);
         final AuthBasicAuthenticator authenticator = new AuthBasicAuthenticator();
-        workoutSessionResource = new WorkoutSessionResource(rep, gson, validator, authenticator);
+        workoutSessionResource = new WorkoutSessionResource(workoutSessionRepository, userRepository, gson, validator,
+                authenticator);
     }
 
     @Test
@@ -49,8 +53,8 @@ public class WorkoutSessionResourceTest {
         workoutSessionResource.createWorkoutSession(json, AuthBasicUtil.HEADER_TEST_123);
 
         // Then
-        verify(rep).add(Mockito.eq(workoutSession));
-        verifyNoMoreInteractions(rep);
+        verify(workoutSessionRepository).add(Mockito.eq(workoutSession));
+        verifyNoMoreInteractions(workoutSessionRepository);
     }
 
     @Test
@@ -63,7 +67,7 @@ public class WorkoutSessionResourceTest {
         workoutSessionResource.createWorkoutSession(invalidJson, AuthBasicUtil.HEADER_TEST_123);
 
         //Then
-        verifyNoMoreInteractions(rep);
+        verifyNoMoreInteractions(workoutSessionRepository);
     }
 
     @Test
@@ -76,7 +80,7 @@ public class WorkoutSessionResourceTest {
         workoutSessionResource.createWorkoutSession(json, AuthBasicUtil.HEADER_DEFAULT);
 
         // Then
-        verifyNoMoreInteractions(rep);
+        verifyNoMoreInteractions(workoutSessionRepository);
     }
 
     @Test
@@ -88,9 +92,9 @@ public class WorkoutSessionResourceTest {
         workoutSessionResource.deleteWorkoutSession(id, AuthBasicUtil.HEADER_TEST_123);
 
         // Then
-        verify(rep).query(any(Specification.class));
-        verify(rep).remove(any(Specification.class));
-        verifyNoMoreInteractions(rep);
+        verify(workoutSessionRepository).query(any(Specification.class));
+        verify(workoutSessionRepository).remove(any(Specification.class));
+        verifyNoMoreInteractions(workoutSessionRepository);
     }
 
     @Test
@@ -102,12 +106,12 @@ public class WorkoutSessionResourceTest {
         workoutSessionResource.deleteWorkoutSession(id, AuthBasicUtil.HEADER_DEFAULT);
 
         // Then
-        verify(rep).query(any(Specification.class));
-        verifyNoMoreInteractions(rep);
+        verify(workoutSessionRepository).query(any(Specification.class));
+        verifyNoMoreInteractions(workoutSessionRepository);
     }
 
     private static WorkoutSession createWorkoutSession() {
-        Calendar calendar = new GregorianCalendar();
+        Calendar calendar = new GregorianCalendar(2000, 1, 1);
         calendar.set(Calendar.MILLISECOND, 0); // JSON doesnt serialize milliseconds
         Date date = calendar.getTime();
         User user = new User(1, "Test", "User", 1.8f, date, "test", "123", "123@hotmail.com");

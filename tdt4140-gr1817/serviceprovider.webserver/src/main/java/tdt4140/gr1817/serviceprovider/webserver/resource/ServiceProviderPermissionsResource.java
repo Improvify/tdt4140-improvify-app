@@ -4,8 +4,11 @@ import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
 import tdt4140.gr1817.ecosystem.persistence.Specification;
 import tdt4140.gr1817.ecosystem.persistence.data.ServiceProviderPermissions;
+import tdt4140.gr1817.ecosystem.persistence.data.User;
 import tdt4140.gr1817.ecosystem.persistence.repositories.ServiceProviderPermissionsRepository;
+import tdt4140.gr1817.ecosystem.persistence.repositories.UserRepository;
 import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.specification.GetServiceProviderPermissionByIdSpecification;
+import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.specification.GetUserByIdSpecification;
 import tdt4140.gr1817.serviceprovider.webserver.validation.AuthBasicAuthenticator;
 import tdt4140.gr1817.serviceprovider.webserver.validation.ServiceProviderPermissionsValidator;
 
@@ -25,15 +28,18 @@ import javax.ws.rs.core.Response;
 public class ServiceProviderPermissionsResource {
 
     private final Gson gson;
-    private final ServiceProviderPermissionsRepository repository;
+    private final ServiceProviderPermissionsRepository permissionsRepository;
+    private final UserRepository userRepository;
     private final ServiceProviderPermissionsValidator validator;
     private final AuthBasicAuthenticator authenticator;
 
     @Inject
-    public ServiceProviderPermissionsResource(ServiceProviderPermissionsRepository repository, Gson gson,
+    public ServiceProviderPermissionsResource(ServiceProviderPermissionsRepository permissionsRepository,
+                                              UserRepository userRepository, Gson gson,
                                               ServiceProviderPermissionsValidator validator,
                                               AuthBasicAuthenticator authenticator) {
-        this.repository = repository;
+        this.permissionsRepository = permissionsRepository;
+        this.userRepository = userRepository;
         this.gson = gson;
         this.validator = validator;
         this.authenticator = authenticator;
@@ -47,13 +53,21 @@ public class ServiceProviderPermissionsResource {
             ServiceProviderPermissions serviceProviderPermissions = gson.fromJson(json,
                     ServiceProviderPermissions.class);
 
-            if (authenticator.authenticate(credentials, serviceProviderPermissions.getUser())) {
-                repository.add(serviceProviderPermissions);
-                return Response.status(200).entity("Service provider permissions added").build();
+            try {
+                User user = getCorrectUserDataFromDatabase(serviceProviderPermissions.getUser());
+                serviceProviderPermissions.setUser(user);
+
+                if (authenticator.authenticate(credentials, serviceProviderPermissions.getUser())) {
+                    permissionsRepository.add(serviceProviderPermissions);
+                    return Response.status(200).entity("Service provider permissions added").build();
+                }
+                return Response.status(401).entity("Authorization failed").build();
+            } catch (RuntimeException e) {
+                return Response.status(401).entity("Authorization failed").build();
             }
-            return Response.status(401).entity("Authorization failed").build();
         }
-        return Response.status(400).entity("Failed to add service provider permissions, illegal request").build();
+        return Response.status(400)
+                .entity("Failed to add service provider permissions, illegal json for permissions").build();
     }
 
     @DELETE
@@ -63,16 +77,20 @@ public class ServiceProviderPermissionsResource {
                                                      @HeaderParam("Authorization") String credentials) {
         Specification specification = new GetServiceProviderPermissionByIdSpecification(uid, sid);
         try {
-            ServiceProviderPermissions serviceProviderPermissions = repository.query(specification).get(0);
+            ServiceProviderPermissions serviceProviderPermissions = permissionsRepository.query(specification).get(0);
 
             if (authenticator.authenticate(credentials, serviceProviderPermissions.getUser())) {
-                repository.remove(specification);
+                permissionsRepository.remove(specification);
                 return Response.status(200).entity("Service provider permissions removed").build();
             }
             return Response.status(401).entity("Authorization failed").build();
-        } catch (IndexOutOfBoundsException e) {
-            // If permissions with given id doesn't exist
-            return Response.status(404).entity("Failed to remove service provider permissions, not found").build();
+        } catch (RuntimeException e) {
+            return Response.status(401).entity("Authorization failed").build();
         }
+    }
+
+    private User getCorrectUserDataFromDatabase(User user) {
+        Specification specification = new GetUserByIdSpecification(user.getId());
+        return userRepository.query(specification).get(0);
     }
 }

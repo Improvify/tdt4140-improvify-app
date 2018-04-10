@@ -22,20 +22,20 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 public class UserResourceTest {
-    private UserRepository rep;
+    private UserRepository userRepository;
     private UserResource userResource;
     private Gson gson = new Gson();
 
     @Before
     public void setUp() throws Exception {
-        rep = Mockito.mock(UserRepository.class);
+        userRepository = Mockito.mock(UserRepository.class);
 
-        User user = createUser();
-        when(rep.query(Mockito.any())).thenReturn(Collections.singletonList(user));
+        final User user = createUser();
+        when(userRepository.query(Mockito.any())).thenReturn(Collections.singletonList(user));
 
         final UserValidator validator = new UserValidator(gson);
         final AuthBasicAuthenticator authenticator = new AuthBasicAuthenticator();
-        userResource = new UserResource(rep, gson, validator, authenticator);
+        userResource = new UserResource(userRepository, gson, validator, authenticator);
     }
 
     @Test
@@ -48,8 +48,8 @@ public class UserResourceTest {
         userResource.createUser(json);
 
         // Then
-        verify(rep).add(Mockito.eq(user));
-        verifyNoMoreInteractions(rep);
+        verify(userRepository).add(Mockito.eq(user));
+        verifyNoMoreInteractions(userRepository);
     }
 
     @Test
@@ -62,7 +62,7 @@ public class UserResourceTest {
         userResource.createUser(invalidJson);
 
         // Then
-        verifyNoMoreInteractions(rep);
+        verifyNoMoreInteractions(userRepository);
     }
 
     @Test
@@ -74,9 +74,9 @@ public class UserResourceTest {
         userResource.deleteUser(id, AuthBasicUtil.HEADER_TEST_123);
 
         // Then
-        verify(rep).query(any(Specification.class));
-        verify(rep).remove(any(Specification.class));
-        verifyNoMoreInteractions(rep);
+        verify(userRepository).query(any(Specification.class));
+        verify(userRepository).remove(any(Specification.class));
+        verifyNoMoreInteractions(userRepository);
     }
 
     @Test
@@ -88,12 +88,12 @@ public class UserResourceTest {
         userResource.deleteUser(id, AuthBasicUtil.HEADER_DEFAULT);
 
         // Then
-        verify(rep).query(any(Specification.class));
-        verifyNoMoreInteractions(rep);
+        verify(userRepository).query(any(Specification.class));
+        verifyNoMoreInteractions(userRepository);
     }
 
     private static User createUser() {
-        Calendar calendar = new GregorianCalendar();
+        Calendar calendar = new GregorianCalendar(2000,1,1);
         calendar.set(Calendar.MILLISECOND, 0); // JSON doesnt serialize milliseconds
         Date date = calendar.getTime();
         return new User(1, "Test", "User", 1.8f, date, "test", "123", "123@hotmail.com");

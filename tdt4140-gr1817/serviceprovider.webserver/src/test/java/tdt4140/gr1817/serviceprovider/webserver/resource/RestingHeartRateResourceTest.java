@@ -8,6 +8,7 @@ import tdt4140.gr1817.ecosystem.persistence.Specification;
 import tdt4140.gr1817.ecosystem.persistence.data.RestingHeartRate;
 import tdt4140.gr1817.ecosystem.persistence.data.User;
 import tdt4140.gr1817.ecosystem.persistence.repositories.RestingHeartRateRepository;
+import tdt4140.gr1817.ecosystem.persistence.repositories.UserRepository;
 import tdt4140.gr1817.serviceprovider.webserver.validation.AuthBasicAuthenticator;
 import tdt4140.gr1817.serviceprovider.webserver.validation.RestingHeartRateValidator;
 import tdt4140.gr1817.serviceprovider.webserver.validation.util.AuthBasicUtil;
@@ -23,20 +24,25 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 public class RestingHeartRateResourceTest {
-    private RestingHeartRateRepository rep;
+    private RestingHeartRateRepository restingHeartRateRepository;
     private Gson gson = new Gson();
     private RestingHeartRateResource restingHeartRateResource;
 
     @Before
     public void setUp() throws Exception {
-        rep = Mockito.mock(RestingHeartRateRepository.class);
+        restingHeartRateRepository = Mockito.mock(RestingHeartRateRepository.class);
+        UserRepository userRepository = Mockito.mock(UserRepository.class);
 
-        RestingHeartRate restingHeartRate = createRestingHeartRate();
-        when(rep.query(Mockito.any())).thenReturn(Collections.singletonList(restingHeartRate));
+        final RestingHeartRate restingHeartRate = createRestingHeartRate();
+        when(restingHeartRateRepository.query(Mockito.any()))
+                .thenReturn(Collections.singletonList(restingHeartRate));
+        when(userRepository.query(Mockito.any()))
+                .thenReturn(Collections.singletonList(restingHeartRate.getMeasuredBy()));
 
         final RestingHeartRateValidator validator = new RestingHeartRateValidator(gson);
         final AuthBasicAuthenticator authenticator = new AuthBasicAuthenticator();
-        restingHeartRateResource = new RestingHeartRateResource(rep, gson, validator, authenticator);
+        restingHeartRateResource = new RestingHeartRateResource(restingHeartRateRepository, userRepository, gson,
+                validator, authenticator);
     }
 
     @Test
@@ -49,8 +55,8 @@ public class RestingHeartRateResourceTest {
         restingHeartRateResource.createRestingHeartRate(json, AuthBasicUtil.HEADER_TEST_123);
 
         // Then
-        verify(rep).add(Mockito.eq(restingHeartRate));
-        verifyNoMoreInteractions(rep);
+        verify(restingHeartRateRepository).add(Mockito.eq(restingHeartRate));
+        verifyNoMoreInteractions(restingHeartRateRepository);
     }
 
     @Test
@@ -63,7 +69,7 @@ public class RestingHeartRateResourceTest {
         restingHeartRateResource.createRestingHeartRate(invalidJson, AuthBasicUtil.HEADER_TEST_123);
 
         // Then
-        verifyNoMoreInteractions(rep);
+        verifyNoMoreInteractions(restingHeartRateRepository);
     }
 
     @Test
@@ -76,7 +82,7 @@ public class RestingHeartRateResourceTest {
         restingHeartRateResource.createRestingHeartRate(json, AuthBasicUtil.HEADER_DEFAULT);
 
         // Then
-        verifyNoMoreInteractions(rep);
+        verifyNoMoreInteractions(restingHeartRateRepository);
     }
 
     @Test
@@ -88,9 +94,9 @@ public class RestingHeartRateResourceTest {
         restingHeartRateResource.deleteRestingHeartRate(id, AuthBasicUtil.HEADER_TEST_123);
 
         // Then
-        verify(rep).query(any(Specification.class));
-        verify(rep).remove(any(Specification.class));
-        verifyNoMoreInteractions(rep);
+        verify(restingHeartRateRepository).query(any(Specification.class));
+        verify(restingHeartRateRepository).remove(any(Specification.class));
+        verifyNoMoreInteractions(restingHeartRateRepository);
     }
 
     @Test
@@ -102,12 +108,12 @@ public class RestingHeartRateResourceTest {
         restingHeartRateResource.deleteRestingHeartRate(id, AuthBasicUtil.HEADER_DEFAULT);
 
         // Then
-        verify(rep).query(any(Specification.class));
-        verifyNoMoreInteractions(rep);
+        verify(restingHeartRateRepository).query(any(Specification.class));
+        verifyNoMoreInteractions(restingHeartRateRepository);
     }
 
     private static RestingHeartRate createRestingHeartRate() {
-        Calendar calendar = new GregorianCalendar();
+        Calendar calendar = new GregorianCalendar(2000, 1, 1);
         calendar.set(Calendar.MILLISECOND, 0); // JSON doesnt serialize milliseconds
         Date date = calendar.getTime();
         User user = new User(1, "Test", "User", 1.8f, date, "test", "123", "123@hotmail.com");

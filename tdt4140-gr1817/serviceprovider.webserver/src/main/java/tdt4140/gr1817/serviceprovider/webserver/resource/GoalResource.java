@@ -4,8 +4,11 @@ import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
 import tdt4140.gr1817.ecosystem.persistence.Specification;
 import tdt4140.gr1817.ecosystem.persistence.data.Goal;
+import tdt4140.gr1817.ecosystem.persistence.data.User;
 import tdt4140.gr1817.ecosystem.persistence.repositories.GoalRepository;
+import tdt4140.gr1817.ecosystem.persistence.repositories.UserRepository;
 import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.specification.GetGoalByIdSpecification;
+import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.specification.GetUserByIdSpecification;
 import tdt4140.gr1817.serviceprovider.webserver.validation.AuthBasicAuthenticator;
 import tdt4140.gr1817.serviceprovider.webserver.validation.GoalValidator;
 
@@ -25,14 +28,16 @@ import javax.ws.rs.core.Response;
 public class GoalResource {
 
     private final Gson gson;
-    private final GoalRepository repository;
+    private final GoalRepository goalRepository;
+    private final UserRepository userRepository;
     private final GoalValidator validator;
     private final AuthBasicAuthenticator authenticator;
 
     @Inject
-    public GoalResource(GoalRepository repository, Gson gson, GoalValidator validator,
-                        AuthBasicAuthenticator authenticator) {
-        this.repository = repository;
+    public GoalResource(GoalRepository goalRepository, UserRepository userRepository, Gson gson,
+                        GoalValidator validator, AuthBasicAuthenticator authenticator) {
+        this.goalRepository = goalRepository;
+        this.userRepository = userRepository;
         this.gson = gson;
         this.validator = validator;
         this.authenticator = authenticator;
@@ -45,13 +50,20 @@ public class GoalResource {
         if (validator.validate(json)) {
             Goal goal = gson.fromJson(json, Goal.class);
 
-            if (authenticator.authenticate(credentials, goal.getUser())) {
-                repository.add(goal);
-                return Response.status(200).entity("Goal added").build();
+            try {
+                User user = getCorrectUserDataFromDatabase(goal.getUser());
+                goal.setUser(user);
+
+                if (authenticator.authenticate(credentials, goal.getUser())) {
+                    goalRepository.add(goal);
+                    return Response.status(200).entity("Goal added").build();
+                }
+                return Response.status(401).entity("Authorization failed").build();
+            } catch (RuntimeException e) {
+                return Response.status(401).entity("Authorization failed").build();
             }
-            return Response.status(401).entity("Authorization failed").build();
         }
-        return Response.status(400).entity("Failed to add goal, illegal request").build();
+        return Response.status(400).entity("Failed to add goal, illegal json for goal").build();
     }
 
     @DELETE
@@ -60,16 +72,20 @@ public class GoalResource {
     public Response deleteGoal(@PathParam("id") int id, @HeaderParam("Authorization") String credentials) {
         Specification specification = new GetGoalByIdSpecification(id);
         try {
-            Goal goal = repository.query(specification).get(0);
+            Goal goal = goalRepository.query(specification).get(0);
 
             if (authenticator.authenticate(credentials, goal.getUser())) {
-                repository.remove(specification);
+                goalRepository.remove(specification);
                 return Response.status(200).entity("Goal removed").build();
             }
             return Response.status(401).entity("Authorization failed").build();
-        } catch (IndexOutOfBoundsException e) {
-            // If goal with given id doesn't exist
-            return Response.status(404).entity("Failed to remove goal, not found").build();
+        } catch (RuntimeException e) {
+            return Response.status(401).entity("Authorization failed").build();
         }
+    }
+
+    private User getCorrectUserDataFromDatabase(User user) {
+        Specification specification = new GetUserByIdSpecification(user.getId());
+        return userRepository.query(specification).get(0);
     }
 }
