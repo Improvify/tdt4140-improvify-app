@@ -92,7 +92,7 @@ public class BuilderFactory {
         final WorkoutPlan workoutPlan = createWorkoutPlan().id(1).build();
         return WorkoutPlanRow.builder()
                 .id(1)
-                .description("It's like my father used to say: 'Jet fuel can't melt steel beems'")
+                .description("It's like my father used to say: 'Jet fuel can't melt steel beams'")
                 .durationSeconds(420)
                 .intensity("0.8 MAX hr")
                 .comment("Don't let your dreams be memes")
