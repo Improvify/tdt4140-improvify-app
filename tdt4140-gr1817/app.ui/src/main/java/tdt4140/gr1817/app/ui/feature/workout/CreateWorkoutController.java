@@ -162,11 +162,11 @@ public class CreateWorkoutController {
 
     private boolean isValid() {
         Alert emptyTitleAlert
-                = new Alert(Alert.AlertType.ERROR, "Missing workout plan title", ButtonType.OK);
+                = new Alert(Alert.AlertType.WARNING, "Missing workout plan title", ButtonType.OK);
         Alert emptyWorkoutPlan
-                = new Alert(Alert.AlertType.ERROR, "Your workout plan must contain at least 1 row", ButtonType.OK);
+                = new Alert(Alert.AlertType.WARNING, "Your workout plan must contain at least 1 row", ButtonType.OK);
         Alert missingCellInformation
-                = new Alert(Alert.AlertType.ERROR, "One or more fields are empty");
+                = new Alert(Alert.AlertType.WARNING, "One or more fields are empty");
 
         //Check first if title or rows are missing
         if (titleField.getText() == null || titleField.getText().trim().isEmpty()) {
