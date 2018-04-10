@@ -2,6 +2,7 @@ POST http://localhost:2222/workoutsession
 Accept: */*
 Cache-Control: no-cache
 Content-Type: application/json
+Authorization: Basic dGVzdDoxMjM=
 
 {
   "time": "2018-03-13T09:05:58.647Z",
@@ -10,7 +11,9 @@ Content-Type: application/json
   "averageHeartRate": 175.3,
   "maxHeartRate": 198,
   "distanceRun": 1337.69,
-  "user": {"id": 1}
+  "user": {
+    "id": 1
+  }
 }
 
 ###
