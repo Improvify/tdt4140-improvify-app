@@ -2,8 +2,6 @@ package tdt4140.gr1817.serviceprovider.webserver;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
-import com.google.gson.Gson;
-import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import lombok.NonNull;
@@ -18,17 +16,8 @@ import org.glassfish.jersey.servlet.ServletContainer;
 import org.jvnet.hk2.guice.bridge.api.GuiceBridge;
 import org.jvnet.hk2.guice.bridge.api.GuiceIntoHK2Bridge;
 import org.slf4j.LoggerFactory;
-import tdt4140.gr1817.ecosystem.persistence.repositories.GoalRepository;
-import tdt4140.gr1817.ecosystem.persistence.repositories.RestingHeartRateRepository;
-import tdt4140.gr1817.ecosystem.persistence.repositories.UserRepository;
-import tdt4140.gr1817.ecosystem.persistence.repositories.WeightRepository;
-import tdt4140.gr1817.ecosystem.persistence.repositories.WorkoutSessionRepository;
-import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.MySqlGoalRepository;
-import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.MySqlRestingHeartRateRepository;
-import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.MySqlUserRepository;
-import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.MySqlWeightRepository;
-import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.MySqlWorkoutSessionRepository;
 import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.guice.MySqlConnectionModule;
+import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.guice.MySqlRepositoryModule;
 
 import javax.ws.rs.core.Feature;
 
@@ -52,25 +41,7 @@ public class App {
 
         Injector injector = Guice.createInjector(
                 new MySqlConnectionModule("root", "root", "localhost",
-                        "ecosystem", 3306),
-//                new MySqlRepositoryModule(),
-                new AbstractModule() {
-                    @Override
-                    protected void configure() {
-                        // FIXME: replace this module with MySqlRepistoryModule when it's done
-                        bind(RestingHeartRateRepository.class).to(MySqlRestingHeartRateRepository.class);
-                        bind(UserRepository.class).to(MySqlUserRepository.class);
-                        bind(WeightRepository.class).to(MySqlWeightRepository.class);
-                        bind(WorkoutSessionRepository.class).to(MySqlWorkoutSessionRepository.class);
-                        bind(GoalRepository.class).to(MySqlGoalRepository.class);
-                    }
-                },
-                new AbstractModule() {
-                    @Override
-                    protected void configure() {
-                        bind(Gson.class).toInstance(new Gson());
-                    }
-                });
+                        "ecosystem", 3306), new MySqlRepositoryModule());
 
         return injector;
     }

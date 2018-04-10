@@ -32,7 +32,6 @@ public class WorkoutSessionValidator implements Validator {
                     && isValidIntensity(workoutSession.getIntensity()));
 
         } catch (JsonSyntaxException | NullPointerException | NumberFormatException e) {
-            log.info("Json was invalid: \"{}\"", json, e);
             return false;
         }
     }

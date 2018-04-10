@@ -7,27 +7,39 @@ import org.mockito.Mockito;
 import tdt4140.gr1817.ecosystem.persistence.Specification;
 import tdt4140.gr1817.ecosystem.persistence.data.User;
 import tdt4140.gr1817.ecosystem.persistence.data.Weight;
+import tdt4140.gr1817.ecosystem.persistence.repositories.UserRepository;
 import tdt4140.gr1817.ecosystem.persistence.repositories.WeightRepository;
+import tdt4140.gr1817.serviceprovider.webserver.validation.AuthBasicAuthenticator;
 import tdt4140.gr1817.serviceprovider.webserver.validation.WeightValidator;
+import tdt4140.gr1817.serviceprovider.webserver.validation.util.AuthBasicUtil;
 
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 public class WeightResourceTest {
-    private WeightRepository rep;
+    private WeightRepository weightRepository;
     private Gson gson = new Gson();
     private WeightResource weightResource;
 
     @Before
     public void setUp() throws Exception {
-        rep = Mockito.mock(WeightRepository.class);
+        weightRepository = Mockito.mock(WeightRepository.class);
+        UserRepository userRepository = Mockito.mock(UserRepository.class);
+
+        final Weight weight = createWeight();
+        when(weightRepository.query(Mockito.any())).thenReturn(Collections.singletonList(weight));
+        when(userRepository.query(Mockito.any())).thenReturn(Collections.singletonList(weight.getUser()));
+
         final WeightValidator validator = new WeightValidator(gson);
-        weightResource = new WeightResource(rep, gson, validator);
+        final AuthBasicAuthenticator authenticator = new AuthBasicAuthenticator();
+        weightResource = new WeightResource(weightRepository, userRepository, gson, validator, authenticator);
     }
 
     @Test
@@ -37,11 +49,11 @@ public class WeightResourceTest {
         String json = gson.toJson(weight);
 
         // When
-        weightResource.createWeight(json);
+        weightResource.createWeight(json, AuthBasicUtil.HEADER_TEST_123);
 
         // Then
-        verify(rep).add(Mockito.eq(weight));
-        verifyNoMoreInteractions(rep);
+        verify(weightRepository).add(Mockito.eq(weight));
+        verifyNoMoreInteractions(weightRepository);
     }
 
     @Test
@@ -51,10 +63,36 @@ public class WeightResourceTest {
         String invalidJson = weight.toString();
 
         // When
-        weightResource.createWeight(invalidJson);
+        weightResource.createWeight(invalidJson, AuthBasicUtil.HEADER_TEST_123);
 
         // Then
-        verifyNoMoreInteractions(rep);
+        verifyNoMoreInteractions(weightRepository);
+    }
+
+    @Test
+    public void shouldAddGoalWhenWrongAuthorization() throws Exception {
+        // Given
+        Weight weight = createWeight();
+        String json = gson.toJson(weight);
+
+        // When
+        weightResource.createWeight(json, AuthBasicUtil.HEADER_DEFAULT);
+
+        // Then
+        verifyNoMoreInteractions(weightRepository);
+    }
+
+    @Test
+    public void shouldNotAddWeightWhenIllegalHeader() {
+        // Given
+        Weight weight = createWeight();
+        String json = gson.toJson(weight);
+
+        // When
+        weightResource.createWeight(json, AuthBasicUtil.HEADER_ILLEGAL);
+
+        // Then
+        verifyNoMoreInteractions(weightRepository);
     }
 
     @Test
@@ -63,18 +101,45 @@ public class WeightResourceTest {
         int id = 1;
 
         // When
-        weightResource.deleteWeight(id);
+        weightResource.deleteWeight(id, AuthBasicUtil.HEADER_TEST_123);
 
         // Then
-        verify(rep).remove(any(Specification.class));
-        verifyNoMoreInteractions(rep);
+        verify(weightRepository).query(any(Specification.class));
+        verify(weightRepository).remove(any(Specification.class));
+        verifyNoMoreInteractions(weightRepository);
+    }
+
+    @Test
+    public void shouldNotRemoveWeightWhenWrongAuthorization() {
+        // Given
+        int id = 1;
+
+        // When
+        weightResource.deleteWeight(id, AuthBasicUtil.HEADER_DEFAULT);
+
+        // Then
+        verify(weightRepository).query(any(Specification.class));
+        verifyNoMoreInteractions(weightRepository);
+    }
+
+    @Test
+    public void shouldNotRemoveWeightWhenIllegalHeader() {
+        // Given
+        int id = 1;
+
+        // When
+        weightResource.deleteWeight(id, AuthBasicUtil.HEADER_ILLEGAL);
+
+        // Then
+        verify(weightRepository).query(any(Specification.class));
+        verifyNoMoreInteractions(weightRepository);
     }
 
     private static Weight createWeight() {
-        Calendar calendar = new GregorianCalendar();
+        Calendar calendar = new GregorianCalendar(2000, 1, 1);
         calendar.set(Calendar.MILLISECOND, 0); // JSON doesnt serialize milliseconds
         Date date = calendar.getTime();
-        User user = new User(1, "hei", "bu", 2.5f, date, "hellu", "hshs", "123@hotmail.com");
+        User user = new User(1, "Test", "User", 1.8f, date, "test", "123", "123@hotmail.com");
         return new Weight(1, 140.4f, date, user);
     }
 }
