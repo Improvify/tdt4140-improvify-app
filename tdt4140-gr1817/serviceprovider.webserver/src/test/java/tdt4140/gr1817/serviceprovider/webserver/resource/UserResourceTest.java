@@ -7,15 +7,19 @@ import org.mockito.Mockito;
 import tdt4140.gr1817.ecosystem.persistence.Specification;
 import tdt4140.gr1817.ecosystem.persistence.data.User;
 import tdt4140.gr1817.ecosystem.persistence.repositories.UserRepository;
+import tdt4140.gr1817.serviceprovider.webserver.validation.AuthBasicAuthenticator;
 import tdt4140.gr1817.serviceprovider.webserver.validation.UserValidator;
+import tdt4140.gr1817.serviceprovider.webserver.validation.util.AuthBasicUtil;
 
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 public class UserResourceTest {
     private UserRepository rep;
@@ -25,8 +29,13 @@ public class UserResourceTest {
     @Before
     public void setUp() throws Exception {
         rep = Mockito.mock(UserRepository.class);
+
+        User user = createUser();
+        when(rep.query(Mockito.any())).thenReturn(Collections.singletonList(user));
+
         final UserValidator validator = new UserValidator(gson);
-        userResource = new UserResource(rep, gson, validator);
+        final AuthBasicAuthenticator authenticator = new AuthBasicAuthenticator();
+        userResource = new UserResource(rep, gson, validator, authenticator);
     }
 
     @Test
@@ -62,10 +71,24 @@ public class UserResourceTest {
         int id = 1;
 
         // When
-        userResource.deleteUser(id);
+        userResource.deleteUser(id, AuthBasicUtil.HEADER_TEST_123);
 
         // Then
+        verify(rep).query(any(Specification.class));
         verify(rep).remove(any(Specification.class));
+        verifyNoMoreInteractions(rep);
+    }
+
+    @Test
+    public void shouldNotRemoveUserWhenWrongAuthorization() {
+        // Given
+        int id = 1;
+
+        // When
+        userResource.deleteUser(id, AuthBasicUtil.HEADER_DEFAULT);
+
+        // Then
+        verify(rep).query(any(Specification.class));
         verifyNoMoreInteractions(rep);
     }
 
@@ -73,6 +96,6 @@ public class UserResourceTest {
         Calendar calendar = new GregorianCalendar();
         calendar.set(Calendar.MILLISECOND, 0); // JSON doesnt serialize milliseconds
         Date date = calendar.getTime();
-        return new User(1, "T", "EST", 2.5f, date, "asd", "123", "123@ll.com");
+        return new User(1, "Test", "User", 1.8f, date, "test", "123", "123@hotmail.com");
     }
 }

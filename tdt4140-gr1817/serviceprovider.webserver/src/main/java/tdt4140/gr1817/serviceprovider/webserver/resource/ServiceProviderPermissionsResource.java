@@ -71,7 +71,7 @@ public class ServiceProviderPermissionsResource {
             }
             return Response.status(401).entity("Authorization failed").build();
         } catch (IndexOutOfBoundsException e) {
-            // If goal with given id doesn't exist
+            // If permissions with given id doesn't exist
             return Response.status(404).entity("Failed to remove service provider permissions, not found").build();
         }
     }

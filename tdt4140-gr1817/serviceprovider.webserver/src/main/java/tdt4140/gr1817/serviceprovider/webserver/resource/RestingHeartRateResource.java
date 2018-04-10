@@ -68,7 +68,7 @@ public class RestingHeartRateResource {
             }
             return Response.status(401).entity("Authorization failed").build();
         } catch (IndexOutOfBoundsException e) {
-            // If goal with given id doesn't exist
+            // If rate with given id doesn't exist
             return Response.status(404).entity("Failed to remove resting heart rate, not found").build();
         }
     }
