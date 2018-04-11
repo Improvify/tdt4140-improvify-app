@@ -1,0 +1,21 @@
+PUT http://localhost:2222/workoutsession
+Accept: */*
+Cache-Control: no-cache
+Content-Type: application/json
+Authorization: Basic dGVzdDoxMjM=
+
+{
+  "id" : 1,
+  "startTime": "2018-03-13",
+  "intensity": 5,
+  "kiloCalories": 750.5,
+  "averageHeartRate": 175.3,
+  "maxHeartRate": 198,
+  "distanceRun": 1337.69,
+  "durationSeconds": 3450,
+  "user": {
+    "id": 1
+  }
+}
+
+###

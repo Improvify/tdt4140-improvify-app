@@ -1,0 +1,13 @@
+GET http://localhost:2222/weight/
+Accept: */*
+Cache-Control: no-cache
+Content-Type: application/json
+Authorization: Basic dGVzdDoxMjM=
+
+{
+  "user": {
+    "id": 1
+  }
+}
+
+###

@@ -1,0 +1,24 @@
+PUT http://localhost:2222/serviceproviderpermissions
+Accept: */*
+Cache-Control: no-cache
+Content-Type: application/json
+Authorization: Basic dGVzdDoxMjM=
+
+{
+  "user": {
+    "id": 1
+  },
+  "serviceProvider": {
+    "id": 1
+  },
+  "weight": true,
+  "height": true,
+  "email": false,
+  "name": false,
+  "restingHeartRate": false,
+  "username": false,
+  "workoutSession": true,
+  "birthDate": true
+}
+
+###

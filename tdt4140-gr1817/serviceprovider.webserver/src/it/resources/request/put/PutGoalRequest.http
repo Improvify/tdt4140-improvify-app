@@ -1,0 +1,17 @@
+PUT http://localhost:2222/goal
+Accept: */*
+Cache-Control: no-cache
+Content-Type: application/json
+Authorization: Basic dGVzdDoxMjM=
+
+{
+  "id" : 1,
+  "description": "Run faster than Henrik",
+  "isCompleted": false,
+  "isCurrent": true,
+  "user": {
+    "id": 1
+  }
+}
+
+###

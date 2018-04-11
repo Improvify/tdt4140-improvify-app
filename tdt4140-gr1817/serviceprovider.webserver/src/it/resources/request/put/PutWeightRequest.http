@@ -1,0 +1,16 @@
+PUT http://localhost:2222/weight
+Accept: */*
+Cache-Control: no-cache
+Content-Type: application/json
+Authorization: Basic dGVzdDoxMjM=
+
+{
+  "id" : 1,
+  "currentWeight": 69,
+  "date": "2018-03-13",
+  "user": {
+    "id": 1
+  }
+}
+
+###

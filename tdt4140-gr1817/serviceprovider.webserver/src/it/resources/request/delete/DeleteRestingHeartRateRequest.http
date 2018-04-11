@@ -1,0 +1,13 @@
+DELETE http://localhost:2222/restingheartrate/1
+Accept: */*
+Cache-Control: no-cache
+Content-Type: application/json
+Authorization: Basic dGVzdDoxMjM=
+
+{
+  "measuredBy": {
+    "id": 1
+  }
+}
+
+###
