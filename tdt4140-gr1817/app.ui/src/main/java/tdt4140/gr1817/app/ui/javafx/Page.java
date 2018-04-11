@@ -11,6 +11,7 @@ public enum Page {
     SEE_USERS("see_users.fxml", "see_users.title"),
     GLOBAL_STATISTICS("global_statistics.fxml", "global_statistics.title"),
     VIEW_USER("view_user.fxml", "view_user.title"),
+    VITAL_DATA_CHART("vital_data_chart.fxml","vital_data_chart.title")
     ;
 
     private final String fxmlFile;

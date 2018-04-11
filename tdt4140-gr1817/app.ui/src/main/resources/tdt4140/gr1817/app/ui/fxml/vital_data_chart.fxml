@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.layout.AnchorPane?>
+
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tdt4140.gr1817.app.ui.feature.userlist.VitalDataChartController">
+   <children>
+      <LineChart fx:id="lineChart">
+        <xAxis>
+          <NumberAxis side="BOTTOM" fx:id="xAxis"/>
+        </xAxis>
+        <yAxis>
+          <NumberAxis side="LEFT" fx:id="yAxis"/>
+        </yAxis>
+      </LineChart>
+   </children>
+</AnchorPane>
