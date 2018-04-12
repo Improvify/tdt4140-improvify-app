@@ -46,6 +46,7 @@ public class Main extends Application {
      * @see #getPageFromProperty(String)
      */
     protected Page getInitialPage() {
+<<<<<<< HEAD
         String initialPage = System.getProperty("startPage");
         if (initialPage != null) {
             log.info("Overriding initial page: {}", initialPage);
@@ -65,6 +66,9 @@ public class Main extends Application {
             default:
                 throw new IllegalArgumentException("Unrecognized page: " + startPageValue);
         }
+=======
+        return Page.CREATE_WORKOUT;
+>>>>>>> #43 some formatting
     }
 
     public static void main(String[] args) {

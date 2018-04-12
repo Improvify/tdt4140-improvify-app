@@ -10,7 +10,9 @@ public class GetWeightByUserSpecification implements SqlSpecification {
 
     private final User user;
 
-    public GetWeightByUserSpecification(User user){this.user = user;}
+    public GetWeightByUserSpecification(User user) {
+        this.user = user;
+    }
 
     @Override
     public PreparedStatement toStatement(Connection connection) throws SQLException {
