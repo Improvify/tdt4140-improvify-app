@@ -58,7 +58,7 @@ public class ViewUserController {
     public void displayUser() {
         if (user != null) {
             fullName.setText(user.getFirstName() + " " + user.getLastName());
-            height.setText(Math.round(user.getHeight()) / 100 + "m");
+            height.setText(Math.round(user.getHeight()) / 100 + "m tall");
             email.setText(user.getEmail());
 
             final GregorianCalendar birthDate = new GregorianCalendar();
