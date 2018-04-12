@@ -1,9 +1,13 @@
 package tdt4140.gr1817.app.ui.feature.viewuser;
 
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import lombok.extern.slf4j.Slf4j;
 import tdt4140.gr1817.app.core.feature.user.GetUserWithId;
 import tdt4140.gr1817.app.core.feature.user.UserSelectionService;
+import tdt4140.gr1817.app.ui.javafx.Navigator;
+import tdt4140.gr1817.app.ui.javafx.Page;
 import tdt4140.gr1817.ecosystem.persistence.data.User;
 
 import javax.inject.Inject;
@@ -23,6 +27,7 @@ public class ViewUserController {
     private final UserSelectionService userSelectionService;
     private final Optional<UserSelectionService.UserId> selectedUser;
     private final GetUserWithId getUserWithId;
+    private final Navigator navigator;
 
     private User user;
 
@@ -33,10 +38,12 @@ public class ViewUserController {
 
 
     @Inject
-    public ViewUserController(UserSelectionService userSelectionService, GetUserWithId getUserWithId) {
+    public ViewUserController(UserSelectionService userSelectionService, GetUserWithId getUserWithId,
+                              Navigator navigator) {
         this.userSelectionService = userSelectionService;
         selectedUser = userSelectionService.getSelectedUserId();
         this.getUserWithId = getUserWithId;
+        this.navigator = navigator;
     }
 
     public void initialize() {
@@ -68,5 +75,10 @@ public class ViewUserController {
             final int age = (int) ChronoUnit.YEARS.between(localBirthDate, LocalDate.now());
             this.age.setText(String.valueOf(age) + " years old");
         }
+    }
+
+    @FXML
+    public void goToSeeUsers(ActionEvent event) {
+        navigator.navigate(Page.SEE_USERS);
     }
 }
