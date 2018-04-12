@@ -13,6 +13,7 @@ public class User {
     private int id;
     private String firstName;
     private String lastName;
+    /** Height in centimeters. */
     private float height;
     private Date birthDate;
     private String username;

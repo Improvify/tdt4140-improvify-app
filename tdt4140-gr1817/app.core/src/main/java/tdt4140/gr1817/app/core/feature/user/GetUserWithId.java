@@ -22,7 +22,7 @@ public class GetUserWithId {
     }
 
     /**
-     * Returns the user with the specified id
+     * Returns the user with the specified id.
      * @param id the users id
      * @return the {@link User}, or {@code null} if none was found
      */
