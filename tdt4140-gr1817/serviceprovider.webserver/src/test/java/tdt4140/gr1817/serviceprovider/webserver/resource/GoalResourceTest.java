@@ -13,11 +13,14 @@ import tdt4140.gr1817.serviceprovider.webserver.validation.AuthBasicAuthenticato
 import tdt4140.gr1817.serviceprovider.webserver.validation.GoalValidator;
 import tdt4140.gr1817.serviceprovider.webserver.validation.util.AuthBasicUtil;
 
+import javax.ws.rs.core.Response;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -43,15 +46,56 @@ public class GoalResourceTest {
     }
 
     @Test
+    public void shouldGetGoals() throws Exception {
+        // Given
+        String username = "test";
+
+        // When
+        final Response response = goalResource.getGoals(username, AuthBasicUtil.HEADER_TEST_123);
+
+        // Then
+        assertThat(response.getStatus(), is(200));
+        verify(goalRepository).query(any(Specification.class));
+        verifyNoMoreInteractions(goalRepository);
+    }
+
+    @Test
+    public void shouldNotGetGoalsWhenWrongAuthorization() {
+        // Given
+        String username = "test";
+
+        // When
+        final Response response = goalResource.getGoals(username, AuthBasicUtil.HEADER_DEFAULT);
+
+        // Then
+        assertThat(response.getStatus(), is(401));
+        verifyNoMoreInteractions(goalRepository);
+    }
+
+    @Test
+    public void shouldNotGetGoalsWhenIllegalHeader() {
+        // Given
+        String username = "test";
+
+        // When
+        final Response response = goalResource.getGoals(username, AuthBasicUtil.HEADER_ILLEGAL);
+
+        // Then
+        assertThat(response.getStatus(), is(401));
+        verifyNoMoreInteractions(goalRepository);
+    }
+
+    @Test
     public void shouldAddGoal() throws Exception {
         // Given
         Goal goal = createGoal();
         String json = gson.toJson(goal);
 
         // When
-        goalResource.createGoal(json, AuthBasicUtil.HEADER_TEST_123);
+        final Response response = goalResource.createGoal(json, AuthBasicUtil.HEADER_TEST_123);
 
         // Then
+        assertThat(response.getStatus(), is(200));
         verify(goalRepository).add(Mockito.eq(goal));
         verifyNoMoreInteractions(goalRepository);
     }
@@ -63,9 +107,10 @@ public class GoalResourceTest {
         String invalidJson = goal.toString();
 
         // When
-        goalResource.createGoal(invalidJson, AuthBasicUtil.HEADER_TEST_123);
+        final Response response = goalResource.createGoal(invalidJson, AuthBasicUtil.HEADER_TEST_123);
 
         // Then
+        assertThat(response.getStatus(), is(400));
         verifyNoMoreInteractions(goalRepository);
     }
 
@@ -76,9 +121,10 @@ public class GoalResourceTest {
         String json = gson.toJson(goal);
 
         // When
-        goalResource.createGoal(json, AuthBasicUtil.HEADER_DEFAULT);
+        final Response response = goalResource.createGoal(json, AuthBasicUtil.HEADER_DEFAULT);
 
         // Then
+        assertThat(response.getStatus(), is(401));
         verifyNoMoreInteractions(goalRepository);
     }
 
@@ -89,9 +135,10 @@ public class GoalResourceTest {
         String json = gson.toJson(goal);
 
         // When
-        goalResource.createGoal(json, AuthBasicUtil.HEADER_ILLEGAL);
+        final Response response = goalResource.createGoal(json, AuthBasicUtil.HEADER_ILLEGAL);
 
         // Then
+        assertThat(response.getStatus(), is(401));
         verifyNoMoreInteractions(goalRepository);
     }
 
@@ -102,9 +149,10 @@ public class GoalResourceTest {
         String json = gson.toJson(goal);
 
         // When
-        goalResource.updateGoal(json, AuthBasicUtil.HEADER_TEST_123);
+        final Response response = goalResource.updateGoal(json, AuthBasicUtil.HEADER_TEST_123);
 
         // Then
+        assertThat(response.getStatus(), is(200));
         verify(goalRepository).update(Mockito.eq(goal));
         verifyNoMoreInteractions(goalRepository);
     }
@@ -116,9 +164,10 @@ public class GoalResourceTest {
         String invalidJson = goal.toString();
 
         // When
-        goalResource.updateGoal(invalidJson, AuthBasicUtil.HEADER_TEST_123);
+        final Response response = goalResource.updateGoal(invalidJson, AuthBasicUtil.HEADER_TEST_123);
 
         // Then
+        assertThat(response.getStatus(), is(400));
         verifyNoMoreInteractions(goalRepository);
     }
 
@@ -129,9 +178,10 @@ public class GoalResourceTest {
         String json = gson.toJson(goal);
 
         // When
-        goalResource.updateGoal(json, AuthBasicUtil.HEADER_DEFAULT);
+        final Response response = goalResource.updateGoal(json, AuthBasicUtil.HEADER_DEFAULT);
 
         // Then
+        assertThat(response.getStatus(), is(401));
         verifyNoMoreInteractions(goalRepository);
     }
 
@@ -142,9 +192,10 @@ public class GoalResourceTest {
         String json = gson.toJson(goal);
 
         // When
-        goalResource.updateGoal(json, AuthBasicUtil.HEADER_ILLEGAL);
+        final Response response = goalResource.updateGoal(json, AuthBasicUtil.HEADER_ILLEGAL);
 
         // Then
+        assertThat(response.getStatus(), is(401));
         verifyNoMoreInteractions(goalRepository);
     }
 
@@ -154,9 +205,10 @@ public class GoalResourceTest {
         int id = 1;
 
         // When
-        goalResource.deleteGoal(id, AuthBasicUtil.HEADER_TEST_123);
+        final Response response = goalResource.deleteGoal(id, AuthBasicUtil.HEADER_TEST_123);
 
         // Then
+        assertThat(response.getStatus(), is(200));
         verify(goalRepository).query(any(Specification.class));
         verify(goalRepository).remove(any(Specification.class));
         verifyNoMoreInteractions(goalRepository);
@@ -168,9 +220,10 @@ public class GoalResourceTest {
         int id = 1;
 
         // When
-        goalResource.deleteGoal(id, AuthBasicUtil.HEADER_DEFAULT);
+        final Response response = goalResource.deleteGoal(id, AuthBasicUtil.HEADER_DEFAULT);
 
         // Then
+        assertThat(response.getStatus(), is(401));
         verify(goalRepository).query(any(Specification.class));
         verifyNoMoreInteractions(goalRepository);
     }
@@ -181,9 +234,10 @@ public class GoalResourceTest {
         int id = 1;
 
         // When
-        goalResource.deleteGoal(id, AuthBasicUtil.HEADER_ILLEGAL);
+        final Response response = goalResource.deleteGoal(id, AuthBasicUtil.HEADER_ILLEGAL);
 
         // Then
+        assertThat(response.getStatus(), is(401));
         verify(goalRepository).query(any(Specification.class));
         verifyNoMoreInteractions(goalRepository);
     }

@@ -14,11 +14,14 @@ import tdt4140.gr1817.serviceprovider.webserver.validation.AuthBasicAuthenticato
 import tdt4140.gr1817.serviceprovider.webserver.validation.ServiceProviderPermissionsValidator;
 import tdt4140.gr1817.serviceprovider.webserver.validation.util.AuthBasicUtil;
 
+import javax.ws.rs.core.Response;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -46,15 +49,56 @@ public class ServiceProviderPermissionsResourceTest {
     }
 
     @Test
+    public void shouldGetGoals() throws Exception {
+        // Given
+        String username = "test";
+
+        // When
+        final Response response = resource.getServiceProviderPermissions(username, AuthBasicUtil.HEADER_TEST_123);
+
+        // Then
+        assertThat(response.getStatus(), is(200));
+        verify(permissionsRepository).query(any(Specification.class));
+        verifyNoMoreInteractions(permissionsRepository);
+    }
+
+    @Test
+    public void shouldNotGetGoalsWhenWrongAuthorization() {
+        // Given
+        String username = "test";
+
+        // When
+        final Response response = resource.getServiceProviderPermissions(username, AuthBasicUtil.HEADER_DEFAULT);
+
+        // Then
+        assertThat(response.getStatus(), is(401));
+        verifyNoMoreInteractions(permissionsRepository);
+    }
+
+    @Test
+    public void shouldNotGetGoalsWhenIllegalHeader() {
+        // Given
+        String username = "test";
+
+        // When
+        final Response response = resource.getServiceProviderPermissions(username, AuthBasicUtil.HEADER_ILLEGAL);
+
+        // Then
+        assertThat(response.getStatus(), is(401));
+        verifyNoMoreInteractions(permissionsRepository);
+    }
+
+    @Test
     public void shouldAddServiceProviderPermissions() throws Exception {
         // Given
         ServiceProviderPermissions ServiceProviderPermissions = createServiceProviderPermissions();
         String json = gson.toJson(ServiceProviderPermissions);
 
         // When
-        resource.createServiceProviderPermissions(json, AuthBasicUtil.HEADER_TEST_123);
+        final Response response = resource.createServiceProviderPermissions(json, AuthBasicUtil.HEADER_TEST_123);
 
         // Then
+        assertThat(response.getStatus(), is(200));
         verify(permissionsRepository).add(Mockito.eq(ServiceProviderPermissions));
         verifyNoMoreInteractions(permissionsRepository);
     }
@@ -66,9 +110,10 @@ public class ServiceProviderPermissionsResourceTest {
         String invalidJson = ServiceProviderPermissions.toString();
 
         // When
-        resource.createServiceProviderPermissions(invalidJson, AuthBasicUtil.HEADER_TEST_123);
+        final Response response = resource.createServiceProviderPermissions(invalidJson, AuthBasicUtil.HEADER_TEST_123);
 
         // Then
+        assertThat(response.getStatus(), is(400));
         verifyNoMoreInteractions(permissionsRepository);
     }
 
@@ -79,9 +124,10 @@ public class ServiceProviderPermissionsResourceTest {
         String json = gson.toJson(ServiceProviderPermissions);
 
         // When
-        resource.createServiceProviderPermissions(json, AuthBasicUtil.HEADER_DEFAULT);
+        final Response response = resource.createServiceProviderPermissions(json, AuthBasicUtil.HEADER_DEFAULT);
 
         // Then
+        assertThat(response.getStatus(), is(401));
         verifyNoMoreInteractions(permissionsRepository);
     }
 
@@ -92,9 +138,10 @@ public class ServiceProviderPermissionsResourceTest {
         String json = gson.toJson(ServiceProviderPermissions);
 
         // When
-        resource.createServiceProviderPermissions(json, AuthBasicUtil.HEADER_ILLEGAL);
+        final Response response = resource.createServiceProviderPermissions(json, AuthBasicUtil.HEADER_ILLEGAL);
 
         // Then
+        assertThat(response.getStatus(), is(401));
         verifyNoMoreInteractions(permissionsRepository);
     }
 
@@ -105,9 +152,10 @@ public class ServiceProviderPermissionsResourceTest {
         String json = gson.toJson(ServiceProviderPermissions);
 
         // When
-        resource.updateServiceProviderPermissions(json, AuthBasicUtil.HEADER_TEST_123);
+        final Response response = resource.updateServiceProviderPermissions(json, AuthBasicUtil.HEADER_TEST_123);
 
         // Then
+        assertThat(response.getStatus(), is(200));
         verify(permissionsRepository).update(Mockito.eq(ServiceProviderPermissions));
         verifyNoMoreInteractions(permissionsRepository);
     }
@@ -119,9 +167,10 @@ public class ServiceProviderPermissionsResourceTest {
         String invalidJson = ServiceProviderPermissions.toString();
 
         // When
-        resource.updateServiceProviderPermissions(invalidJson, AuthBasicUtil.HEADER_TEST_123);
+        final Response response = resource.updateServiceProviderPermissions(invalidJson, AuthBasicUtil.HEADER_TEST_123);
 
         // Then
+        assertThat(response.getStatus(), is(400));
         verifyNoMoreInteractions(permissionsRepository);
     }
 
@@ -132,9 +181,10 @@ public class ServiceProviderPermissionsResourceTest {
         String json = gson.toJson(ServiceProviderPermissions);
 
         // When
-        resource.updateServiceProviderPermissions(json, AuthBasicUtil.HEADER_DEFAULT);
+        final Response response = resource.updateServiceProviderPermissions(json, AuthBasicUtil.HEADER_DEFAULT);
 
         // Then
+        assertThat(response.getStatus(), is(401));
         verifyNoMoreInteractions(permissionsRepository);
     }
 
@@ -145,9 +195,10 @@ public class ServiceProviderPermissionsResourceTest {
         String json = gson.toJson(ServiceProviderPermissions);
 
         // When
-        resource.updateServiceProviderPermissions(json, AuthBasicUtil.HEADER_ILLEGAL);
+        final Response response = resource.updateServiceProviderPermissions(json, AuthBasicUtil.HEADER_ILLEGAL);
 
         // Then
+        assertThat(response.getStatus(), is(401));
         verifyNoMoreInteractions(permissionsRepository);
     }
 
@@ -157,9 +208,10 @@ public class ServiceProviderPermissionsResourceTest {
         int uid = 1, sid = 1;
 
         // When
-        resource.deleteServiceProviderPermissions(uid, sid, AuthBasicUtil.HEADER_TEST_123);
+        final Response response = resource.deleteServiceProviderPermissions(uid, sid, AuthBasicUtil.HEADER_TEST_123);
 
         // Then
+        assertThat(response.getStatus(), is(200));
         verify(permissionsRepository).query(any(Specification.class));
         verify(permissionsRepository).remove(any(Specification.class));
         verifyNoMoreInteractions(permissionsRepository);
@@ -171,9 +223,10 @@ public class ServiceProviderPermissionsResourceTest {
         int uid = 1, sid = 1;
 
         // When
-        resource.deleteServiceProviderPermissions(uid, sid, AuthBasicUtil.HEADER_DEFAULT);
+        final Response response = resource.deleteServiceProviderPermissions(uid, sid, AuthBasicUtil.HEADER_DEFAULT);
 
         // Then
+        assertThat(response.getStatus(), is(401));
         verify(permissionsRepository).query(any(Specification.class));
         verifyNoMoreInteractions(permissionsRepository);
     }
@@ -184,9 +237,10 @@ public class ServiceProviderPermissionsResourceTest {
         int uid = 1, sid = 1;
 
         // When
-        resource.deleteServiceProviderPermissions(uid, sid, AuthBasicUtil.HEADER_ILLEGAL);
+        final Response response = resource.deleteServiceProviderPermissions(uid, sid, AuthBasicUtil.HEADER_ILLEGAL);
 
         // Then
+        assertThat(response.getStatus(), is(401));
         verify(permissionsRepository).query(any(Specification.class));
         verifyNoMoreInteractions(permissionsRepository);
     }

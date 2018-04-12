@@ -13,11 +13,14 @@ import tdt4140.gr1817.serviceprovider.webserver.validation.AuthBasicAuthenticato
 import tdt4140.gr1817.serviceprovider.webserver.validation.RestingHeartRateValidator;
 import tdt4140.gr1817.serviceprovider.webserver.validation.util.AuthBasicUtil;
 
+import javax.ws.rs.core.Response;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -46,15 +49,57 @@ public class RestingHeartRateResourceTest {
     }
 
     @Test
+    public void shouldGetRestingHeartRates() throws Exception {
+        // Given
+        String username = "test";
+
+        // When
+        final Response response = restingHeartRateResource
+                .getRestingHeartRates(username, AuthBasicUtil.HEADER_TEST_123);
+
+        // Then
+        assertThat(response.getStatus(), is(200));
+        verify(restingHeartRateRepository).query(any(Specification.class));
+        verifyNoMoreInteractions(restingHeartRateRepository);
+    }
+
+    @Test
+    public void shouldNotGetRestingHeartRatesWhenWrongAuthorization() {
+        // Given
+        String username = "test";
+
+        // When
+        final Response response = restingHeartRateResource.getRestingHeartRates(username, AuthBasicUtil.HEADER_DEFAULT);
+
+        // Then
+        assertThat(response.getStatus(), is(401));
+        verifyNoMoreInteractions(restingHeartRateRepository);
+    }
+
+    @Test
+    public void shouldNotGetRestingHeartRatesWhenIllegalHeader() {
+        // Given
+        String username = "test";
+
+        // When
+        final Response response = restingHeartRateResource.getRestingHeartRates(username, AuthBasicUtil.HEADER_ILLEGAL);
+
+        // Then
+        assertThat(response.getStatus(), is(401));
+        verifyNoMoreInteractions(restingHeartRateRepository);
+    }
+
+    @Test
     public void shouldAddRestingHeartRate() throws Exception {
         // Given
         RestingHeartRate restingHeartRate = createRestingHeartRate();
         String json = gson.toJson(restingHeartRate);
 
         // When
-        restingHeartRateResource.createRestingHeartRate(json, AuthBasicUtil.HEADER_TEST_123);
+        final Response response = restingHeartRateResource.createRestingHeartRate(json, AuthBasicUtil.HEADER_TEST_123);
 
         // Then
+        assertThat(response.getStatus(), is(200));
         verify(restingHeartRateRepository).add(Mockito.eq(restingHeartRate));
         verifyNoMoreInteractions(restingHeartRateRepository);
     }
@@ -66,9 +111,10 @@ public class RestingHeartRateResourceTest {
         String invalidJson = restingHeartRate.toString();
 
         // When
-        restingHeartRateResource.createRestingHeartRate(invalidJson, AuthBasicUtil.HEADER_TEST_123);
+        final Response response = restingHeartRateResource.createRestingHeartRate(invalidJson, AuthBasicUtil.HEADER_TEST_123);
 
         // Then
+        assertThat(response.getStatus(), is(400));
         verifyNoMoreInteractions(restingHeartRateRepository);
     }
 
@@ -79,22 +125,24 @@ public class RestingHeartRateResourceTest {
         String json = gson.toJson(restingHeartRate);
 
         // When
-        restingHeartRateResource.createRestingHeartRate(json, AuthBasicUtil.HEADER_DEFAULT);
+        final Response response = restingHeartRateResource.createRestingHeartRate(json, AuthBasicUtil.HEADER_DEFAULT);
 
         // Then
+        assertThat(response.getStatus(), is(401));
         verifyNoMoreInteractions(restingHeartRateRepository);
     }
 
     @Test
-    public void shouldNotAddGoalWhenIllegalHeader() {
+    public void shouldNotAddRestingHeartRateWhenIllegalHeader() {
         // Given
         RestingHeartRate restingHeartRate = createRestingHeartRate();
         String json = gson.toJson(restingHeartRate);
 
         // When
-        restingHeartRateResource.createRestingHeartRate(json, AuthBasicUtil.HEADER_ILLEGAL);
+        final Response response = restingHeartRateResource.createRestingHeartRate(json, AuthBasicUtil.HEADER_ILLEGAL);
 
         // Then
+        assertThat(response.getStatus(), is(401));
         verifyNoMoreInteractions(restingHeartRateRepository);
     }
 
@@ -105,9 +153,10 @@ public class RestingHeartRateResourceTest {
         String json = gson.toJson(restingHeartRate);
 
         // When
-        restingHeartRateResource.updateRestingHeartRate(json, AuthBasicUtil.HEADER_TEST_123);
+        final Response response = restingHeartRateResource.updateRestingHeartRate(json, AuthBasicUtil.HEADER_TEST_123);
 
         // Then
+        assertThat(response.getStatus(), is(200));
         verify(restingHeartRateRepository).update(Mockito.eq(restingHeartRate));
         verifyNoMoreInteractions(restingHeartRateRepository);
     }
@@ -119,9 +168,10 @@ public class RestingHeartRateResourceTest {
         String invalidJson = restingHeartRate.toString();
 
         // When
-        restingHeartRateResource.updateRestingHeartRate(invalidJson, AuthBasicUtil.HEADER_TEST_123);
+        final Response response = restingHeartRateResource.updateRestingHeartRate(invalidJson, AuthBasicUtil.HEADER_TEST_123);
 
         // Then
+        assertThat(response.getStatus(), is(400));
         verifyNoMoreInteractions(restingHeartRateRepository);
     }
 
@@ -132,22 +182,24 @@ public class RestingHeartRateResourceTest {
         String json = gson.toJson(restingHeartRate);
 
         // When
-        restingHeartRateResource.updateRestingHeartRate(json, AuthBasicUtil.HEADER_DEFAULT);
+        final Response response = restingHeartRateResource.updateRestingHeartRate(json, AuthBasicUtil.HEADER_DEFAULT);
 
         // Then
+        assertThat(response.getStatus(), is(401));
         verifyNoMoreInteractions(restingHeartRateRepository);
     }
 
     @Test
-    public void shouldNotUpdateGoalWhenIllegalHeader() {
+    public void shouldNotUpdateRestingHeartRateWhenIllegalHeader() {
         // Given
         RestingHeartRate restingHeartRate = createRestingHeartRate();
         String json = gson.toJson(restingHeartRate);
 
         // When
-        restingHeartRateResource.updateRestingHeartRate(json, AuthBasicUtil.HEADER_ILLEGAL);
+        final Response response = restingHeartRateResource.updateRestingHeartRate(json, AuthBasicUtil.HEADER_ILLEGAL);
 
         // Then
+        assertThat(response.getStatus(), is(401));
         verifyNoMoreInteractions(restingHeartRateRepository);
     }
 
@@ -157,36 +209,39 @@ public class RestingHeartRateResourceTest {
         int id = 1;
 
         // When
-        restingHeartRateResource.deleteRestingHeartRate(id, AuthBasicUtil.HEADER_TEST_123);
+        final Response response = restingHeartRateResource.deleteRestingHeartRate(id, AuthBasicUtil.HEADER_TEST_123);
 
         // Then
+        assertThat(response.getStatus(), is(200));
         verify(restingHeartRateRepository).query(any(Specification.class));
         verify(restingHeartRateRepository).remove(any(Specification.class));
         verifyNoMoreInteractions(restingHeartRateRepository);
     }
 
     @Test
-    public void shouldNotRemoveGoalWhenWrongAuthorization() {
+    public void shouldNotRemoveRestingHeartRateWhenWrongAuthorization() {
         // Given
         int id = 1;
 
         // When
-        restingHeartRateResource.deleteRestingHeartRate(id, AuthBasicUtil.HEADER_DEFAULT);
+        final Response response = restingHeartRateResource.deleteRestingHeartRate(id, AuthBasicUtil.HEADER_DEFAULT);
 
         // Then
+        assertThat(response.getStatus(), is(401));
         verify(restingHeartRateRepository).query(any(Specification.class));
         verifyNoMoreInteractions(restingHeartRateRepository);
     }
 
     @Test
-    public void shouldNotRemoveGoalWhenIllegalHeader() {
+    public void shouldNotRemoveRestingHeartRateWhenIllegalHeader() {
         // Given
         int id = 1;
 
         // When
-        restingHeartRateResource.deleteRestingHeartRate(id, AuthBasicUtil.HEADER_ILLEGAL);
+        final Response response = restingHeartRateResource.deleteRestingHeartRate(id, AuthBasicUtil.HEADER_ILLEGAL);
 
         // Then
+        assertThat(response.getStatus(), is(401));
         verify(restingHeartRateRepository).query(any(Specification.class));
         verifyNoMoreInteractions(restingHeartRateRepository);
     }

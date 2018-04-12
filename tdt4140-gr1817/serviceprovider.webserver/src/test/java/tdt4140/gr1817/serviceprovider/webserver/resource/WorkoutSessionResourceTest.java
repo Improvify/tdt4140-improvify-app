@@ -13,11 +13,14 @@ import tdt4140.gr1817.serviceprovider.webserver.validation.AuthBasicAuthenticato
 import tdt4140.gr1817.serviceprovider.webserver.validation.WorkoutSessionValidator;
 import tdt4140.gr1817.serviceprovider.webserver.validation.util.AuthBasicUtil;
 
+import javax.ws.rs.core.Response;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -44,15 +47,56 @@ public class WorkoutSessionResourceTest {
     }
 
     @Test
+    public void shouldGetWorkoutSessions() throws Exception {
+        // Given
+        String username = "test";
+
+        // When
+        final Response response = workoutSessionResource.getWorkoutSessions(username, AuthBasicUtil.HEADER_TEST_123);
+
+        // Then
+        assertThat(response.getStatus(), is(200));
+        verify(workoutSessionRepository).query(any(Specification.class));
+        verifyNoMoreInteractions(workoutSessionRepository);
+    }
+
+    @Test
+    public void shouldNotGetWorkoutSessionsWhenWrongAuthorization() {
+        // Given
+        String username = "test";
+
+        // When
+        final Response response = workoutSessionResource.getWorkoutSessions(username, AuthBasicUtil.HEADER_DEFAULT);
+
+        // Then
+        assertThat(response.getStatus(), is(401));
+        verifyNoMoreInteractions(workoutSessionRepository);
+    }
+
+    @Test
+    public void shouldNotGetWorkoutSessionsWhenIllegalHeader() {
+        // Given
+        String username = "test";
+
+        // When
+        final Response response = workoutSessionResource.getWorkoutSessions(username, AuthBasicUtil.HEADER_ILLEGAL);
+
+        // Then
+        assertThat(response.getStatus(), is(401));
+        verifyNoMoreInteractions(workoutSessionRepository);
+    }
+
+    @Test
     public void shouldAddWorkoutSession() throws Exception {
         // Given
         WorkoutSession workoutSession = createWorkoutSession();
         String json = gson.toJson(workoutSession);
 
         // When
-        workoutSessionResource.createWorkoutSession(json, AuthBasicUtil.HEADER_TEST_123);
+        final Response response = workoutSessionResource.createWorkoutSession(json, AuthBasicUtil.HEADER_TEST_123);
 
         // Then
+        assertThat(response.getStatus(), is(200));
         verify(workoutSessionRepository).add(Mockito.eq(workoutSession));
         verifyNoMoreInteractions(workoutSessionRepository);
     }
@@ -64,9 +108,10 @@ public class WorkoutSessionResourceTest {
         String invalidJson = workoutSession.toString();
 
         // When
-        workoutSessionResource.createWorkoutSession(invalidJson, AuthBasicUtil.HEADER_TEST_123);
+        final Response response = workoutSessionResource.createWorkoutSession(invalidJson, AuthBasicUtil.HEADER_TEST_123);
 
         //Then
+        assertThat(response.getStatus(), is(400));
         verifyNoMoreInteractions(workoutSessionRepository);
     }
 
@@ -77,22 +122,24 @@ public class WorkoutSessionResourceTest {
         String json = gson.toJson(workoutSession);
 
         // When
-        workoutSessionResource.createWorkoutSession(json, AuthBasicUtil.HEADER_DEFAULT);
+        final Response response = workoutSessionResource.createWorkoutSession(json, AuthBasicUtil.HEADER_DEFAULT);
 
         // Then
+        assertThat(response.getStatus(), is(401));
         verifyNoMoreInteractions(workoutSessionRepository);
     }
 
     @Test
-    public void shouldNotAddGoalWhenIllegalHeader() {
+    public void shouldNotAddWorkoutSessionWhenIllegalHeader() {
         // Given
         WorkoutSession workoutSession = createWorkoutSession();
         String json = gson.toJson(workoutSession);
 
         // When
-        workoutSessionResource.createWorkoutSession(json, AuthBasicUtil.HEADER_ILLEGAL);
+        final Response response = workoutSessionResource.createWorkoutSession(json, AuthBasicUtil.HEADER_ILLEGAL);
 
         // Then
+        assertThat(response.getStatus(), is(401));
         verifyNoMoreInteractions(workoutSessionRepository);
     }
 
@@ -103,9 +150,10 @@ public class WorkoutSessionResourceTest {
         String json = gson.toJson(workoutSession);
 
         // When
-        workoutSessionResource.updateWorkoutSession(json, AuthBasicUtil.HEADER_TEST_123);
+        final Response response = workoutSessionResource.updateWorkoutSession(json, AuthBasicUtil.HEADER_TEST_123);
 
         // Then
+        assertThat(response.getStatus(), is(200));
         verify(workoutSessionRepository).update(Mockito.eq(workoutSession));
         verifyNoMoreInteractions(workoutSessionRepository);
     }
@@ -117,9 +165,10 @@ public class WorkoutSessionResourceTest {
         String invalidJson = workoutSession.toString();
 
         // When
-        workoutSessionResource.updateWorkoutSession(invalidJson, AuthBasicUtil.HEADER_TEST_123);
+        final Response response = workoutSessionResource.updateWorkoutSession(invalidJson, AuthBasicUtil.HEADER_TEST_123);
 
         //Then
+        assertThat(response.getStatus(), is(400));
         verifyNoMoreInteractions(workoutSessionRepository);
     }
 
@@ -130,61 +179,66 @@ public class WorkoutSessionResourceTest {
         String json = gson.toJson(workoutSession);
 
         // When
-        workoutSessionResource.updateWorkoutSession(json, AuthBasicUtil.HEADER_DEFAULT);
+        final Response response = workoutSessionResource.updateWorkoutSession(json, AuthBasicUtil.HEADER_DEFAULT);
 
         // Then
+        assertThat(response.getStatus(), is(401));
         verifyNoMoreInteractions(workoutSessionRepository);
     }
 
     @Test
-    public void shouldNotUpdateGoalWhenIllegalHeader() {
+    public void shouldNotUpdateWorkoutSessionWhenIllegalHeader() {
         // Given
         WorkoutSession workoutSession = createWorkoutSession();
         String json = gson.toJson(workoutSession);
 
         // When
-        workoutSessionResource.updateWorkoutSession(json, AuthBasicUtil.HEADER_ILLEGAL);
+        final Response response = workoutSessionResource.updateWorkoutSession(json, AuthBasicUtil.HEADER_ILLEGAL);
 
         // Then
+        assertThat(response.getStatus(), is(401));
         verifyNoMoreInteractions(workoutSessionRepository);
     }
 
     @Test
-    public void shouldRemoveGoal() {
+    public void shouldRemoveWorkoutSession() {
         // Given
         int id = 1;
 
         // When
-        workoutSessionResource.deleteWorkoutSession(id, AuthBasicUtil.HEADER_TEST_123);
+        final Response response = workoutSessionResource.deleteWorkoutSession(id, AuthBasicUtil.HEADER_TEST_123);
 
         // Then
+        assertThat(response.getStatus(), is(200));
         verify(workoutSessionRepository).query(any(Specification.class));
         verify(workoutSessionRepository).remove(any(Specification.class));
         verifyNoMoreInteractions(workoutSessionRepository);
     }
 
     @Test
-    public void shouldNotRemoveGoalWhenWrongAuthorization() {
+    public void shouldNotRemoveWorkoutSessionWhenWrongAuthorization() {
         // Given
         int id = 1;
 
         // When
-        workoutSessionResource.deleteWorkoutSession(id, AuthBasicUtil.HEADER_DEFAULT);
+        final Response response = workoutSessionResource.deleteWorkoutSession(id, AuthBasicUtil.HEADER_DEFAULT);
 
         // Then
+        assertThat(response.getStatus(), is(401));
         verify(workoutSessionRepository).query(any(Specification.class));
         verifyNoMoreInteractions(workoutSessionRepository);
     }
 
     @Test
-    public void shouldNotRemoveGoalWhenIllegalHeader() {
+    public void shouldNotRemoveWorkoutSessionWhenIllegalHeader() {
         // Given
         int id = 1;
 
         // When
-        workoutSessionResource.deleteWorkoutSession(id, AuthBasicUtil.HEADER_ILLEGAL);
+        final Response response = workoutSessionResource.deleteWorkoutSession(id, AuthBasicUtil.HEADER_ILLEGAL);
 
         // Then
+        assertThat(response.getStatus(), is(401));
         verify(workoutSessionRepository).query(any(Specification.class));
         verifyNoMoreInteractions(workoutSessionRepository);
     }

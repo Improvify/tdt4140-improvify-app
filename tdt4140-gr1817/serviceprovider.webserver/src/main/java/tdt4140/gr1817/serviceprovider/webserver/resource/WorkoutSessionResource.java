@@ -8,6 +8,8 @@ import tdt4140.gr1817.ecosystem.persistence.data.WorkoutSession;
 import tdt4140.gr1817.ecosystem.persistence.repositories.UserRepository;
 import tdt4140.gr1817.ecosystem.persistence.repositories.WorkoutSessionRepository;
 import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.specification.GetUserByIdSpecification;
+import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.specification.GetUserByUsernameSpecification;
+import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.specification.improvify.GetAllWorkoutSessionForUserSpecification;
 import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.specification.improvify.GetWorkoutSessionByIdSpecification;
 import tdt4140.gr1817.serviceprovider.webserver.validation.AuthBasicAuthenticator;
 import tdt4140.gr1817.serviceprovider.webserver.validation.WorkoutSessionValidator;
@@ -15,6 +17,7 @@ import tdt4140.gr1817.serviceprovider.webserver.validation.WorkoutSessionValidat
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -23,6 +26,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.List;
 
 @Slf4j
 @Path("workoutsession")
@@ -42,6 +46,26 @@ public class WorkoutSessionResource {
         this.gson = gson;
         this.validator = validator;
         this.authenticator = authenticator;
+    }
+
+    @GET
+    @Path("{username}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getWorkoutSessions(@PathParam("username") String username,
+                                       @HeaderParam("Authorization") String credentials) {
+        try {
+            User user = userRepository.query(new GetUserByUsernameSpecification(username)).get(0);
+
+            if (authenticator.authenticate(credentials, user)) {
+                final List<WorkoutSession> workoutSessions = workoutSessionRepository
+                        .query(new GetAllWorkoutSessionForUserSpecification(user.getId()));
+                String json = gson.toJson(workoutSessions);
+                return Response.status(200).entity(json).build();
+            }
+            return Response.status(401).entity("{\"message\":\"Authorization failed\"}").build();
+        } catch (RuntimeException e) {
+            return Response.status(401).entity("{\"message\":\"Authorization failed\"}").build();
+        }
     }
 
     @POST

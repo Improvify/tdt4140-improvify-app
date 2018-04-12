@@ -11,11 +11,14 @@ import tdt4140.gr1817.serviceprovider.webserver.validation.AuthBasicAuthenticato
 import tdt4140.gr1817.serviceprovider.webserver.validation.UserValidator;
 import tdt4140.gr1817.serviceprovider.webserver.validation.util.AuthBasicUtil;
 
+import javax.ws.rs.core.Response;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
@@ -40,15 +43,58 @@ public class UserResourceTest {
     }
 
     @Test
+    public void shouldGetUser() throws Exception {
+        // Given
+        String username = "test";
+
+        // When
+        final Response response = userResource.getUser(username, AuthBasicUtil.HEADER_TEST_123);
+
+        // Then
+        assertThat(response.getStatus(), is(200));
+        verify(userRepository).query(any(Specification.class));
+        verifyNoMoreInteractions(userRepository);
+    }
+
+    @Test
+    public void shouldNotGetUserWhenWrongAuthorization() {
+        // Given
+        String username = "test";
+
+        // When
+        final Response response = userResource.getUser(username, AuthBasicUtil.HEADER_DEFAULT);
+
+        // Then
+        assertThat(response.getStatus(), is(401));
+        verify(userRepository).query(any(Specification.class));
+        verifyNoMoreInteractions(userRepository);
+    }
+
+    @Test
+    public void shouldNotGetUserWhenIllegalHeader() {
+        // Given
+        String username = "test";
+
+        // When
+        final Response response = userResource.getUser(username, AuthBasicUtil.HEADER_ILLEGAL);
+
+        // Then
+        assertThat(response.getStatus(), is(401));
+        verify(userRepository).query(any(Specification.class));
+        verifyNoMoreInteractions(userRepository);
+    }
+
+    @Test
     public void shouldAddUser() throws Exception {
         // Given
         User user = createUser();
         String json = gson.toJson(user);
 
         // When
-        userResource.createUser(json);
+        final Response response = userResource.createUser(json);
 
         // Then
+        assertThat(response.getStatus(), is(200));
         verify(userRepository).add(Mockito.eq(user));
         verifyNoMoreInteractions(userRepository);
     }
@@ -60,9 +106,10 @@ public class UserResourceTest {
         String invalidJson = user.toString();
 
         // When
-        userResource.createUser(invalidJson);
+        final Response response = userResource.createUser(invalidJson);
 
         // Then
+        assertThat(response.getStatus(), is(400));
         verifyNoMoreInteractions(userRepository);
     }
 
@@ -74,9 +121,10 @@ public class UserResourceTest {
         doThrow(new RuntimeException()).when(userRepository).add(user);
 
         // When
-        userResource.createUser(json);
+        final Response response = userResource.createUser(json);
 
         // Then
+        assertThat(response.getStatus(), is(400));
         verify(userRepository).add(any(User.class));
         verifyNoMoreInteractions(userRepository);
     }
@@ -88,9 +136,10 @@ public class UserResourceTest {
         String json = gson.toJson(user);
 
         // When
-        userResource.updateUser(json, AuthBasicUtil.HEADER_TEST_123);
+        final Response response = userResource.updateUser(json, AuthBasicUtil.HEADER_TEST_123);
 
         // Then
+        assertThat(response.getStatus(), is(200));
         verify(userRepository).query(any(Specification.class));
         verify(userRepository).update(Mockito.eq(user));
         verifyNoMoreInteractions(userRepository);
@@ -103,9 +152,10 @@ public class UserResourceTest {
         String invalidJson = user.toString();
 
         // When
-        userResource.updateUser(invalidJson, AuthBasicUtil.HEADER_TEST_123);
+        final Response response = userResource.updateUser(invalidJson, AuthBasicUtil.HEADER_TEST_123);
 
         // Then
+        assertThat(response.getStatus(), is(400));
         verifyNoMoreInteractions(userRepository);
     }
 
@@ -116,9 +166,10 @@ public class UserResourceTest {
         String json = gson.toJson(user);
 
         // When
-        userResource.updateUser(json, AuthBasicUtil.HEADER_DEFAULT);
+        final Response response = userResource.updateUser(json, AuthBasicUtil.HEADER_DEFAULT);
 
         // Then
+        assertThat(response.getStatus(), is(401));
         verify(userRepository).query(any(Specification.class));
         verifyNoMoreInteractions(userRepository);
     }
@@ -130,9 +181,10 @@ public class UserResourceTest {
         String json = gson.toJson(user);
 
         // When
-        userResource.updateUser(json, AuthBasicUtil.HEADER_ILLEGAL);
+        final Response response = userResource.updateUser(json, AuthBasicUtil.HEADER_ILLEGAL);
 
         // Then
+        assertThat(response.getStatus(), is(401));
         verify(userRepository).query(any(Specification.class));
         verifyNoMoreInteractions(userRepository);
     }
@@ -143,9 +195,10 @@ public class UserResourceTest {
         int id = 1;
 
         // When
-        userResource.deleteUser(id, AuthBasicUtil.HEADER_TEST_123);
+        final Response response = userResource.deleteUser(id, AuthBasicUtil.HEADER_TEST_123);
 
         // Then
+        assertThat(response.getStatus(), is(200));
         verify(userRepository).query(any(Specification.class));
         verify(userRepository).remove(any(Specification.class));
         verifyNoMoreInteractions(userRepository);
@@ -157,9 +210,10 @@ public class UserResourceTest {
         int id = 1;
 
         // When
-        userResource.deleteUser(id, AuthBasicUtil.HEADER_DEFAULT);
+        final Response response = userResource.deleteUser(id, AuthBasicUtil.HEADER_DEFAULT);
 
         // Then
+        assertThat(response.getStatus(), is(401));
         verify(userRepository).query(any(Specification.class));
         verifyNoMoreInteractions(userRepository);
     }
@@ -170,9 +224,10 @@ public class UserResourceTest {
         int id = 1;
 
         // When
-        userResource.deleteUser(id, AuthBasicUtil.HEADER_ILLEGAL);
+        final Response response = userResource.deleteUser(id, AuthBasicUtil.HEADER_ILLEGAL);
 
         // Then
+        assertThat(response.getStatus(), is(401));
         verify(userRepository).query(any(Specification.class));
         verifyNoMoreInteractions(userRepository);
     }
