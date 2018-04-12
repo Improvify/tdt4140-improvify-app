@@ -9,9 +9,6 @@ import java.nio.charset.StandardCharsets;
 
 public class SaveWorkoutPlanMarkdownToFile {
 
-    String convertedWorkoutPlan;
-
-
     public void writeToFile(File file, String contents) throws IOException {
         try (
                 BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file, true),
