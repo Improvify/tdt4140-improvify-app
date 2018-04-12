@@ -2,7 +2,6 @@ package tdt4140.gr1817.serviceprovider.webserver;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
-import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import org.glassfish.jersey.client.ClientConfig;
@@ -14,9 +13,8 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.LoggerFactory;
 import tdt4140.gr1817.ecosystem.persistence.data.User;
-import tdt4140.gr1817.ecosystem.persistence.repositories.UserRepository;
-import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.MySqlUserRepository;
 import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.guice.MySqlConnectionModule;
+import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.guice.MySqlRepositoryModule;
 import tdt4140.gr1817.serviceprovider.webserver.util.JerseyGsonProvider;
 
 import javax.ws.rs.client.Client;
@@ -52,12 +50,7 @@ public class WebserverIT {
         // TODO: Add all modules needed for webserver, or user MysqlModule when it is ready
         injector = Guice.createInjector(
                 new MySqlConnectionModule("root", "", "localhost", "ecosystem", 3306),
-                new AbstractModule() {
-                    @Override
-                    protected void configure() {
-                        bind(UserRepository.class).to(MySqlUserRepository.class);
-                    }
-                });
+                new MySqlRepositoryModule());
 
 
         serverThread = new Thread(() -> {
@@ -123,7 +116,7 @@ public class WebserverIT {
         String post = targetPath.request(MediaType.APPLICATION_JSON)
                 .post(Entity.entity(user, MediaType.APPLICATION_JSON_TYPE), String.class);
 
-        assertThat(post, is("User added"));
+        assertThat(post, is("{\"message\":\"User added\"}"));
     }
 
     private static Client createClient() {
