@@ -14,7 +14,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.verify;
 
 /**
@@ -60,7 +60,8 @@ public class ViewUserControllerTest {
         assertThat(viewUserController.ageTextProperty.get(), is("22 years old"));
         assertThat(viewUserController.fullNameTextProperty.get(), is("Test Larsson"));
         assertThat(viewUserController.emailTextProperty.get(), is("test@larsson.com"));
-        assertThat(viewUserController.heightTextProperty.get(), is("2.10m tall"));
+        String correctlyPunctuatedDecimal = String.format("%.2fm tall", 2.10);
+        assertThat(viewUserController.heightTextProperty.get(), is(correctlyPunctuatedDecimal));
     }
 
 
