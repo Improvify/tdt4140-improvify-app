@@ -96,6 +96,59 @@ public class GoalResourceTest {
     }
 
     @Test
+    public void shouldUpdateGoal() throws Exception {
+        // Given
+        Goal goal = createGoal();
+        String json = gson.toJson(goal);
+
+        // When
+        goalResource.updateGoal(json, AuthBasicUtil.HEADER_TEST_123);
+
+        // Then
+        verify(goalRepository).update(Mockito.eq(goal));
+        verifyNoMoreInteractions(goalRepository);
+    }
+
+    @Test
+    public void shouldNotUpdateWhenInvalidGoal() throws Exception {
+        // Given
+        Goal goal = createGoal();
+        String invalidJson = goal.toString();
+
+        // When
+        goalResource.updateGoal(invalidJson, AuthBasicUtil.HEADER_TEST_123);
+
+        // Then
+        verifyNoMoreInteractions(goalRepository);
+    }
+
+    @Test
+    public void shouldNotUpdateGoalWhenWrongAuthorization() {
+        // Given
+        Goal goal = createGoal();
+        String json = gson.toJson(goal);
+
+        // When
+        goalResource.updateGoal(json, AuthBasicUtil.HEADER_DEFAULT);
+
+        // Then
+        verifyNoMoreInteractions(goalRepository);
+    }
+
+    @Test
+    public void shouldNotUpdateGoalWhenIllegalHeader() {
+        // Given
+        Goal goal = createGoal();
+        String json = gson.toJson(goal);
+
+        // When
+        goalResource.updateGoal(json, AuthBasicUtil.HEADER_ILLEGAL);
+
+        // Then
+        verifyNoMoreInteractions(goalRepository);
+    }
+
+    @Test
     public void shouldRemoveGoal() {
         // Given
         int id = 1;

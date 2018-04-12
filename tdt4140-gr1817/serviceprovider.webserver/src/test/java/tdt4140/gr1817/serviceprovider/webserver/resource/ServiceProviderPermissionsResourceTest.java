@@ -99,6 +99,59 @@ public class ServiceProviderPermissionsResourceTest {
     }
 
     @Test
+    public void shouldUpdateServiceProviderPermissions() throws Exception {
+        // Given
+        ServiceProviderPermissions ServiceProviderPermissions = createServiceProviderPermissions();
+        String json = gson.toJson(ServiceProviderPermissions);
+
+        // When
+        resource.updateServiceProviderPermissions(json, AuthBasicUtil.HEADER_TEST_123);
+
+        // Then
+        verify(permissionsRepository).update(Mockito.eq(ServiceProviderPermissions));
+        verifyNoMoreInteractions(permissionsRepository);
+    }
+
+    @Test
+    public void shouldNotUpdateWhenInvalidServiceProviderPermissions() throws Exception {
+        // Given
+        ServiceProviderPermissions ServiceProviderPermissions = createServiceProviderPermissions();
+        String invalidJson = ServiceProviderPermissions.toString();
+
+        // When
+        resource.updateServiceProviderPermissions(invalidJson, AuthBasicUtil.HEADER_TEST_123);
+
+        // Then
+        verifyNoMoreInteractions(permissionsRepository);
+    }
+
+    @Test
+    public void shouldNotUpdateServiceProviderPermissionsWhenWrongAuthorization() throws Exception {
+        // Given
+        ServiceProviderPermissions ServiceProviderPermissions = createServiceProviderPermissions();
+        String json = gson.toJson(ServiceProviderPermissions);
+
+        // When
+        resource.updateServiceProviderPermissions(json, AuthBasicUtil.HEADER_DEFAULT);
+
+        // Then
+        verifyNoMoreInteractions(permissionsRepository);
+    }
+
+    @Test
+    public void shouldNotUpdateServiceProviderPermissionsWhenIllegalHeader() {
+        // Given
+        ServiceProviderPermissions ServiceProviderPermissions = createServiceProviderPermissions();
+        String json = gson.toJson(ServiceProviderPermissions);
+
+        // When
+        resource.updateServiceProviderPermissions(json, AuthBasicUtil.HEADER_ILLEGAL);
+
+        // Then
+        verifyNoMoreInteractions(permissionsRepository);
+    }
+
+    @Test
     public void shouldRemoveServiceProviderPermissions() {
         // Given
         int uid = 1, sid = 1;

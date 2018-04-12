@@ -96,6 +96,59 @@ public class WeightResourceTest {
     }
 
     @Test
+    public void shouldUpdateWeight() throws Exception {
+        // Given
+        Weight weight = createWeight();
+        String json = gson.toJson(weight);
+
+        // When
+        weightResource.updateWeight(json, AuthBasicUtil.HEADER_TEST_123);
+
+        // Then
+        verify(weightRepository).update(Mockito.eq(weight));
+        verifyNoMoreInteractions(weightRepository);
+    }
+
+    @Test
+    public void shouldNotUpdateWhenInvalidWeight() throws Exception {
+        // Given
+        Weight weight = createWeight();
+        String invalidJson = weight.toString();
+
+        // When
+        weightResource.updateWeight(invalidJson, AuthBasicUtil.HEADER_TEST_123);
+
+        // Then
+        verifyNoMoreInteractions(weightRepository);
+    }
+
+    @Test
+    public void shouldNotUpdateGoalWhenWrongAuthorization() throws Exception {
+        // Given
+        Weight weight = createWeight();
+        String json = gson.toJson(weight);
+
+        // When
+        weightResource.updateWeight(json, AuthBasicUtil.HEADER_DEFAULT);
+
+        // Then
+        verifyNoMoreInteractions(weightRepository);
+    }
+
+    @Test
+    public void shouldNotUpdateWeightWhenIllegalHeader() {
+        // Given
+        Weight weight = createWeight();
+        String json = gson.toJson(weight);
+
+        // When
+        weightResource.updateWeight(json, AuthBasicUtil.HEADER_ILLEGAL);
+
+        // Then
+        verifyNoMoreInteractions(weightRepository);
+    }
+
+    @Test
     public void shouldRemoveWeight() {
         // Given
         int id = 1;

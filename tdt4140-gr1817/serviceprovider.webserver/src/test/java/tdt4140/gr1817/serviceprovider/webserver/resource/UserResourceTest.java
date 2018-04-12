@@ -82,6 +82,62 @@ public class UserResourceTest {
     }
 
     @Test
+    public void shouldUpdateUser() throws Exception {
+        // Given
+        User user = createUser();
+        String json = gson.toJson(user);
+
+        // When
+        userResource.updateUser(json, AuthBasicUtil.HEADER_TEST_123);
+
+        // Then
+        verify(userRepository).query(any(Specification.class));
+        verify(userRepository).update(Mockito.eq(user));
+        verifyNoMoreInteractions(userRepository);
+    }
+
+    @Test
+    public void shouldNotUpdateWhenInvalidUser() throws Exception {
+        // Given
+        User user = createUser();
+        String invalidJson = user.toString();
+
+        // When
+        userResource.updateUser(invalidJson, AuthBasicUtil.HEADER_TEST_123);
+
+        // Then
+        verifyNoMoreInteractions(userRepository);
+    }
+
+    @Test
+    public void shouldNotUpdateUserWhenWrongAuthorization() {
+        // Given
+        User user = createUser();
+        String json = gson.toJson(user);
+
+        // When
+        userResource.updateUser(json, AuthBasicUtil.HEADER_DEFAULT);
+
+        // Then
+        verify(userRepository).query(any(Specification.class));
+        verifyNoMoreInteractions(userRepository);
+    }
+
+    @Test
+    public void shouldNotUpdateUserWhenIllegalHeader() {
+        // Given
+        User user = createUser();
+        String json = gson.toJson(user);
+
+        // When
+        userResource.updateUser(json, AuthBasicUtil.HEADER_ILLEGAL);
+
+        // Then
+        verify(userRepository).query(any(Specification.class));
+        verifyNoMoreInteractions(userRepository);
+    }
+
+    @Test
     public void shouldRemoveUser() {
         // Given
         int id = 1;

@@ -17,6 +17,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -65,6 +66,29 @@ public class GoalResource {
             }
         }
         return Response.status(400).entity("{\"message\":\"Failed to add goal, illegal json for goal\"}").build();
+    }
+
+    @PUT
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updateGoal(String json, @HeaderParam("Authorization") String credentials) {
+        if (validator.validate(json)) {
+            Goal goal = gson.fromJson(json, Goal.class);
+
+            try {
+                User user = getCorrectUserDataFromDatabase(goal.getUser());
+                goal.setUser(user);
+
+                if (authenticator.authenticate(credentials, goal.getUser())) {
+                    goalRepository.update(goal);
+                    return Response.status(200).entity("{\"message\":\"Goal updated\"}").build();
+                }
+                return Response.status(401).entity("{\"message\":\"Authorization failed\"}").build();
+            } catch (RuntimeException e) {
+                return Response.status(401).entity("{\"message\":\"Authorization failed\"}").build();
+            }
+        }
+        return Response.status(400).entity("{\"message\":\"Failed to update goal, illegal json for goal\"}").build();
     }
 
     @DELETE

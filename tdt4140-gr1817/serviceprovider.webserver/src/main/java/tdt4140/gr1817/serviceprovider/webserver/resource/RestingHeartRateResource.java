@@ -17,6 +17,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -66,6 +67,31 @@ public class RestingHeartRateResource {
         }
         return Response.status(400)
                 .entity("{\"message\":\"Failed to add resting heart rate, illegal json for heart rate\"}")
+                .build();
+    }
+
+    @PUT
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updateRestingHeartRate(String json, @HeaderParam("Authorization") String credentials) {
+        if (validator.validate(json)) {
+            RestingHeartRate restingHeartRate = gson.fromJson(json, RestingHeartRate.class);
+
+            try {
+                User user = getCorrectUserDataFromDatabase(restingHeartRate.getMeasuredBy());
+                restingHeartRate.setMeasuredBy(user);
+
+                if (authenticator.authenticate(credentials, restingHeartRate.getMeasuredBy())) {
+                    restingHeartRateRepository.update(restingHeartRate);
+                    return Response.status(200).entity("{\"message\":\"Resting heart rate updated\"}").build();
+                }
+                return Response.status(401).entity("{\"message\":\"Authorization failed\"}").build();
+            } catch (RuntimeException e) {
+                return Response.status(401).entity("{\"message\":\"Authorization failed\"}").build();
+            }
+        }
+        return Response.status(400)
+                .entity("{\"message\":\"Failed to update resting heart rate, illegal json for heart rate\"}")
                 .build();
     }
 

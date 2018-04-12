@@ -99,6 +99,59 @@ public class RestingHeartRateResourceTest {
     }
 
     @Test
+    public void shouldUpdateRestingHeartRate() throws Exception {
+        // Given
+        RestingHeartRate restingHeartRate = createRestingHeartRate();
+        String json = gson.toJson(restingHeartRate);
+
+        // When
+        restingHeartRateResource.updateRestingHeartRate(json, AuthBasicUtil.HEADER_TEST_123);
+
+        // Then
+        verify(restingHeartRateRepository).update(Mockito.eq(restingHeartRate));
+        verifyNoMoreInteractions(restingHeartRateRepository);
+    }
+
+    @Test
+    public void shouldNotUpdateWhenInvalidRestingHeartRate() throws Exception {
+        // Given
+        RestingHeartRate restingHeartRate = createRestingHeartRate();
+        String invalidJson = restingHeartRate.toString();
+
+        // When
+        restingHeartRateResource.updateRestingHeartRate(invalidJson, AuthBasicUtil.HEADER_TEST_123);
+
+        // Then
+        verifyNoMoreInteractions(restingHeartRateRepository);
+    }
+
+    @Test
+    public void shouldNotUpdateRestingHeartRateWhenWrongAuthorization() throws Exception {
+        // Given
+        RestingHeartRate restingHeartRate = createRestingHeartRate();
+        String json = gson.toJson(restingHeartRate);
+
+        // When
+        restingHeartRateResource.updateRestingHeartRate(json, AuthBasicUtil.HEADER_DEFAULT);
+
+        // Then
+        verifyNoMoreInteractions(restingHeartRateRepository);
+    }
+
+    @Test
+    public void shouldNotUpdateGoalWhenIllegalHeader() {
+        // Given
+        RestingHeartRate restingHeartRate = createRestingHeartRate();
+        String json = gson.toJson(restingHeartRate);
+
+        // When
+        restingHeartRateResource.updateRestingHeartRate(json, AuthBasicUtil.HEADER_ILLEGAL);
+
+        // Then
+        verifyNoMoreInteractions(restingHeartRateRepository);
+    }
+
+    @Test
     public void shouldRemoveRestingHeartRate() {
         // Given
         int id = 1;

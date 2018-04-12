@@ -97,6 +97,59 @@ public class WorkoutSessionResourceTest {
     }
 
     @Test
+    public void shouldUpdateWorkoutSession() throws Exception {
+        // Given
+        WorkoutSession workoutSession = createWorkoutSession();
+        String json = gson.toJson(workoutSession);
+
+        // When
+        workoutSessionResource.updateWorkoutSession(json, AuthBasicUtil.HEADER_TEST_123);
+
+        // Then
+        verify(workoutSessionRepository).update(Mockito.eq(workoutSession));
+        verifyNoMoreInteractions(workoutSessionRepository);
+    }
+
+    @Test
+    public void shouldNotUpdateWhenInvalidWorkoutSession() throws Exception {
+        // Given
+        WorkoutSession workoutSession = createWorkoutSession();
+        String invalidJson = workoutSession.toString();
+
+        // When
+        workoutSessionResource.updateWorkoutSession(invalidJson, AuthBasicUtil.HEADER_TEST_123);
+
+        //Then
+        verifyNoMoreInteractions(workoutSessionRepository);
+    }
+
+    @Test
+    public void shouldNotUpdateWorkoutSessionWhenWrongAuthorization() throws Exception {
+        // Given
+        WorkoutSession workoutSession = createWorkoutSession();
+        String json = gson.toJson(workoutSession);
+
+        // When
+        workoutSessionResource.updateWorkoutSession(json, AuthBasicUtil.HEADER_DEFAULT);
+
+        // Then
+        verifyNoMoreInteractions(workoutSessionRepository);
+    }
+
+    @Test
+    public void shouldNotUpdateGoalWhenIllegalHeader() {
+        // Given
+        WorkoutSession workoutSession = createWorkoutSession();
+        String json = gson.toJson(workoutSession);
+
+        // When
+        workoutSessionResource.updateWorkoutSession(json, AuthBasicUtil.HEADER_ILLEGAL);
+
+        // Then
+        verifyNoMoreInteractions(workoutSessionRepository);
+    }
+
+    @Test
     public void shouldRemoveGoal() {
         // Given
         int id = 1;

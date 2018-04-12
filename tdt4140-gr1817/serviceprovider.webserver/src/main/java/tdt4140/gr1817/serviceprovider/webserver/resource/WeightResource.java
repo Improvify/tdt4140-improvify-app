@@ -17,6 +17,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -64,6 +65,30 @@ public class WeightResource {
             }
         }
         return Response.status(400).entity("{\"message\":\"Failed to add weight, illegal json for weight\"}").build();
+    }
+
+    @PUT
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updateWeight(String json, @HeaderParam("Authorization") String credentials) {
+        if (validator.validate(json)) {
+            Weight weight = gson.fromJson(json, Weight.class);
+
+            try {
+                User user = getCorrectUserDataFromDatabase(weight.getUser());
+                weight.setUser(user);
+
+                if (authenticator.authenticate(credentials, weight.getUser())) {
+                    weightRepository.update(weight);
+                    return Response.status(200).entity("{\"message\":\"Weight updated\"}").build();
+                }
+                return Response.status(401).entity("{\"message\":\"Authorization failed\"}").build();
+            } catch (RuntimeException e) {
+                return Response.status(401).entity("{\"message\":\"Authorization failed\"}").build();
+            }
+        }
+        return Response.status(400).entity("{\"message\":\"Failed to update weight, illegal json for weight\"}")
+                .build();
     }
 
     @DELETE
