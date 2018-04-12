@@ -25,6 +25,7 @@ public class GetAllUsers {
 
     public List<User> getAll() {
         List<User> allUsers = userRepository.query(new GetAllUsersSpecification());
+        // FIXME: 4/9/2018 only get users that the service provider has access to. Maybe use a different specification
         if (allUsers == null) {
             allUsers = new ArrayList<>(0);
         }

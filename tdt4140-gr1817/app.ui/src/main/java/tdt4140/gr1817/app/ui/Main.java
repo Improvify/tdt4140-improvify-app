@@ -28,8 +28,36 @@ public class Main extends Application {
         navigator.navigate(getInitialPage());
     }
 
+    /**
+     * Returns the first page that the app should show.
+     * <p>
+     * For debugging purposes, it can be overridden with the VM option {@code -DstartPage=}.
+     * Valid values for {@code startPage} can be found in {@link #getPageFromProperty(String)}.
+     * </p>
+     *
+     * @return {@link Page} to start program on
+     * @see #getPageFromProperty(String)
+     */
     protected Page getInitialPage() {
+        String initialPage = System.getProperty("startPage");
+        if (initialPage != null) {
+            log.info("Overriding initial page: {}", initialPage);
+            return getPageFromProperty(initialPage);
+        }
         return Page.CREATE_WORKOUT;
+    }
+
+    protected static Page getPageFromProperty(String startPageValue) {
+        switch (startPageValue.toUpperCase()) {
+            case "SEE_USERS":
+                return Page.SEE_USERS;
+            case "CREATE_WORKOUT":
+                return Page.CREATE_WORKOUT;
+            case "GLOBAL_STATISTICS":
+                return Page.GLOBAL_STATISTICS;
+            default:
+                throw new IllegalArgumentException("Unrecognized page: " + startPageValue);
+        }
     }
 
     public static void main(String[] args) {

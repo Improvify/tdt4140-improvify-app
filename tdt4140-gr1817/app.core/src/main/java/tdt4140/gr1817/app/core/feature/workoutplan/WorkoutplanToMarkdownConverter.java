@@ -29,16 +29,16 @@ public class WorkoutplanToMarkdownConverter {
                 GetAllWorkoutplanRowsForWorkoutplanByIDSpecification(id);
         List<WorkoutPlanRow> rows = workoutPlanRowRepository.query(specification);
 
-        String markdown = "";
-        markdown += "Description|Duration|Intensity|Comment\n"
-                + "-----------|--------|---------|-------\n";
+        StringBuilder markdown = new StringBuilder();
+        markdown.append("Description|Duration|Intensity|Comment\n");
+        markdown.append("-----------|--------|---------|-------\n");
 
         for (WorkoutPlanRow row : rows) {
-            markdown += String.format("%s | %s | %s | %s \n", row.getDescription(), row.getDurationSeconds(),
-                    row.getIntensity(), row.getComment());
+            markdown.append(String.format("%s | %s | %s | %s \n", row.getDescription(), row.getDurationSeconds(),
+                    row.getIntensity(), row.getComment()));
         }
 
-        return markdown;
+        return markdown.toString();
     }
 
 }

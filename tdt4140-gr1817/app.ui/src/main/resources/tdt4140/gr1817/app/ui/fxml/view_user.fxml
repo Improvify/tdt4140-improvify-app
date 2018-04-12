@@ -1,8 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            prefHeight="400.0" prefWidth="600.0">
-
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tdt4140.gr1817.app.ui.feature.viewuser.ViewUserController">
+   <children>
+      <VBox spacing="10.0">
+         <children>
+            <Label text="User">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </Label>
+            <HBox spacing="36.0">
+               <children>
+                  <Label fx:id="fullName" text="&lt;Name&gt;" />
+                  <Label fx:id="email" text="&lt;email&gt;" />
+               </children>
+            </HBox>
+            <Label fx:id="age" text="&lt;Age&gt; years" />
+            <Label fx:id="height" text="&lt;Height&gt; meters tall" />
+            <Region id="user-graph" prefHeight="211.0" prefWidth="568.0" style="-fx-background-color: red;" />
+         </children>
+         <padding>
+            <Insets bottom="36.0" left="36.0" right="36.0" top="36.0" />
+         </padding>
+      </VBox>
+      <Button fx:id="back" mnemonicParsing="false" onAction="#goToSeeUsers" text="Back" />
+   </children>
 </AnchorPane>

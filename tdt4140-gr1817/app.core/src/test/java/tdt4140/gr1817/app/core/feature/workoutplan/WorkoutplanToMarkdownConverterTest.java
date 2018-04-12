@@ -2,23 +2,17 @@ package tdt4140.gr1817.app.core.feature.workoutplan;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mock;
-import org.mockito.Mockito;
 import tdt4140.gr1817.ecosystem.persistence.data.User;
 import tdt4140.gr1817.ecosystem.persistence.data.improvify.WorkoutPlan;
 import tdt4140.gr1817.ecosystem.persistence.data.improvify.WorkoutPlanRow;
 import tdt4140.gr1817.ecosystem.persistence.repositories.improvify.WorkoutPlanRowRepository;
 
-import java.sql.Connection;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.not;
-import static org.junit.Assert.assertFalse;
+import static org.hamcrest.Matchers.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -31,7 +25,6 @@ import static org.mockito.Mockito.when;
 public class WorkoutplanToMarkdownConverterTest {
 
 
-    private Connection conn;
     //private List<User> users;
     private WorkoutPlan wop;
     private WorkoutPlanRow wopr1;
@@ -42,9 +35,6 @@ public class WorkoutplanToMarkdownConverterTest {
         wop = WorkoutPlan.builder().id(1).build();
         wopr1 = WorkoutPlanRow.builder().id(1).build();
         wopr2 = WorkoutPlanRow.builder().id(2).build();
-
-        conn = mock(Connection.class);
-
     }
 
     @Test

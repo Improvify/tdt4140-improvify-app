@@ -1,12 +1,7 @@
 package tdt4140.gr1817.app.ui.feature.userlist;
 
-import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.google.inject.Provider;
-import com.google.inject.Provides;
-import com.google.inject.Singleton;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.TableView;
 import javafx.scene.text.Text;
@@ -16,10 +11,11 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import org.testfx.framework.junit.ApplicationTest;
 import org.testfx.matcher.base.NodeMatchers;
+import tdt4140.gr1817.app.ui.feature.util.MockedUserRepositoryModule;
+import tdt4140.gr1817.app.ui.feature.util.NavigatorSpyModule;
 import tdt4140.gr1817.app.ui.javafx.JavaFxModule;
 import tdt4140.gr1817.app.ui.javafx.Navigator;
 import tdt4140.gr1817.app.ui.javafx.Page;
-import tdt4140.gr1817.app.ui.javafx.SceneFactory;
 import tdt4140.gr1817.ecosystem.persistence.data.User;
 import tdt4140.gr1817.ecosystem.persistence.repositories.UserRepository;
 
@@ -28,7 +24,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.ResourceBundle;
 import java.util.Set;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -42,37 +37,27 @@ import static org.testfx.api.FxAssert.verifyThat;
  */
 public class SeeUsersIT extends ApplicationTest {
 
-    private Navigator navigatorSpy = null;
-    private SeeUsersPage seeUsersPage;
+    private Navigator navigatorSpy;
+    private SeeUsersPage seeUsersPage = new SeeUsersPage(this);
 
     @Override
     public void start(Stage stage) throws Exception {
-        final UserRepository userRepositoryMock = Mockito.mock(UserRepository.class);
         final List<User> usersList = Arrays.asList(
                 createUser(1, 25).firstName("Pizza").lastName("Spice").build(),
                 createUser(2, 22).firstName("Pizza").lastName("Topping").build()
         );
+
+        MockedUserRepositoryModule mockedUserRepositoryModule = new MockedUserRepositoryModule();
+        UserRepository userRepositoryMock = mockedUserRepositoryModule.getUserRepositoryMock();
         Mockito.when(userRepositoryMock.query(Mockito.any())).thenReturn(usersList);
 
         final Injector injector = Guice.createInjector(new JavaFxModule(stage),
-                new MockedUserRepositoryModule(userRepositoryMock),
-                new AbstractModule() {
-                    @Override
-                    protected void configure() { }
+                mockedUserRepositoryModule,
+                new NavigatorSpyModule());
 
-                    @Provides @Singleton
-                    public Navigator provideSpyNavigator(Stage stage1, ResourceBundle bundle, Provider<FXMLLoader> loader, SceneFactory sceneFactory) {
-                        final Navigator navigator = new Navigator(stage1, bundle, loader, sceneFactory);
-                        navigatorSpy = Mockito.spy(navigator);
-                        return navigatorSpy;
-                    }
-                });
-
-        final Navigator navigator = injector.getInstance(Navigator.class);
-        navigator.navigate(Page.SEE_USERS);
+        navigatorSpy = injector.getInstance(Navigator.class);
+        navigatorSpy.navigate(Page.SEE_USERS);
         Mockito.reset(navigatorSpy);
-
-        seeUsersPage = new SeeUsersPage(this);
     }
 
     @Test
@@ -149,16 +134,4 @@ public class SeeUsersIT extends ApplicationTest {
                 .email("test@test.com");
     }
 
-    private static class MockedUserRepositoryModule extends AbstractModule {
-        private final UserRepository userRepositoryMock;
-
-        public MockedUserRepositoryModule(UserRepository userRepositoryMock) {
-            this.userRepositoryMock = userRepositoryMock;
-        }
-
-        @Override
-        protected void configure() {
-            bind(UserRepository.class).toInstance(userRepositoryMock);
-        }
-    }
 }

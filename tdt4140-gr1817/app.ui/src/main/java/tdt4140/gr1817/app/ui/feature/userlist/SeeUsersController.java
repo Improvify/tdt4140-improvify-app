@@ -1,5 +1,7 @@
 package tdt4140.gr1817.app.ui.feature.userlist;
 
+import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -9,6 +11,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import lombok.extern.slf4j.Slf4j;
 import tdt4140.gr1817.app.core.feature.user.GetAllUsers;
+import tdt4140.gr1817.app.core.feature.user.UserSelectionService;
 import tdt4140.gr1817.app.ui.javafx.Navigator;
 import tdt4140.gr1817.app.ui.javafx.Page;
 
@@ -27,6 +30,7 @@ public class SeeUsersController {
 
     final ObservableList<UserItem> userItemList = FXCollections.observableArrayList();
     private final Provider<GetAllUsers> getAllUsersProvider;
+    private final UserSelectionService userSelectionService;
     private final UserItemAdapter userItemAdapter;
     private final Navigator navigator;
 
@@ -43,11 +47,14 @@ public class SeeUsersController {
     @FXML
     private TableColumn<UserItem, Integer> ageColumn;
 
+    public ReadOnlyObjectProperty<UserItem> selectedUserItem = new SimpleObjectProperty<>();
+
     @Inject
     public SeeUsersController(Navigator navigator, Provider<GetAllUsers> getAllUsersProvider,
-                              UserItemAdapter userItemAdapter) {
+                              UserSelectionService userSelectionService, UserItemAdapter userItemAdapter) {
         this.navigator = navigator;
         this.getAllUsersProvider = getAllUsersProvider;
+        this.userSelectionService = userSelectionService;
         this.userItemAdapter = userItemAdapter;
     }
 
@@ -59,6 +66,7 @@ public class SeeUsersController {
         ageColumn.setCellValueFactory(new PropertyValueFactory<>("age"));
 
         userTable.setItems(userItemList);
+        selectedUserItem = userTable.getSelectionModel().selectedItemProperty();
 
         viewSelectedUser.disableProperty().bind(userTable.getSelectionModel().selectedItemProperty().isNull());
 
@@ -74,11 +82,23 @@ public class SeeUsersController {
         userItemList.setAll(userItems);
     }
 
+    public void setSelectedUser(UserItem user) {
+        if (user == null) {
+            userSelectionService.setSelectedUserId(null);
+            return;
+        }
+        UserSelectionService.UserId userId = new UserSelectionService.UserId(user.getUserId());
+        userSelectionService.setSelectedUserId(userId);
+    }
+
     @FXML
     public void showSelectedUser() {
-        if (userTable != null) {
-            log.debug("Showing {}", userTable.getSelectionModel().getSelectedItem());
+        UserItem selectedUser = selectedUserItem.get();
+        setSelectedUser(selectedUser);
+        if (selectedUser == null) {
+            log.error("Selected user is null! User table is {}null", userTable == null ? "" : "not ");
         }
+
         navigator.navigate(Page.VIEW_USER);
     }
 
