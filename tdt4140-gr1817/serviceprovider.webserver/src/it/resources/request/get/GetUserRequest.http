@@ -1,12 +1,6 @@
-GET http://localhost:2222/user/
+GET http://localhost:2222/user/test
 Accept: */*
 Cache-Control: no-cache
-Content-Type: application/json
 Authorization: Basic dGVzdDoxMjM=
-
-{
-  "username": "test",
-  "password": "123"
-}
 
 ###

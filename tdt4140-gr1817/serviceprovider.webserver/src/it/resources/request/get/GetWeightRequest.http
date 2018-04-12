@@ -1,13 +1,6 @@
-GET http://localhost:2222/weight/
+GET http://localhost:2222/weight/test
 Accept: */*
 Cache-Control: no-cache
-Content-Type: application/json
 Authorization: Basic dGVzdDoxMjM=
-
-{
-  "user": {
-    "id": 1
-  }
-}
 
 ###
