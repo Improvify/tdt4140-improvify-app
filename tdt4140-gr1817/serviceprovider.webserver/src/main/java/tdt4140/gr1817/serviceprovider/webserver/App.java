@@ -16,17 +16,22 @@ import org.glassfish.jersey.servlet.ServletContainer;
 import org.jvnet.hk2.guice.bridge.api.GuiceBridge;
 import org.jvnet.hk2.guice.bridge.api.GuiceIntoHK2Bridge;
 import org.slf4j.LoggerFactory;
+import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.PropertyConnectionConfigurationSource;
 import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.guice.MySqlConnectionModule;
 import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.guice.MySqlRepositoryModule;
 
 import javax.ws.rs.core.Feature;
 import java.sql.Connection;
-import java.sql.Statement;
 
 @Slf4j
 public class App {
 
 
+    /**
+     * Database configuration can be set with VM options. See {@link PropertyConnectionConfigurationSource}.
+     * @param args command line args
+     * @see PropertyConnectionConfigurationSource
+     */
     public static void main(String[] args) {
         // Jetty spams too much. Increase level for less spam
         ((Logger) LoggerFactory.getLogger("org.eclipse.jetty")).setLevel(Level.INFO);
@@ -38,29 +43,17 @@ public class App {
         app.start();
     }
 
+    /**
+     * @return a configured injector
+     * @see PropertyConnectionConfigurationSource
+     */
     private static Injector createInjector() {
-        //TODO document that you can set database args using VM options. -Ddb.password="" for blank password etc.
-
-        String user = System.getProperty("db.user", "root");
-        String password = System.getProperty("db.password", "root");
-        String host = System.getProperty("db.host", "localhost");
-        int port = Integer.valueOf(System.getProperty("db.port", "3306"), 10);
-
+        PropertyConnectionConfigurationSource conf = new PropertyConnectionConfigurationSource();
         Injector injector = Guice.createInjector(
-                new MySqlConnectionModule(user, password, host, "ecosystem", port),
+                new MySqlConnectionModule(conf.user, conf.password, conf.host, "ecosystem", conf.port),
                 new MySqlRepositoryModule());
 
-
-        try (
-                Connection instance = injector.getInstance(Connection.class);
-                Statement statement = instance.createStatement();
-        ) {
-            statement.execute("SELECT 1");
-
-        } catch (Exception e) {
-            throw new IllegalStateException("Database connection is invalid! "
-                    + "Verify that username and password are correct", e);
-        }
+        conf.validate(injector.getInstance(Connection.class));
 
         return injector;
     }
