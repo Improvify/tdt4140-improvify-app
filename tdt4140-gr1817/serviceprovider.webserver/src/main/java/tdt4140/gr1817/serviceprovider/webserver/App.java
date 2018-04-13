@@ -20,6 +20,8 @@ import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.guice.MySqlConnec
 import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.guice.MySqlRepositoryModule;
 
 import javax.ws.rs.core.Feature;
+import java.sql.Connection;
+import java.sql.Statement;
 
 @Slf4j
 public class App {
@@ -37,11 +39,28 @@ public class App {
     }
 
     private static Injector createInjector() {
-        //TODO get database configuration from system env or args
+        //TODO document that you can set database args using VM options. -Ddb.password="" for blank password etc.
+
+        String user = System.getProperty("db.user", "root");
+        String password = System.getProperty("db.password", "root");
+        String host = System.getProperty("db.host", "localhost");
+        int port = Integer.valueOf(System.getProperty("db.port", "3306"), 10);
 
         Injector injector = Guice.createInjector(
-                new MySqlConnectionModule("root", "root", "localhost",
-                        "ecosystem", 3306), new MySqlRepositoryModule());
+                new MySqlConnectionModule(user, password, host, "ecosystem", port),
+                new MySqlRepositoryModule());
+
+
+        try (
+                Connection instance = injector.getInstance(Connection.class);
+                Statement statement = instance.createStatement();
+        ) {
+            statement.execute("SELECT 1");
+
+        } catch (Exception e) {
+            throw new IllegalStateException("Database connection is invalid! "
+                    + "Verify that username and password are correct", e);
+        }
 
         return injector;
     }

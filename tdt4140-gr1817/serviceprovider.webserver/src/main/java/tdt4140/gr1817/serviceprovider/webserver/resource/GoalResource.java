@@ -60,6 +60,7 @@ public class GoalResource {
                 }
                 return Response.status(401).entity("{\"message\":\"Authorization failed\"}").build();
             } catch (RuntimeException e) {
+                log.error("Failed to create goal", e);
                 return Response.status(401).entity("{\"message\":\"Authorization failed\"}").build();
             }
         }
