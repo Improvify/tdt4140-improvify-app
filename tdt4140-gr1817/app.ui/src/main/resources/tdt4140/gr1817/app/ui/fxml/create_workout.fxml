@@ -2,6 +2,7 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
@@ -15,7 +16,6 @@
          <font>
             <Font size="42.0" />
          </font></Label>
-      <ChoiceBox layoutX="118.0" layoutY="155.0" prefWidth="150.0" />
       <ChoiceBox layoutX="118.0" layoutY="220.0" prefWidth="150.0" />
       <Label layoutX="118.0" layoutY="128.0" text="User" />
       <Label layoutX="118.0" layoutY="193.0" text="Template" />
@@ -44,5 +44,6 @@
       <Button layoutX="342.0" layoutY="610.0" mnemonicParsing="false" text="Save as template" />
       <Button fx:id="saveButton" layoutX="517.0" layoutY="610.0" mnemonicParsing="false" text="Save" />
       <Button layoutX="192.0" layoutY="610.0" mnemonicParsing="false" text="Export to PDF" />
+      <ComboBox fx:id="userDropdown" layoutX="117.0" layoutY="155.0" prefWidth="150.0" />
    </children>
 </Pane>

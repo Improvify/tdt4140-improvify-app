@@ -12,6 +12,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
@@ -23,9 +25,14 @@ import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.DataFormat;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
+import javafx.util.StringConverter;
 import javafx.util.converter.IntegerStringConverter;
+import tdt4140.gr1817.app.core.feature.user.GetAllUsers;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 /**
@@ -39,8 +46,13 @@ import javax.inject.Inject;
 public class CreateWorkoutController {
 
     private static final DataFormat SERIALIZED_MIME_TYPE = new DataFormat("application/x-java-serialized-object");
-
     private final ObservableList<WorkoutRow> workoutRowList = FXCollections.observableArrayList();
+    final ObservableList<UserListItem> userListItems = FXCollections.observableArrayList();
+    private Provider<GetAllUsers> getAllUsersProvider;
+    private UserListItemAdapter userListItemAdapter;
+
+    @FXML
+    private ComboBox userDropdown;
     @FXML
     private Button addButton;
     @FXML
@@ -61,7 +73,10 @@ public class CreateWorkoutController {
     private TableColumn<WorkoutRow, String> commentCol;
 
     @Inject
-    public CreateWorkoutController() {
+    public CreateWorkoutController(Provider<GetAllUsers> getAllUsersProvider,
+                                   UserListItemAdapter userListItemAdapter) {
+        this.getAllUsersProvider = getAllUsersProvider;
+        this.userListItemAdapter = userListItemAdapter;
     }
 
     public void changeWhatEvent(TableColumn.CellEditEvent editedCell) {
@@ -113,12 +128,15 @@ public class CreateWorkoutController {
             }
         });
 
+        userDropdown.setItems(userListItems);
+
         addButton.setOnAction(addButtonHandler);
         deleteButton.setOnAction(deleteButtonHandler);
         deleteButton.setDisable(true);
         saveButton.setOnAction(saveButtonHandler);
 
         dragRow();
+        loadUsers();
 
         IntegerStringConverter converter = new IntegerStringConverter();
 
@@ -126,6 +144,36 @@ public class CreateWorkoutController {
         timeCol.setCellFactory(TextFieldTableCell.forTableColumn(converter));
         intensityCol.setCellFactory(TextFieldTableCell.forTableColumn(converter));
         commentCol.setCellFactory(TextFieldTableCell.forTableColumn());
+        userDropdown.setCellFactory((comboBox) -> {
+            return new ListCell<UserListItem>() {
+                @Override
+                protected void updateItem(UserListItem userListItem, boolean empty) {
+                    super.updateItem(userListItem, empty);
+
+                    if (userListItem == null || empty) {
+                        setText(null);
+                    } else {
+                        setText(userListItem.getUsername());
+                    }
+                }
+            };
+        });
+
+        userDropdown.setConverter(new StringConverter<UserListItem>() {
+            @Override
+            public String toString(UserListItem userListItem) {
+                if (userListItem == null) {
+                    return null;
+                } else {
+                    return userListItem.getUsername();
+                }
+            }
+
+            @Override
+            public UserListItem fromString(String string) {
+                return null;
+            }
+        });
     }
 
 
@@ -166,15 +214,23 @@ public class CreateWorkoutController {
         Alert emptyWorkoutPlan
                 = new Alert(Alert.AlertType.WARNING, "Your workout plan must contain at least 1 row", ButtonType.OK);
         Alert missingCellInformation
-                = new Alert(Alert.AlertType.WARNING, "One or more fields are empty");
+                = new Alert(Alert.AlertType.WARNING, "One or more fields are empty", ButtonType.OK);
+        Alert userNotSelected
+                = new Alert(Alert.AlertType.WARNING, "Please select a user", ButtonType.OK);
 
-        //Check first if title or rows are missing
+        //Checks if title is missing
         if (titleField.getText() == null || titleField.getText().trim().isEmpty()) {
             emptyTitleAlert.showAndWait();
             return false;
         }
+        //Checks if rows are missing
         if (workoutRowList.isEmpty()) {
             emptyWorkoutPlan.showAndWait();
+            return false;
+        }
+        //Checks if user is selected
+        if (userDropdown.getSelectionModel().isEmpty()) {
+            userNotSelected.showAndWait();
             return false;
         }
 
@@ -247,6 +303,14 @@ public class CreateWorkoutController {
 
     }
 
+    public void loadUsers() {
+        final List<UserListItem> userItems = getAllUsersProvider.get().getAll()
+                .stream()
+                .map(userListItemAdapter::adapt)
+                .collect(Collectors.toList());
+
+        userListItems.setAll(userItems);
+    }
 
     public static class WorkoutRow {
         private SimpleStringProperty what;
