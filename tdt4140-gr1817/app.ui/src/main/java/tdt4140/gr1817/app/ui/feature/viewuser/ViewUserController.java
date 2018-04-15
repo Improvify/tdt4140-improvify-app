@@ -28,6 +28,7 @@ public class ViewUserController {
     private final Optional<UserSelectionService.UserId> selectedUser;
     private final GetUserWithId getUserWithId;
     private final Navigator navigator;
+    public VitalDataChartController vitalDataController;
 
     private User user;
 
