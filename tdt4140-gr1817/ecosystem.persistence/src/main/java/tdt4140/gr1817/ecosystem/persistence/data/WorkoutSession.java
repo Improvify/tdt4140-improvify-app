@@ -46,12 +46,10 @@ public class WorkoutSession {
 
     public WorkoutSession(int id, int intensity, User user, GpsFile gpsFile) {
         //Information retrievable from Gps File
-        //TODO: Handle time conversion
         LocalDateTime fileDate = gpsFile.getStartTime();
 
-        Date date = new GregorianCalendar(fileDate.getYear(),
+        this.startTime = new GregorianCalendar(fileDate.getYear(),
                 fileDate.getMonthValue(), fileDate.getDayOfMonth()).getTime();
-        this.startTime = date;
         this.durationSeconds = gpsFile.getDuration();
         this.averageHeartRate = gpsFile.getAverageHeartRate();
         this.maxHeartRate = gpsFile.getMaxHeartRate();

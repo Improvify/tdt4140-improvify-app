@@ -3,7 +3,7 @@ package tdt4140.gr1817.improvify.gpx;
 import lombok.Data;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.util.List;
 
 @Data
 public class GpsFile {
@@ -17,7 +17,7 @@ public class GpsFile {
     private float distanceRun;
     private int duration; //in seconds
 
-    public GpsFile(ArrayList<GpsPoint> pointList) {
+    public GpsFile(List<GpsPoint> pointList) {
 
         //Set startTime to first time point in file.
         this.startTime = pointList.get(0).getTime();
@@ -35,7 +35,7 @@ public class GpsFile {
         this.duration = calculateDuration(pointList);
     }
 
-    private static int calculateTotalDistance(ArrayList<GpsPoint> pointList) {
+    private static int calculateTotalDistance(List<GpsPoint> pointList) {
 
         double total = 0;
 
@@ -47,8 +47,7 @@ public class GpsFile {
         return (int) total;
     }
 
-    private int calculateDuration(ArrayList<GpsPoint> pointList) {
-        System.out.println(pointList.get(pointList.size() - 1));
+    private int calculateDuration(List<GpsPoint> pointList) {
         LocalDateTime endTime = pointList.get(pointList.size() - 1).getTime();
         int deltaT = 0;
         deltaT += (endTime.getSecond() - this.startTime.getSecond());
@@ -60,7 +59,7 @@ public class GpsFile {
         return deltaT;
     }
 
-    private static int calculateMaxHeartRate(ArrayList<GpsPoint> pointList) {
+    private static int calculateMaxHeartRate(List<GpsPoint> pointList) {
         int max = 0;
         for (GpsPoint p : pointList) {
             if (p.getHeartRate() > max) {
@@ -70,7 +69,7 @@ public class GpsFile {
         return max;
     }
 
-    private static int calculateAverageHeartRate(ArrayList<GpsPoint> pointList) {
+    private static int calculateAverageHeartRate(List<GpsPoint> pointList) {
         int total = 0;
         for (GpsPoint p : pointList) {
             total += p.getHeartRate();
@@ -92,9 +91,7 @@ public class GpsFile {
 
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
-        double d = r * c;
-
-        return d;
+        return r * c;
     }
 
     public static void main(String[] args) {
