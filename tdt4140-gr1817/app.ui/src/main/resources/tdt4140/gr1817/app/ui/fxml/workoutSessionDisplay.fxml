@@ -3,8 +3,10 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
-<Pane prefHeight="750.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="tdt4140.gr1817.app.ui.feature.workoutsession.WorkoutsessionController">
+<Pane xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="tdt4140.gr1817.app.ui.feature.workoutsession.WorkoutsessionController"
+      prefHeight="750.0" prefWidth="800.0">
     <children>
         <Label layoutX="230.0" layoutY="31.0" text="Workout Session">
             <font>
@@ -16,16 +18,18 @@
                 <TableColumn fx:id="dateCol" onEditCommit="#changeDateEvent" prefWidth="55.0" sortable="false"
                              text="Date"/>
 
-                <TableColumn fx:id="idCol" onEditCommit="#changeIDEvent" prefWidth="30.0" sortable="false" text="ID"/>
+                <TableColumn fx:id="IDCol" onEditCommit="#changeIDEvent" prefWidth="30.0" sortable="false"
+                             text="ID"/>
 
-                <TableColumn fx:id="intensityCol" minWidth="0.0" onEditCommit="#changeIntensityEvent" prefWidth="90.0"
+                <TableColumn fx:id="IntensityCol" minWidth="0.0" onEditCommit="#changeIntensityEvent" prefWidth="90.0"
                              sortable="false" text="Intensity"/>
 
-                <TableColumn fx:id="kCalCol" onEditCommit="#changeKCalEvent" prefWidth="60.0" sortable="false"
-                             text="KCal"/>
+                <TableColumn fx:id="KCalCol" onEditCommit="#changeKCalEvent" prefWidth="60.0"
+                             sortable="false" text="KCal"/>
 
-                <TableColumn fx:id="heartrateCol" onEditCommit="#changeHeartrateEvent" prefWidth="100.0"
-                             sortable="false" text="HeartRate"/>
+                <TableColumn fx:id="HeartrateCol" onEditCommit="#changeHeartrateEvent" prefWidth="100.0"
+                             sortable="false"
+                             text="HeartRate"/>
 
                 <TableColumn fx:id="maxHRCol" onEditCommit="#changemaxHREvent" prefWidth="80.0" sortable="false"
                              text="maxHR"/>

@@ -26,6 +26,8 @@ public class WorkoutsessionController {
     private final Navigator navigator;
     private final Optional<UserSelectionService.UserId> selectedUser;
 
+    private final ObservableList<WorkoutsessionController.SessionRow> SessionRowList = FXCollections.observableArrayList();
+
     @FXML
     private TableView<WorkoutsessionController.SessionRow> workoutTable;
 
@@ -33,16 +35,16 @@ public class WorkoutsessionController {
     private TableColumn<WorkoutsessionController.SessionRow, String> dateCol;
 
     @FXML
-    private TableColumn<WorkoutsessionController.SessionRow, Integer> idCol;
+    private TableColumn<WorkoutsessionController.SessionRow, Integer> IDCol;
 
     @FXML
-    private TableColumn<WorkoutsessionController.SessionRow, Integer> intensityCol;
+    private TableColumn<WorkoutsessionController.SessionRow, Integer> IntensityCol;
 
     @FXML
-    private TableColumn<WorkoutsessionController.SessionRow, Integer> kCalCol;
+    private TableColumn<WorkoutsessionController.SessionRow, Integer> KCalCol;
 
     @FXML
-    private TableColumn<WorkoutsessionController.SessionRow, Integer> heartrateCol;
+    private TableColumn<WorkoutsessionController.SessionRow, Integer> HeartrateCol;
 
     @FXML
     private TableColumn<WorkoutsessionController.SessionRow, Integer> maxHRCol;
@@ -53,38 +55,6 @@ public class WorkoutsessionController {
     @FXML
     private TableColumn<WorkoutsessionController.SessionRow, Integer> durationCol;
 
-    public WorkoutsessionController(UserSelectionService userSelectionService, Navigator navigator) {
-        this.userSelectionService = userSelectionService;
-        this.navigator = navigator;
-        selectedUser = userSelectionService.getSelectedUserId();
-    }
-
-    @FXML
-    public void initialize() {
-        dateCol.setCellValueFactory(new PropertyValueFactory<>("Date"));
-        idCol.setCellValueFactory(new PropertyValueFactory<>("ID"));
-        intensityCol.setCellValueFactory(new PropertyValueFactory<>("Intensity"));
-        kCalCol.setCellValueFactory(new PropertyValueFactory<>("KCal"));
-        heartrateCol.setCellValueFactory(new PropertyValueFactory<>("Heartrate"));
-        maxHRCol.setCellValueFactory(new PropertyValueFactory<>("MaxHR"));
-        distanceCol.setCellValueFactory(new PropertyValueFactory<>("Distance"));
-        durationCol.setCellValueFactory(new PropertyValueFactory<>("Duration"));
-        /*GetWorkoutSessionByLoggedBySpecification loggedBySpecification = new GetWorkoutSessionByLoggedBySpecification(
-                selectedUser);
-        ResultSet rs = loggedBySpecification.toStatement();
-        while (rs.next()) {
-            sessionRowList.add(new SessionRow(rs.getDate("date"), rs.getInt("id"),
-                    rs.getInt("intensity"), rs.getInt("kCal"), rs.getInt("heartrate"),
-                    rs.getInt("maxHR"), rs.getInt("duration"), rs.getInt("distance")));
-        }
-        workoutTable.setItems(sessionRowList);*/
-
-    }
-
-    @FXML
-    public void goToViewUser() {
-        navigator.navigate(Page.VIEW_USER);
-    }
 
     public void changeDateEvent(TableColumn.CellEditEvent edittedCell) {
         WorkoutsessionController.SessionRow workWork = workoutTable.getSelectionModel().getSelectedItem();
@@ -126,27 +96,38 @@ public class WorkoutsessionController {
         workWork.setDuration(edittedCell.getNewValue().toString());
     }
 
+    @FXML
+    public void initialize() {
+        dateCol.setCellValueFactory(new PropertyValueFactory<>("Date"));
+        IDCol.setCellValueFactory(new PropertyValueFactory<>("ID"));
+        IntensityCol.setCellValueFactory(new PropertyValueFactory<>("Intensity"));
+        KCalCol.setCellValueFactory(new PropertyValueFactory<>("KCal"));
+        HeartrateCol.setCellValueFactory(new PropertyValueFactory<>("Heartrate"));
+        maxHRCol.setCellValueFactory(new PropertyValueFactory<>("MaxHR"));
+        distanceCol.setCellValueFactory(new PropertyValueFactory<>("Distance"));
+        durationCol.setCellValueFactory(new PropertyValueFactory<>("Duration"));
+
+    }
 
     public static class SessionRow {
         private SimpleStringProperty date;
-        private SimpleIntegerProperty id;
-        private SimpleIntegerProperty intensity;
-        private SimpleIntegerProperty kCal;
-        private SimpleIntegerProperty heartrate;
+        private SimpleIntegerProperty ID;
+        private SimpleIntegerProperty Intensity;
+        private SimpleIntegerProperty KCal;
+        private SimpleIntegerProperty Heartrate;
         private SimpleIntegerProperty maxHR;
-        private SimpleIntegerProperty distance;
-        private SimpleIntegerProperty duration;
+        private SimpleIntegerProperty Distance;
+        private SimpleIntegerProperty Duration;
 
-        public SessionRow(String date, int id, int intensity, int kCal, int heartrate, int maxHR, int distance,
-                          int duration) {
+        public SessionRow(String date, int ID, int Intensity, int KCal, int Heartrate, int maxHR, int Distance, int Duration) {
             this.date = new SimpleStringProperty(date);
-            this.id = new SimpleIntegerProperty(id);
-            this.intensity = new SimpleIntegerProperty(intensity);
-            this.kCal = new SimpleIntegerProperty(kCal);
-            this.heartrate = new SimpleIntegerProperty(heartrate);
+            this.ID = new SimpleIntegerProperty(ID);
+            this.Intensity = new SimpleIntegerProperty(Intensity);
+            this.KCal = new SimpleIntegerProperty(KCal);
+            this.Heartrate = new SimpleIntegerProperty(Heartrate);
             this.maxHR = new SimpleIntegerProperty(maxHR);
-            this.distance = new SimpleIntegerProperty(distance);
-            this.duration = new SimpleIntegerProperty(duration);
+            this.Distance = new SimpleIntegerProperty(Distance);
+            this.Duration = new SimpleIntegerProperty(Duration);
         }
 
         //date
@@ -166,60 +147,60 @@ public class WorkoutsessionController {
         //ID
         public void setID(String s) {
             int i = Integer.parseInt(s);
-            this.id = new SimpleIntegerProperty(i);
+            this.ID = new SimpleIntegerProperty(i);
         }
 
         public int getID() {
-            return id.get();
+            return ID.get();
         }
 
-        public SimpleIntegerProperty idProperty() {
-            return id;
+        public SimpleIntegerProperty IDProperty() {
+            return ID;
         }
 
 
         //Intensity
         public void setIntensity(String s) {
             int i = Integer.parseInt(s);
-            this.intensity = new SimpleIntegerProperty(i);
+            this.Intensity = new SimpleIntegerProperty(i);
         }
 
         public int getIntensity() {
-            return intensity.get();
+            return Intensity.get();
         }
 
         public SimpleIntegerProperty intensityProperty() {
-            return intensity;
+            return Intensity;
         }
 
 
         //KCAL
         public void setKCal(String w) {
             int i = Integer.parseInt(w);
-            this.kCal = new SimpleIntegerProperty(i);
+            this.KCal = new SimpleIntegerProperty(i);
         }
 
         public int getKCal() {
-            return kCal.get();
+            return KCal.get();
         }
 
-        public SimpleIntegerProperty kCalProperty() {
-            return kCal;
+        public SimpleIntegerProperty KCalProperty() {
+            return KCal;
         }
 
 
         //Heartrate
         public void setHeartrate(String s) {
             int i = Integer.parseInt(s);
-            this.heartrate = new SimpleIntegerProperty(i);
+            this.Heartrate = new SimpleIntegerProperty(i);
         }
 
         public int getHeartrate() {
-            return heartrate.get();
+            return Heartrate.get();
         }
 
-        public SimpleIntegerProperty heartrateProperty() {
-            return heartrate;
+        public SimpleIntegerProperty HeartrateProperty() {
+            return Heartrate;
         }
 
 
@@ -241,30 +222,30 @@ public class WorkoutsessionController {
         //distance
         public void setDistance(String s) {
             int i = Integer.parseInt(s);
-            this.distance = new SimpleIntegerProperty(i);
+            this.Distance = new SimpleIntegerProperty(i);
         }
 
         public int getDistance() {
-            return distance.get();
+            return Distance.get();
         }
 
         public SimpleIntegerProperty distanceProperty() {
-            return distance;
+            return Distance;
         }
 
 
         //duration
         public void setDuration(String s) {
             int i = Integer.parseInt(s);
-            this.duration = new SimpleIntegerProperty(i);
+            this.Duration = new SimpleIntegerProperty(i);
         }
 
         public int getDuration() {
-            return duration.get();
+            return Duration.get();
         }
 
         public SimpleIntegerProperty durationProperty() {
-            return duration;
+            return Duration;
         }
     }
 }
