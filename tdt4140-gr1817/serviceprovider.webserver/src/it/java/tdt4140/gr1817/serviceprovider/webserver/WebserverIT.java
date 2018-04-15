@@ -13,6 +13,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.LoggerFactory;
 import tdt4140.gr1817.ecosystem.persistence.data.User;
+import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.PropertyConnectionConfigurationSource;
 import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.guice.MySqlConnectionModule;
 import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.guice.MySqlRepositoryModule;
 import tdt4140.gr1817.serviceprovider.webserver.util.JerseyGsonProvider;
@@ -47,10 +48,11 @@ public class WebserverIT {
         ((Logger) LoggerFactory.getLogger("org.eclipse.jetty")).setLevel(Level.WARN);
 
         // TODO: Set up HSQLDB using HsqldbRule from ecosystem.persistence.
-        // TODO: Add all modules needed for webserver, or user MysqlModule when it is ready
+        PropertyConnectionConfigurationSource conf = new PropertyConnectionConfigurationSource();
         injector = Guice.createInjector(
-                new MySqlConnectionModule("root", "", "localhost", "ecosystem", 3306),
-                new MySqlRepositoryModule());
+                new MySqlConnectionModule(conf.user, conf.password, conf.host, "ecosystem", conf.port),
+                new MySqlRepositoryModule()
+        );
 
 
         serverThread = new Thread(() -> {
@@ -76,13 +78,14 @@ public class WebserverIT {
         try (
                 Connection connection = injector.getInstance(Connection.class);
                 Statement statement = connection.createStatement();
-        ){
+        ) {
             try {
                 statement.execute("START TRANSACTION ");
                 statement.execute("SET FOREIGN_KEY_CHECKS=0");
                 final ArrayList<String> truncateStatements = new ArrayList<>();
 
-                try (ResultSet resultSet = statement.executeQuery("SELECT Concat('TRUNCATE TABLE ',table_schema,'.',TABLE_NAME, ';') \n"
+                try (ResultSet resultSet = statement.executeQuery("SELECT Concat('TRUNCATE TABLE ',table_schema,'.',"
+                        + "TABLE_NAME, ';') \n"
                         + "FROM INFORMATION_SCHEMA.TABLES WHERE  table_schema IN ('ecosystem');")) {
                     while (resultSet.next()) {
                         final String truncateQuery = resultSet.getString(1);
