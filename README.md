@@ -4,8 +4,13 @@
 [![coverage report](https://gitlab.stud.iie.ntnu.no/tdt4140-2018/17/badges/master/coverage.svg)](https://gitlab.stud.iie.ntnu.no/tdt4140-2018/17/commits/master)
 ## Project Improvify
 
-Goal oriented training application
+**Improvify** is a training application that helps users reach their potential by connecting them to competent coaches and giving them the tools to analyze and improve their performance.
 
+The Project is currently being developed by Computer Science students at NTNU as a part of ** TDT4140 - Software Development **, a course that aims to give students a taste of working in the software industry.
+
+
+
+## History 
 * [x] Oppgave for 5. februar: Update templates fra Trætteberg  
 * [x] Oppgave for 15. februar: Releaseplan  
 * [x] Oppgave for 8.mars: Sprint 1  
@@ -17,6 +22,7 @@ Goal oriented training application
 > Kjipern hvis du ikke får satt opp plugins for Eclipse.  
 > Alle plugins vi bruker skal eksistere for Eclipse også.  
 > `Maven verify` skal kjøre uansett.
+
 
 ## Running
 
@@ -41,6 +47,8 @@ For more management-centered stuff, and less developer/code-centered,
 check out our gitlab wiki.
 
 ## Architecture
+
+The Project is centered around a REST API web server that interacts with a MySQL database. Most source code, both in the coach UI and back end, is written in Java.
 
 ![](docs/System architecture/Package overview.png)
 
