@@ -6,7 +6,7 @@
 
 **Improvify** is a training application that helps users reach their potential by connecting them to competent coaches and giving them the tools to analyze and improve their performance.
 
-The Project is currently being developed by Computer Science students at NTNU as a part of ** TDT4140 Software Development ** , a course that aims to give students a taste of working in the software industry.
+The Project is currently being developed by Computer Science students at NTNU as a part of **TDT4140 Software Development** , a course that aims to give students a taste of working in the software industry.
 
 
 
