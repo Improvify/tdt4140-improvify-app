@@ -1,0 +1,16 @@
+DELETE http://localhost:2222/serviceproviderpermissions/1
+Accept: */*
+Cache-Control: no-cache
+Content-Type: application/json
+Authorization: Basic dGVzdDoxMjM=
+
+{
+  "user": {
+    "id": 1
+  },
+  "serviceProvider": {
+    "id": 1
+  }
+}
+
+###

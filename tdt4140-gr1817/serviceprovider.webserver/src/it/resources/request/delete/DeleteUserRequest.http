@@ -1,0 +1,12 @@
+DELETE http://localhost:2222/user/1
+Accept: */*
+Cache-Control: no-cache
+Content-Type: application/json
+Authorization: Basic dGVzdDoxMjM=
+
+{
+  "username": "test",
+  "password": "123"
+}
+
+###

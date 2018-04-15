@@ -5,7 +5,7 @@ Content-Type: application/json
 Authorization: Basic dGVzdDoxMjM=
 
 {
-  "description": "Run faster than Henrik",
+  "description": "Run faster than Bendik",
   "isCompleted": false,
   "isCurrent": true,
   "user": {

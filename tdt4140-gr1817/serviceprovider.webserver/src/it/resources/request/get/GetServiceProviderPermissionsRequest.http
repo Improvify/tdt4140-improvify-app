@@ -1,0 +1,6 @@
+GET http://localhost:2222/serviceproviderpermissions/test
+Accept: */*
+Cache-Control: no-cache
+Authorization: Basic dGVzdDoxMjM=
+
+###

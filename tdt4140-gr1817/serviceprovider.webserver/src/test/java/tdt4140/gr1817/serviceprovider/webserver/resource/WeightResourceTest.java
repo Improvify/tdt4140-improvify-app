@@ -13,11 +13,14 @@ import tdt4140.gr1817.serviceprovider.webserver.validation.AuthBasicAuthenticato
 import tdt4140.gr1817.serviceprovider.webserver.validation.WeightValidator;
 import tdt4140.gr1817.serviceprovider.webserver.validation.util.AuthBasicUtil;
 
+import javax.ws.rs.core.Response;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -43,15 +46,56 @@ public class WeightResourceTest {
     }
 
     @Test
+    public void shouldGetWeights() throws Exception {
+        // Given
+        String username = "test";
+
+        // When
+        final Response response = weightResource.getWeights(username, AuthBasicUtil.HEADER_TEST_123);
+
+        // Then
+        assertThat(response.getStatus(), is(200));
+        verify(weightRepository).query(any(Specification.class));
+        verifyNoMoreInteractions(weightRepository);
+    }
+
+    @Test
+    public void shouldNotGetWeightsWhenWrongAuthorization() {
+        // Given
+        String username = "test";
+
+        // When
+        final Response response = weightResource.getWeights(username, AuthBasicUtil.HEADER_DEFAULT);
+
+        // Then
+        assertThat(response.getStatus(), is(401));
+        verifyNoMoreInteractions(weightRepository);
+    }
+
+    @Test
+    public void shouldNotGetWeightsWhenIllegalHeader() {
+        // Given
+        String username = "test";
+
+        // When
+        final Response response = weightResource.getWeights(username, AuthBasicUtil.HEADER_ILLEGAL);
+
+        // Then
+        assertThat(response.getStatus(), is(401));
+        verifyNoMoreInteractions(weightRepository);
+    }
+
+    @Test
     public void shouldAddWeight() throws Exception {
         // Given
         Weight weight = createWeight();
         String json = gson.toJson(weight);
 
         // When
-        weightResource.createWeight(json, AuthBasicUtil.HEADER_TEST_123);
+        final Response response = weightResource.createWeight(json, AuthBasicUtil.HEADER_TEST_123);
 
         // Then
+        assertThat(response.getStatus(), is(200));
         verify(weightRepository).add(Mockito.eq(weight));
         verifyNoMoreInteractions(weightRepository);
     }
@@ -63,22 +107,24 @@ public class WeightResourceTest {
         String invalidJson = weight.toString();
 
         // When
-        weightResource.createWeight(invalidJson, AuthBasicUtil.HEADER_TEST_123);
+        final Response response = weightResource.createWeight(invalidJson, AuthBasicUtil.HEADER_TEST_123);
 
         // Then
+        assertThat(response.getStatus(), is(400));
         verifyNoMoreInteractions(weightRepository);
     }
 
     @Test
-    public void shouldAddGoalWhenWrongAuthorization() throws Exception {
+    public void shouldAddWeightWhenWrongAuthorization() throws Exception {
         // Given
         Weight weight = createWeight();
         String json = gson.toJson(weight);
 
         // When
-        weightResource.createWeight(json, AuthBasicUtil.HEADER_DEFAULT);
+        final Response response = weightResource.createWeight(json, AuthBasicUtil.HEADER_DEFAULT);
 
         // Then
+        assertThat(response.getStatus(), is(401));
         verifyNoMoreInteractions(weightRepository);
     }
 
@@ -89,9 +135,67 @@ public class WeightResourceTest {
         String json = gson.toJson(weight);
 
         // When
-        weightResource.createWeight(json, AuthBasicUtil.HEADER_ILLEGAL);
+        final Response response = weightResource.createWeight(json, AuthBasicUtil.HEADER_ILLEGAL);
 
         // Then
+        assertThat(response.getStatus(), is(401));
+        verifyNoMoreInteractions(weightRepository);
+    }
+
+    @Test
+    public void shouldUpdateWeight() throws Exception {
+        // Given
+        Weight weight = createWeight();
+        String json = gson.toJson(weight);
+
+        // When
+        final Response response = weightResource.updateWeight(json, AuthBasicUtil.HEADER_TEST_123);
+
+        // Then
+        assertThat(response.getStatus(), is(200));
+        verify(weightRepository).update(Mockito.eq(weight));
+        verifyNoMoreInteractions(weightRepository);
+    }
+
+    @Test
+    public void shouldNotUpdateWhenInvalidWeight() throws Exception {
+        // Given
+        Weight weight = createWeight();
+        String invalidJson = weight.toString();
+
+        // When
+        final Response response = weightResource.updateWeight(invalidJson, AuthBasicUtil.HEADER_TEST_123);
+
+        // Then
+        assertThat(response.getStatus(), is(400));
+        verifyNoMoreInteractions(weightRepository);
+    }
+
+    @Test
+    public void shouldNotUpdateWeightWhenWrongAuthorization() throws Exception {
+        // Given
+        Weight weight = createWeight();
+        String json = gson.toJson(weight);
+
+        // When
+        final Response response = weightResource.updateWeight(json, AuthBasicUtil.HEADER_DEFAULT);
+
+        // Then
+        assertThat(response.getStatus(), is(401));
+        verifyNoMoreInteractions(weightRepository);
+    }
+
+    @Test
+    public void shouldNotUpdateWeightWhenIllegalHeader() {
+        // Given
+        Weight weight = createWeight();
+        String json = gson.toJson(weight);
+
+        // When
+        final Response response = weightResource.updateWeight(json, AuthBasicUtil.HEADER_ILLEGAL);
+
+        // Then
+        assertThat(response.getStatus(), is(401));
         verifyNoMoreInteractions(weightRepository);
     }
 
@@ -101,9 +205,10 @@ public class WeightResourceTest {
         int id = 1;
 
         // When
-        weightResource.deleteWeight(id, AuthBasicUtil.HEADER_TEST_123);
+        final Response response = weightResource.deleteWeight(id, AuthBasicUtil.HEADER_TEST_123);
 
         // Then
+        assertThat(response.getStatus(), is(200));
         verify(weightRepository).query(any(Specification.class));
         verify(weightRepository).remove(any(Specification.class));
         verifyNoMoreInteractions(weightRepository);
@@ -115,9 +220,10 @@ public class WeightResourceTest {
         int id = 1;
 
         // When
-        weightResource.deleteWeight(id, AuthBasicUtil.HEADER_DEFAULT);
+        final Response response = weightResource.deleteWeight(id, AuthBasicUtil.HEADER_DEFAULT);
 
         // Then
+        assertThat(response.getStatus(), is(401));
         verify(weightRepository).query(any(Specification.class));
         verifyNoMoreInteractions(weightRepository);
     }
@@ -128,9 +234,10 @@ public class WeightResourceTest {
         int id = 1;
 
         // When
-        weightResource.deleteWeight(id, AuthBasicUtil.HEADER_ILLEGAL);
+        final Response response = weightResource.deleteWeight(id, AuthBasicUtil.HEADER_ILLEGAL);
 
         // Then
+        assertThat(response.getStatus(), is(401));
         verify(weightRepository).query(any(Specification.class));
         verifyNoMoreInteractions(weightRepository);
     }
