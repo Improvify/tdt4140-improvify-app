@@ -1,0 +1,26 @@
+POST http://localhost:2222/workoutsession/gpx
+Accept: */*
+Cache-Control: no-cache
+Authorization: Basic dGVzdDoxMjM=
+Content-Type: multipart/form-data;boundary=topkek
+
+--topkek
+Content-Type: application/octet-stream
+Content-Disposition: form-data;name="file"
+
+< Trondheim10k.gpx
+
+--topkek
+Content-Type: application/json
+Content-Disposition: form-data;name="info"
+
+{
+  "intensity": 6,
+  "user": {
+    "id": 1
+  }
+}
+
+--topkek--
+
+###

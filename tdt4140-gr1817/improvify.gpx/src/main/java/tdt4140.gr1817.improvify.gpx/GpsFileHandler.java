@@ -2,11 +2,11 @@ package tdt4140.gr1817.improvify.gpx;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 
 public final class GpsFileHandler {
 
@@ -15,20 +15,21 @@ public final class GpsFileHandler {
 
 
     public static GpsFile generateGpsFile(String path) {
-        //TODO: dont suck
         try {
             ArrayList<String> lines = loadFile(path);
-            ArrayList<GpsPoint> datapoints = GpsFileHandler.generateGpsPoints(lines);
-            GpsFile file = new GpsFile(datapoints);
-            return file;
+            return generateGpsFile(lines);
         } catch (IOException e) {
-            System.out.println("File not found: " + e.toString());
             return null;
         }
 
     }
 
-    private static ArrayList<String> loadFile(String path) throws FileNotFoundException, IOException {
+    public static GpsFile generateGpsFile(List<String> lines) {
+        List<GpsPoint> datapoints = GpsFileHandler.generateGpsPoints(lines);
+        return new GpsFile(datapoints);
+    }
+
+    private static ArrayList<String> loadFile(String path) throws IOException {
 
         ArrayList<String> fileArr = new ArrayList<>(1000);
 
@@ -45,8 +46,8 @@ public final class GpsFileHandler {
     }
 
 
-    private static ArrayList<GpsPoint> generateGpsPoints(ArrayList<String> fileList) {
-        ArrayList<GpsPoint> gpsPoints = new ArrayList<GpsPoint>();
+    private static ArrayList<GpsPoint> generateGpsPoints(List<String> fileList) {
+        ArrayList<GpsPoint> gpsPoints = new ArrayList<>();
 
         //This point is initialized only for reasons of allowing the code to compile. It gets removed by the end.
         //This is, in my opinion, a hack. And it should be dealt with differently

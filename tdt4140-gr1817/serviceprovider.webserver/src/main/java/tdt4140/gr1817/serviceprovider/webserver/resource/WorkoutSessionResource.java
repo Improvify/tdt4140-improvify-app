@@ -2,6 +2,7 @@ package tdt4140.gr1817.serviceprovider.webserver.resource;
 
 import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
+import org.glassfish.jersey.media.multipart.FormDataParam;
 import tdt4140.gr1817.ecosystem.persistence.Specification;
 import tdt4140.gr1817.ecosystem.persistence.data.User;
 import tdt4140.gr1817.ecosystem.persistence.data.WorkoutSession;
@@ -11,6 +12,7 @@ import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.specification.Get
 import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.specification.GetUserByUsernameSpecification;
 import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.specification.improvify.GetAllWorkoutSessionForUserSpecification;
 import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.specification.improvify.GetWorkoutSessionByIdSpecification;
+import tdt4140.gr1817.improvify.gpx.GpsFileHandler;
 import tdt4140.gr1817.serviceprovider.webserver.validation.AuthBasicAuthenticator;
 import tdt4140.gr1817.serviceprovider.webserver.validation.WorkoutSessionValidator;
 
@@ -26,7 +28,11 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Path("workoutsession")
@@ -90,6 +96,35 @@ public class WorkoutSessionResource {
         }
         return Response.status(400)
                 .entity("{\"message\":\"Failed to add workout session, illegal json for workout session\"}").build();
+    }
+
+    @POST
+    @Path("/gpx")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response createWorkoutSessionByGpxFile(@FormDataParam("file") InputStream inputStream,
+                                                  @FormDataParam("info") String info,
+                                                  @HeaderParam("Authorization") String credentials) {
+        try {
+            WorkoutSession wsData = gson.fromJson(info, WorkoutSession.class);
+            User user = getCorrectUserDataFromDatabase(wsData.getUser());
+            wsData.setUser(user);
+
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+            List<String> result = bufferedReader.lines().collect(Collectors.toList());
+            WorkoutSession workoutSession = new WorkoutSession(0, wsData.getIntensity(), wsData.getUser(),
+                    GpsFileHandler.generateGpsFile(result));
+
+            if (authenticator.authenticate(credentials, workoutSession.getUser())) {
+                workoutSessionRepository.add(workoutSession);
+                return Response.status(200).entity("{\"message\":\"Workout session added\"}").build();
+            }
+            return Response.status(401).entity("{\"message\":\"Authorization failed\"}").build();
+
+        } catch (RuntimeException e) {
+            return Response.status(400)
+                    .entity("{\"message\":\"Failed to add GPX file, illegal data for workout session\"}").build();
+        }
     }
 
     @PUT

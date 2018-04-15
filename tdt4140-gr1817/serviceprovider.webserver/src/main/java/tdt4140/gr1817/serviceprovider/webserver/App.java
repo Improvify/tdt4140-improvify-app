@@ -11,6 +11,7 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.jersey.ServiceLocatorProvider;
+import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.servlet.ServletContainer;
 import org.jvnet.hk2.guice.bridge.api.GuiceBridge;
@@ -92,6 +93,7 @@ public class App {
 
         ResourceConfig config = new ResourceConfig();
         config.packages("tdt4140.gr1817.serviceprovider.webserver.resource");
+        config.register(MultiPartFeature.class);
         config.register((Feature) context -> {
             // Jersey uses HK2 for dependency injection in resources. We replace that with Guice here,
             // since we don't want more frameworks for doing the same, and other modules use Guice.
