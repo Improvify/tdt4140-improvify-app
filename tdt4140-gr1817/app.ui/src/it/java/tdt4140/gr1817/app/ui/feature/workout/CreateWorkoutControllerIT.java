@@ -32,7 +32,7 @@ public class CreateWorkoutControllerIT extends ApplicationTest {
     @Test
     public void shouldAddRowWhenClickingAdd() {
         // Given
-        final TableView<CreateWorkoutController.WorkoutRow> tableView = lookup("#workoutTable").query();
+        final TableView<WorkoutRow> tableView = lookup("#workoutTable").query();
         final int oldRowCount = tableView.getItems().size();
 
         // When
@@ -46,7 +46,7 @@ public class CreateWorkoutControllerIT extends ApplicationTest {
     @Test
     public void shouldRemoveRowWhenClickingRemoveAfterSelectingRow() {
         // Given
-        final TableView<CreateWorkoutController.WorkoutRow> tableView = lookup("#workoutTable").query();
+        final TableView<WorkoutRow> tableView = lookup("#workoutTable").query();
         final int oldRowCount = tableView.getItems().size();
 
         // When

@@ -15,6 +15,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,12 +40,19 @@ public class MySqlWorkoutPlanRepository implements WorkoutPlanRepository {
                     + "VALUES(?,?,?)";
             try (
                     Connection connection = this.connection.get();
-                    PreparedStatement preparedStatement = connection.prepareStatement(insertSql)) {
+                    PreparedStatement preparedStatement = connection.prepareStatement(insertSql,
+                            Statement.RETURN_GENERATED_KEYS)) {
 
                 setParameters(preparedStatement, workoutPlan.getId(), workoutPlan.getDescription(),
                         workoutPlan.getCreatedForUser().getId());
 
                 preparedStatement.execute();
+
+                // Updates the workoutplanID with the generated keys
+                ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
+                if (generatedKeys.next()) {
+                    workoutPlan.setId(generatedKeys.getInt(1));
+                }
             }
         } catch (SQLException e) {
             throw new RuntimeException("Failed to add workoutplan", e);

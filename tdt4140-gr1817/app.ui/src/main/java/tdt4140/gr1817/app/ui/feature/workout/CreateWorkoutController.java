@@ -1,7 +1,5 @@
 package tdt4140.gr1817.app.ui.feature.workout;
 
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -28,9 +26,14 @@ import javafx.scene.input.TransferMode;
 import javafx.util.StringConverter;
 import javafx.util.converter.IntegerStringConverter;
 import tdt4140.gr1817.app.core.feature.user.GetAllUsers;
+import tdt4140.gr1817.app.core.feature.workoutplan.SaveWorkoutPlan;
+import tdt4140.gr1817.app.ui.javafx.Navigator;
+import tdt4140.gr1817.app.ui.javafx.Page;
+import tdt4140.gr1817.ecosystem.persistence.data.improvify.WorkoutPlanRow;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -46,13 +49,16 @@ import java.util.stream.Collectors;
 public class CreateWorkoutController {
 
     private static final DataFormat SERIALIZED_MIME_TYPE = new DataFormat("application/x-java-serialized-object");
+
+    private final Navigator navigator;
     private final ObservableList<WorkoutRow> workoutRowList = FXCollections.observableArrayList();
-    final ObservableList<UserListItem> userListItems = FXCollections.observableArrayList();
+    private final ObservableList<UserListItem> userListItems = FXCollections.observableArrayList();
     private Provider<GetAllUsers> getAllUsersProvider;
     private UserListItemAdapter userListItemAdapter;
+    private SaveWorkoutPlan saveWorkoutPlan;
 
     @FXML
-    private ComboBox userDropdown;
+    private ComboBox<UserListItem> userDropdown;
     @FXML
     private Button addButton;
     @FXML
@@ -68,15 +74,19 @@ public class CreateWorkoutController {
     @FXML
     private TableColumn<WorkoutRow, Integer> timeCol;
     @FXML
-    private TableColumn<WorkoutRow, Integer> intensityCol;
+    private TableColumn<WorkoutRow, String> intensityCol;
     @FXML
     private TableColumn<WorkoutRow, String> commentCol;
 
     @Inject
     public CreateWorkoutController(Provider<GetAllUsers> getAllUsersProvider,
-                                   UserListItemAdapter userListItemAdapter) {
+                                   UserListItemAdapter userListItemAdapter,
+                                   SaveWorkoutPlan saveWorkoutPlan,
+                                   Navigator navigator) {
         this.getAllUsersProvider = getAllUsersProvider;
         this.userListItemAdapter = userListItemAdapter;
+        this.saveWorkoutPlan = saveWorkoutPlan;
+        this.navigator = navigator;
     }
 
     public void changeWhatEvent(TableColumn.CellEditEvent editedCell) {
@@ -105,45 +115,6 @@ public class CreateWorkoutController {
         timeCol.setCellValueFactory(new PropertyValueFactory<>("time"));
         intensityCol.setCellValueFactory(new PropertyValueFactory<>("intensity"));
         commentCol.setCellValueFactory(new PropertyValueFactory<>("comment"));
-
-        //Test data
-        WorkoutRow test1 = new WorkoutRow("bla", 2, 3, "bla");
-        WorkoutRow test2 = new WorkoutRow("biatch", 1, 1, "haha");
-        WorkoutRow test3 = new WorkoutRow("blå", 4, 10, "nigguh");
-        workoutRowList.add(test1);
-        workoutRowList.add(test2);
-        workoutRowList.add(test3);
-
-        workoutTable.setItems(workoutRowList);
-        workoutTable.setEditable(true);
-        workoutTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        workoutTable.getStylesheets().add("tdt4140/gr1817/app/ui/stylesheets/tableview_stylesheet.css");
-
-        workoutTable.focusedProperty().addListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                if (workoutTable.isFocused()) {
-                    deleteButton.setDisable(false);
-                }
-            }
-        });
-
-        userDropdown.setItems(userListItems);
-
-        addButton.setOnAction(addButtonHandler);
-        deleteButton.setOnAction(deleteButtonHandler);
-        deleteButton.setDisable(true);
-        saveButton.setOnAction(saveButtonHandler);
-
-        dragRow();
-        loadUsers();
-
-        IntegerStringConverter converter = new IntegerStringConverter();
-
-        whatCol.setCellFactory(TextFieldTableCell.forTableColumn());
-        timeCol.setCellFactory(TextFieldTableCell.forTableColumn(converter));
-        intensityCol.setCellFactory(TextFieldTableCell.forTableColumn(converter));
-        commentCol.setCellFactory(TextFieldTableCell.forTableColumn());
         userDropdown.setCellFactory((comboBox) -> {
             return new ListCell<UserListItem>() {
                 @Override
@@ -174,6 +145,43 @@ public class CreateWorkoutController {
                 return null;
             }
         });
+
+        //Test data
+        WorkoutRow test1 = new WorkoutRow("bla", 2, "moderat", "bla");
+        WorkoutRow test2 = new WorkoutRow("biatch", 1, "moderat", "haha");
+        WorkoutRow test3 = new WorkoutRow("blå", 4, "moderat", "nigguh");
+        workoutRowList.add(test1);
+        workoutRowList.add(test2);
+        workoutRowList.add(test3);
+
+        workoutTable.setItems(workoutRowList);
+        workoutTable.setEditable(true);
+        workoutTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        workoutTable.getStylesheets().add("tdt4140/gr1817/app/ui/stylesheets/tableview_stylesheet.css");
+
+        workoutTable.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if (workoutTable.isFocused()) {
+                    deleteButton.setDisable(false);
+                }
+            }
+        });
+
+        userDropdown.setItems(userListItems);
+
+        addButton.setOnAction(addButtonHandler);
+        deleteButton.setOnAction(deleteButtonHandler);
+        deleteButton.setDisable(true);
+        saveButton.setOnAction(saveButtonHandler);
+
+        setDraggableRows();
+        loadUsers();
+
+        whatCol.setCellFactory(TextFieldTableCell.forTableColumn());
+        timeCol.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
+        intensityCol.setCellFactory(TextFieldTableCell.forTableColumn());
+        commentCol.setCellFactory(TextFieldTableCell.forTableColumn());
     }
 
 
@@ -203,7 +211,18 @@ public class CreateWorkoutController {
                 @Override
                 public void handle(ActionEvent event) {
                     if (isValid()) {
-                        int i = 0;
+                        try {
+                            saveWorkoutPlan.save(
+                                    userDropdown.getValue().getId(),
+                                    titleField.getText(),
+                                    workoutRowToPersistenceRow(workoutRowList));
+                        } catch (Exception e) {
+                            Alert saveFailed = new Alert(Alert.AlertType.WARNING, "Save failed", ButtonType.OK);
+                            saveFailed.showAndWait();
+                        }
+                        Alert saveComplete = new Alert(Alert.AlertType.INFORMATION, "Workout plan was saved");
+                        saveComplete.showAndWait();
+                        navigator.navigate(Page.SEE_USERS);
                     }
                 }
             };
@@ -251,7 +270,7 @@ public class CreateWorkoutController {
         return true;
     }
 
-    public void dragRow() {
+    public void setDraggableRows() {
         workoutTable.setRowFactory(tv -> {
             TableRow<WorkoutRow> row = new TableRow<>();
 
@@ -303,6 +322,7 @@ public class CreateWorkoutController {
 
     }
 
+    // Loads users from database
     public void loadUsers() {
         final List<UserListItem> userItems = getAllUsersProvider.get().getAll()
                 .stream()
@@ -312,72 +332,18 @@ public class CreateWorkoutController {
         userListItems.setAll(userItems);
     }
 
-    public static class WorkoutRow {
-        private SimpleStringProperty what;
-        private SimpleIntegerProperty time;
-        private SimpleIntegerProperty intensity;
-        private SimpleStringProperty comment;
-
-        public WorkoutRow(String what, int time, int intensity, String comment) {
-            this.what = new SimpleStringProperty(what);
-            this.time = new SimpleIntegerProperty(time);
-            this.intensity = new SimpleIntegerProperty(intensity);
-            this.comment = new SimpleStringProperty(comment);
-
+    // Converts UI WorkoutRow to ecosystem.persistence WorkoutPlanRow
+    public List<WorkoutPlanRow> workoutRowToPersistenceRow(ObservableList<WorkoutRow> rowList) {
+        List<WorkoutPlanRow> persistenceRowList = new ArrayList<>();
+        for (WorkoutRow row : rowList) {
+            WorkoutPlanRow wRow = WorkoutPlanRow.builder()
+                    .description(row.getWhat())
+                    .durationSeconds(row.getTime())
+                    .intensity(row.getIntensity())
+                    .comment(row.getComment())
+                    .build();
+            persistenceRowList.add(wRow);
         }
-
-        public WorkoutRow() {
-        }
-
-        public void setWhat(String w) {
-            this.what = new SimpleStringProperty(w);
-        }
-
-        public String getWhat() {
-            return what.get();
-        }
-
-        public SimpleStringProperty whatProperty() {
-            return what;
-        }
-
-        public void setTime(String s) {
-            int t = Integer.parseInt(s);
-            this.time = new SimpleIntegerProperty(t);
-        }
-
-        public int getTime() {
-            return time.get();
-        }
-
-        public SimpleIntegerProperty timeProperty() {
-            return time;
-        }
-
-        public void setIntensity(String s) {
-            int i = Integer.parseInt(s);
-            this.intensity = new SimpleIntegerProperty(i);
-        }
-
-        public int getIntensity() {
-            return intensity.get();
-        }
-
-        public SimpleIntegerProperty intensityProperty() {
-            return intensity;
-        }
-
-        public void setComment(String c) {
-            this.comment = new SimpleStringProperty(c);
-        }
-
-        public String getComment() {
-            return comment.get();
-        }
-
-        public SimpleStringProperty commentProperty() {
-            return comment;
-        }
+        return persistenceRowList;
     }
 }
-
