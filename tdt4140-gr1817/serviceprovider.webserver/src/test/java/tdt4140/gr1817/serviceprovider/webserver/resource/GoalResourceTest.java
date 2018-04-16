@@ -9,7 +9,7 @@ import tdt4140.gr1817.ecosystem.persistence.data.Goal;
 import tdt4140.gr1817.ecosystem.persistence.data.User;
 import tdt4140.gr1817.ecosystem.persistence.repositories.GoalRepository;
 import tdt4140.gr1817.ecosystem.persistence.repositories.UserRepository;
-import tdt4140.gr1817.serviceprovider.webserver.validation.AuthBasicAuthenticator;
+import tdt4140.gr1817.serviceprovider.webserver.security.AuthBasicAuthenticator;
 import tdt4140.gr1817.serviceprovider.webserver.validation.GoalValidator;
 import tdt4140.gr1817.serviceprovider.webserver.validation.util.AuthBasicUtil;
 

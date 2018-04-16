@@ -1,4 +1,4 @@
-package tdt4140.gr1817.serviceprovider.webserver.validation;
+package tdt4140.gr1817.serviceprovider.webserver.security;
 
 import org.junit.Before;
 import org.junit.Test;
