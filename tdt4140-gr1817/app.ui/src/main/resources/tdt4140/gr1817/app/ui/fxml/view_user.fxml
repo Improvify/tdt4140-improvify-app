@@ -5,10 +5,11 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tdt4140.gr1817.app.ui.feature.viewuser.ViewUserController">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1"
+            fx:id="viewUser"
+            fx:controller="tdt4140.gr1817.app.ui.feature.viewuser.ViewUserController">
    <children>
       <VBox spacing="10.0">
          <children>
@@ -25,7 +26,7 @@
             </HBox>
             <Label fx:id="age" text="&lt;Age&gt; years" />
             <Label fx:id="height" text="&lt;Height&gt; meters tall" />
-            <Region id="user-graph" prefHeight="211.0" prefWidth="568.0" style="-fx-background-color: red;" />
+            <fx:include source="vital_data_chart.fxml" fx:id="vitalData" prefHeight="211.0" prefWidth="568.0"/>
          </children>
          <padding>
             <Insets bottom="36.0" left="36.0" right="36.0" top="36.0" />
