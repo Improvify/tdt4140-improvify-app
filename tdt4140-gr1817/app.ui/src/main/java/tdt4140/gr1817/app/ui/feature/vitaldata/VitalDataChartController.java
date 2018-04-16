@@ -1,4 +1,4 @@
-package tdt4140.gr1817.app.ui.feature.viewuser;
+package tdt4140.gr1817.app.ui.feature.vitaldata;
 
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.collections.ObservableList;
@@ -7,6 +7,9 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.util.StringConverter;
+import lombok.extern.slf4j.Slf4j;
+import tdt4140.gr1817.app.core.feature.user.GetUserWithId;
+import tdt4140.gr1817.app.core.feature.user.UserSelectionService;
 import tdt4140.gr1817.app.core.feature.user.vitaldata.DataSeries;
 import tdt4140.gr1817.app.core.feature.user.vitaldata.GetVitalDataForUser;
 import tdt4140.gr1817.ecosystem.persistence.data.RestingHeartRate;
@@ -18,14 +21,19 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 
 /**
- * @see #setUser(User)
+ * Displays a graph of the {@link UserSelectionService selected user's} vital data.
  */
+@Slf4j
 public class VitalDataChartController {
 
     private final GetVitalDataForUser vitalUserData;
+    private final UserSelectionService userSelectionService;
+    private final GetUserWithId getUserWithId;
+    private final DataPointToSeriesAdapter dataPointAdapter;
 
     @FXML
     private LineChart<Long, Float> lineChart;
@@ -36,15 +44,19 @@ public class VitalDataChartController {
     @FXML
     private NumberAxis yAxis;
 
-    SimpleDoubleProperty xLowerBound = new SimpleDoubleProperty();
-    SimpleDoubleProperty xUpperBound = new SimpleDoubleProperty();
-    SimpleDoubleProperty yLowerBound = new SimpleDoubleProperty();
-    SimpleDoubleProperty yUpperBound = new SimpleDoubleProperty();
+    public SimpleDoubleProperty xLowerBound = new SimpleDoubleProperty();
+    public SimpleDoubleProperty xUpperBound = new SimpleDoubleProperty();
+    public SimpleDoubleProperty yLowerBound = new SimpleDoubleProperty();
+    public SimpleDoubleProperty yUpperBound = new SimpleDoubleProperty();
 
 
     @Inject
-    public VitalDataChartController(GetVitalDataForUser getVitalDataForUser) {
+    public VitalDataChartController(GetVitalDataForUser getVitalDataForUser, UserSelectionService userSelectionService,
+                                    GetUserWithId getUserWithId, DataPointToSeriesAdapter dataPointToSeriesAdapter) {
         vitalUserData = getVitalDataForUser;
+        this.userSelectionService = userSelectionService;
+        this.getUserWithId = getUserWithId;
+        this.dataPointAdapter = dataPointToSeriesAdapter;
     }
 
     @FXML
@@ -57,7 +69,7 @@ public class VitalDataChartController {
 
         xAxis.setAutoRanging(false);
         xAxis.lowerBoundProperty().bind(xLowerBound);
-        xAxis.upperBoundProperty().bind(yUpperBound);
+        xAxis.upperBoundProperty().bind(xUpperBound);
         xAxis.tickUnitProperty().bind(xUpperBound.subtract(xLowerBound).divide(5)); // (xU - xL) / 5
         xAxis.minorTickLengthProperty().bind(xUpperBound.subtract(xLowerBound).divide(5)); // (xU - xL) / 5
         xAxis.setMinorTickVisible(false);
@@ -75,13 +87,23 @@ public class VitalDataChartController {
                 return null;
             }
         });
+
+        loadData();
     }
 
-    public void setUser(User user) {
-        vitalUserData.setUser(user);
-        GetVitalDataForUser.VitalData vitalData = vitalUserData.load();
+    public void loadData() {
+        Optional<UserSelectionService.UserId> selectedUserId = userSelectionService.getSelectedUserId();
+        if (selectedUserId.isPresent()) {
+            int id = selectedUserId.get().getId();
+            User user = getUserWithId.getUserWithId(id);
 
-        updateLineChart(vitalData.getWeights(), vitalData.getHeartRates());
+            vitalUserData.setUser(user);
+            GetVitalDataForUser.VitalData vitalData = vitalUserData.load();
+            updateLineChart(vitalData.getWeights(), vitalData.getHeartRates());
+
+        } else {
+            log.warn("No user selected");
+        }
     }
 
     /**
@@ -93,19 +115,28 @@ public class VitalDataChartController {
     private void updateLineChart(List<Weight> weights, List<RestingHeartRate> heartRates) {
         DataSeries weightDataSeries = createDataSeries(weights,
                 weight -> new DataSeries.DataPoint(weight.getDate().getTime(), weight.getCurrentWeight()));
-        XYChart.Series<Long, Float> weightSeries = createChartSeries(weightDataSeries.getData());
+        XYChart.Series<Long, Float> weightSeries = dataPointAdapter.createChartSeries(weightDataSeries.getData());
         weightSeries.setName("Vekt");
 
 
         DataSeries heartRateDataSeries = createDataSeries(heartRates,
                 heartRate -> new DataSeries.DataPoint(heartRate.getMeasuredAt().getTime(), heartRate.getHeartRate()));
-        XYChart.Series<Long, Float> heartRateSeries = createChartSeries(heartRateDataSeries.getData());
+        XYChart.Series<Long, Float> heartRateSeries = dataPointAdapter.createChartSeries(heartRateDataSeries.getData());
         heartRateSeries.setName("Hvilepuls");
 
-        xLowerBound.set(Math.min(heartRateDataSeries.getXLowerBound(), weightDataSeries.getXLowerBound()));
-        xUpperBound.set(Math.max(heartRateDataSeries.getXUpperBound(), weightDataSeries.getXUpperBound()));
-        yLowerBound.set(Math.min(heartRateDataSeries.getYLowerBound(), weightDataSeries.getYLowerBound()));
-        yUpperBound.set(Math.max(heartRateDataSeries.getYUpperBound(), weightDataSeries.getYUpperBound()));
+        if (heartRateDataSeries.getData().isEmpty() && weightDataSeries.getData().isEmpty()) {
+            final long threeDays = 60L * 60L * 24L * 1000L;
+            final long now = new Date().getTime();
+            xLowerBound.set(now - threeDays);
+            xUpperBound.set(now + threeDays);
+            yLowerBound.set(5);
+            yUpperBound.set(10);
+        } else {
+            xLowerBound.set(Math.min(heartRateDataSeries.getXLowerBound(), weightDataSeries.getXLowerBound()));
+            xUpperBound.set(Math.max(heartRateDataSeries.getXUpperBound(), weightDataSeries.getXUpperBound()));
+            yLowerBound.set(Math.min(heartRateDataSeries.getYLowerBound(), weightDataSeries.getYLowerBound()));
+            yUpperBound.set(Math.max(heartRateDataSeries.getYUpperBound(), weightDataSeries.getYUpperBound()));
+        }
 
         ObservableList<XYChart.Series<Long, Float>> data = lineChart.getData();
         data.setAll(weightSeries, heartRateSeries);
@@ -133,25 +164,4 @@ public class VitalDataChartController {
         return dataSeries;
     }
 
-    /**
-     * Converts {@link DataSeries.DataPoint DataPoints} to a {@link XYChart.Series}.
-     *
-     * @param dataPoints
-     * @return
-     */
-    public XYChart.Series<Long, Float> createChartSeries(List<DataSeries.DataPoint> dataPoints) {
-        XYChart.Series<Long, Float> series = new XYChart.Series<>();
-
-        List<XYChart.Data<Long, Float>> chartData = new ArrayList<>(dataPoints.size());
-        for (DataSeries.DataPoint dataPoint : dataPoints) {
-            long x = dataPoint.getTimestamp();
-            float y = dataPoint.getValue();
-            XYChart.Data<Long, Float> longFloatData = new XYChart.Data<>(x, y);
-
-            chartData.add(longFloatData);
-        }
-        series.getData().setAll(chartData);
-
-        return series;
-    }
 }

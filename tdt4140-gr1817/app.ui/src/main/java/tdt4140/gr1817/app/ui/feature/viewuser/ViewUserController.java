@@ -6,6 +6,7 @@ import javafx.scene.control.Label;
 import lombok.extern.slf4j.Slf4j;
 import tdt4140.gr1817.app.core.feature.user.GetUserWithId;
 import tdt4140.gr1817.app.core.feature.user.UserSelectionService;
+import tdt4140.gr1817.app.ui.feature.vitaldata.VitalDataChartController;
 import tdt4140.gr1817.app.ui.javafx.Navigator;
 import tdt4140.gr1817.app.ui.javafx.Page;
 import tdt4140.gr1817.ecosystem.persistence.data.User;
