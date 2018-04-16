@@ -1,16 +1,22 @@
 package tdt4140.gr1817.app.ui;
 
+import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.google.inject.Provides;
+import com.google.inject.name.Named;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import lombok.extern.slf4j.Slf4j;
 import tdt4140.gr1817.app.ui.javafx.JavaFxModule;
 import tdt4140.gr1817.app.ui.javafx.Navigator;
 import tdt4140.gr1817.app.ui.javafx.Page;
+import tdt4140.gr1817.ecosystem.persistence.data.ServiceProvider;
+import tdt4140.gr1817.ecosystem.persistence.repositories.ServiceProviderRepository;
 import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.PropertyConnectionConfigurationSource;
 import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.guice.MySqlConnectionModule;
 import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.guice.MySqlRepositoryModule;
+import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.specification.GetServiceProviderByNameSpecification;
 
 import java.sql.Connection;
 
@@ -27,7 +33,21 @@ public class Main extends Application {
 
         injector = Guice.createInjector(new JavaFxModule(primaryStage),
                 new MySqlConnectionModule(conf.user, conf.password, conf.host, "ecosystem", conf.port),
-                new MySqlRepositoryModule());
+                new MySqlRepositoryModule(),
+                new AbstractModule() {
+                    @Override
+                    protected void configure() {
+
+                    }
+
+                    @Provides
+                    @Named("improvify")
+                    public ServiceProvider providerImprovifyServiceProvider(ServiceProviderRepository repository) {
+                        return repository.query(new GetServiceProviderByNameSpecification("improvify")).get(0);
+
+                    }
+                }
+        );
 
         conf.validate(injector.getInstance(Connection.class));
 

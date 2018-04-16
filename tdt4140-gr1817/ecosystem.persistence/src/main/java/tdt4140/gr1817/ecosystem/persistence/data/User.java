@@ -10,6 +10,8 @@ import java.util.Date;
 @Builder
 @AllArgsConstructor
 public class User {
+
+    public static final float NO_PERMISSION = -1;
     private int id;
     private String firstName;
     private String lastName;

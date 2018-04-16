@@ -3,8 +3,12 @@ package tdt4140.gr1817.app.core.feature.user;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+import tdt4140.gr1817.ecosystem.persistence.data.ServiceProvider;
+import tdt4140.gr1817.ecosystem.persistence.data.ServiceProviderPermissions;
 import tdt4140.gr1817.ecosystem.persistence.data.User;
+import tdt4140.gr1817.ecosystem.persistence.repositories.ServiceProviderPermissionsRepository;
 import tdt4140.gr1817.ecosystem.persistence.repositories.UserRepository;
 
 import java.util.Collections;
@@ -13,6 +17,7 @@ import java.util.Date;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
@@ -24,26 +29,51 @@ public class GetUserWithIdTest {
 
 
     private UserRepository userRepositoryMock;
+    private HonorUserPermissions honorUserPermissionsMock;
+    private ServiceProvider serviceProviderMock;
+    private ServiceProviderPermissionsRepository serviceProviderPermissionsRepositoryMock;
 
     @Before
     public void setUp() throws Exception {
         userRepositoryMock = Mockito.mock(UserRepository.class);
+        honorUserPermissionsMock = Mockito.mock(HonorUserPermissions.class);
+        serviceProviderMock = Mockito.mock(ServiceProvider.class);
+        serviceProviderPermissionsRepositoryMock = Mockito.mock(ServiceProviderPermissionsRepository.class);
+
+
     }
 
     @Test
     public void shouldGetUserWithSpecifiedId() throws Exception {
         // Given
         User user = new User(5, "", "", 5f, new Date(), "", "", "");
+        ServiceProviderPermissions serviceProviderPermissions = new ServiceProviderPermissions(user,
+                serviceProviderMock,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true
+        );
+
         when(userRepositoryMock.query(any()))
                 .thenReturn(Collections.singletonList(user));
+        when(serviceProviderPermissionsRepositoryMock.query(Mockito.any()))
+                .thenReturn(Collections.singletonList(serviceProviderPermissions));
+        when(honorUserPermissionsMock.honorUserPermissions(Mockito.any(), Mockito.any())).thenReturn(user);
 
-        GetUserWithId getUserWithId = new GetUserWithId(userRepositoryMock);
+        GetUserWithId getUserWithId = new GetUserWithId(userRepositoryMock, honorUserPermissionsMock,
+                serviceProviderMock, serviceProviderPermissionsRepositoryMock);
 
         // When
         User result = getUserWithId.getUserWithId(5);
 
         // Then
         Mockito.verify(userRepositoryMock).query(any());
+        verify(honorUserPermissionsMock).honorUserPermissions(user, serviceProviderPermissions);
         assertThat(result, Matchers.equalTo(user));
     }
 
@@ -53,7 +83,8 @@ public class GetUserWithIdTest {
         when(userRepositoryMock.query(any()))
                 .thenReturn(Collections.emptyList());
 
-        GetUserWithId getUserWithId = new GetUserWithId(userRepositoryMock);
+        GetUserWithId getUserWithId = new GetUserWithId(userRepositoryMock, honorUserPermissionsMock,
+                serviceProviderMock, serviceProviderPermissionsRepositoryMock);
 
         // When
         User result = getUserWithId.getUserWithId(-1);
