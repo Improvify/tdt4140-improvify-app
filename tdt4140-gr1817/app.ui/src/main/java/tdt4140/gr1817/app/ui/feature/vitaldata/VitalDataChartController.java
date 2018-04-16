@@ -1,6 +1,8 @@
 package tdt4140.gr1817.app.ui.feature.vitaldata;
 
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleLongProperty;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.chart.LineChart;
@@ -44,11 +46,13 @@ public class VitalDataChartController {
     @FXML
     private NumberAxis yAxis;
 
-    public SimpleDoubleProperty xLowerBound = new SimpleDoubleProperty();
-    public SimpleDoubleProperty xUpperBound = new SimpleDoubleProperty();
+    public SimpleLongProperty xLowerBound = new SimpleLongProperty();
+    public SimpleLongProperty xUpperBound = new SimpleLongProperty();
     public SimpleDoubleProperty yLowerBound = new SimpleDoubleProperty();
     public SimpleDoubleProperty yUpperBound = new SimpleDoubleProperty();
 
+    public ObservableList<XYChart.Series<Long, Float>> observableSeriesList = FXCollections.observableArrayList();
+    public static final long THREE_DAYS = 60L * 60L * 24L * 1000L;
 
     @Inject
     public VitalDataChartController(GetVitalDataForUser getVitalDataForUser, UserSelectionService userSelectionService,
@@ -62,6 +66,7 @@ public class VitalDataChartController {
     @FXML
     public void initialize() {
         lineChart.setTitle("User data");
+        lineChart.setData(observableSeriesList);
 
         yAxis.setAutoRanging(false);
         yAxis.lowerBoundProperty().bind(yLowerBound.subtract(10));
@@ -125,10 +130,9 @@ public class VitalDataChartController {
         heartRateSeries.setName("Hvilepuls");
 
         if (heartRateDataSeries.getData().isEmpty() && weightDataSeries.getData().isEmpty()) {
-            final long threeDays = 60L * 60L * 24L * 1000L;
             final long now = new Date().getTime();
-            xLowerBound.set(now - threeDays);
-            xUpperBound.set(now + threeDays);
+            xLowerBound.set(now - THREE_DAYS);
+            xUpperBound.set(now + THREE_DAYS);
             yLowerBound.set(5);
             yUpperBound.set(10);
         } else {
@@ -138,8 +142,7 @@ public class VitalDataChartController {
             yUpperBound.set(Math.max(heartRateDataSeries.getYUpperBound(), weightDataSeries.getYUpperBound()));
         }
 
-        ObservableList<XYChart.Series<Long, Float>> data = lineChart.getData();
-        data.setAll(weightSeries, heartRateSeries);
+        observableSeriesList.setAll(weightSeries, heartRateSeries);
     }
 
     /**

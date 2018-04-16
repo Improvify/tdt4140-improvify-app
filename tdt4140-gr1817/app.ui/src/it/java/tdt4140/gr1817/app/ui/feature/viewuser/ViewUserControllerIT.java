@@ -1,5 +1,6 @@
 package tdt4140.gr1817.app.ui.feature.viewuser;
 
+import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import javafx.stage.Stage;
@@ -13,7 +14,9 @@ import tdt4140.gr1817.app.ui.javafx.JavaFxModule;
 import tdt4140.gr1817.app.ui.javafx.Navigator;
 import tdt4140.gr1817.app.ui.javafx.Page;
 import tdt4140.gr1817.ecosystem.persistence.data.User;
+import tdt4140.gr1817.ecosystem.persistence.repositories.RestingHeartRateRepository;
 import tdt4140.gr1817.ecosystem.persistence.repositories.UserRepository;
+import tdt4140.gr1817.ecosystem.persistence.repositories.WeightRepository;
 
 import java.util.Calendar;
 import java.util.Collections;
@@ -35,17 +38,29 @@ public class ViewUserControllerIT extends ApplicationTest {
     private ViewUserPage viewUserPage = new ViewUserPage(this);
     private Navigator navigatorSpy;
     private UserRepository userRepositoryMock;
+    private WeightRepository weightRepositoryMock;
+    private RestingHeartRateRepository restingHeartRateRepository;
 
     @Override
     public void start(Stage stage) throws Exception {
         super.start(stage);
         MockedUserRepositoryModule mockedUserRepositoryModule = new MockedUserRepositoryModule();
         userRepositoryMock = mockedUserRepositoryModule.getUserRepositoryMock();
+        weightRepositoryMock = Mockito.mock(WeightRepository.class);
+        restingHeartRateRepository = Mockito.mock(RestingHeartRateRepository.class);
 
         Injector injector = Guice.createInjector(
                 new JavaFxModule(stage),
                 new NavigatorSpyModule(),
-                mockedUserRepositoryModule);
+                mockedUserRepositoryModule,
+                new AbstractModule() {
+                    @Override
+                    protected void configure() {
+                        bind(WeightRepository.class).toInstance(weightRepositoryMock);
+                        bind(RestingHeartRateRepository.class).toInstance(restingHeartRateRepository);
+                    }
+                }
+        );
 
         UserSelectionService userSelectionService = injector.getInstance(UserSelectionService.class);
         userSelectionService.setSelectedUserId(new UserSelectionService.UserId(1));
