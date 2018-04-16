@@ -10,7 +10,8 @@ import tdt4140.gr1817.ecosystem.persistence.data.ServiceProviderPermissions;
 import tdt4140.gr1817.ecosystem.persistence.data.User;
 import tdt4140.gr1817.ecosystem.persistence.repositories.ServiceProviderPermissionsRepository;
 import tdt4140.gr1817.ecosystem.persistence.repositories.UserRepository;
-import tdt4140.gr1817.serviceprovider.webserver.validation.AuthBasicAuthenticator;
+import tdt4140.gr1817.serviceprovider.webserver.security.AuthBasicAuthenticator;
+import tdt4140.gr1817.serviceprovider.webserver.security.PasswordHashUtil;
 import tdt4140.gr1817.serviceprovider.webserver.validation.ServiceProviderPermissionsValidator;
 import tdt4140.gr1817.serviceprovider.webserver.validation.util.AuthBasicUtil;
 
@@ -43,7 +44,9 @@ public class ServiceProviderPermissionsResourceTest {
         when(userRepository.query(Mockito.any())).thenReturn(Collections.singletonList(permissions.getUser()));
 
         final ServiceProviderPermissionsValidator validator = new ServiceProviderPermissionsValidator(gson);
-        final AuthBasicAuthenticator authenticator = new AuthBasicAuthenticator();
+        final PasswordHashUtil passwordHashUtilMock = Mockito.mock(PasswordHashUtil.class);
+        when(passwordHashUtilMock.validatePassword(any(String.class), any(String.class))).thenReturn(true);
+        final AuthBasicAuthenticator authenticator = new AuthBasicAuthenticator(passwordHashUtilMock);
         resource = new ServiceProviderPermissionsResource(permissionsRepository, userRepository, gson,
                 validator, authenticator);
     }

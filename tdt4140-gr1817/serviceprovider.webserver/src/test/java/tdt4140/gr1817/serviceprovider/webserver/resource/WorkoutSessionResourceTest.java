@@ -9,11 +9,14 @@ import tdt4140.gr1817.ecosystem.persistence.data.User;
 import tdt4140.gr1817.ecosystem.persistence.data.WorkoutSession;
 import tdt4140.gr1817.ecosystem.persistence.repositories.UserRepository;
 import tdt4140.gr1817.ecosystem.persistence.repositories.WorkoutSessionRepository;
-import tdt4140.gr1817.serviceprovider.webserver.validation.AuthBasicAuthenticator;
+import tdt4140.gr1817.serviceprovider.webserver.security.AuthBasicAuthenticator;
+import tdt4140.gr1817.serviceprovider.webserver.security.PasswordHashUtil;
 import tdt4140.gr1817.serviceprovider.webserver.validation.WorkoutSessionValidator;
 import tdt4140.gr1817.serviceprovider.webserver.validation.util.AuthBasicUtil;
 
 import javax.ws.rs.core.Response;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
@@ -31,6 +34,33 @@ public class WorkoutSessionResourceTest {
     private final Gson gson = new Gson();
     private WorkoutSessionResource workoutSessionResource;
 
+    private final String gpx = "<trk>\n" +
+            "    <name>Trondheim maraton 10km</name>\n" +
+            "    <type>running</type>\n" +
+            "    <trkseg>\n" +
+            "      <trkpt lat=\"63.43078055419027805328369140625\" lon=\"10.39632654748857021331787109375\">\n" +
+            "        <ele>17.200000762939453125</ele>\n" +
+            "        <time>2017-09-02T14:00:00.000Z</time>\n" +
+            "        <extensions>\n" +
+            "          <ns3:TrackPointExtension>\n" +
+            "            <ns3:hr>131</ns3:hr>\n" +
+            "            <ns3:cad>0</ns3:cad>\n" +
+            "          </ns3:TrackPointExtension>\n" +
+            "        </extensions>\n" +
+            "      </trkpt>\n" +
+            "      <trkpt lat=\"63.43078189529478549957275390625\" lon=\"10.39632436819374561309814453125\">\n" +
+            "        <ele>17.200000762939453125</ele>\n" +
+            "        <time>2017-09-02T14:00:01.000Z</time>\n" +
+            "        <extensions>\n" +
+            "          <ns3:TrackPointExtension>\n" +
+            "            <ns3:hr>135</ns3:hr>\n" +
+            "            <ns3:cad>0</ns3:cad>\n" +
+            "          </ns3:TrackPointExtension>\n" +
+            "        </extensions>\n" +
+            "      </trkpt>\n" +
+            "    <trkseg>\n" +
+            "<trk>\n";
+
     @Before
     public void setUp() throws Exception {
         workoutSessionRepository = Mockito.mock(WorkoutSessionRepository.class);
@@ -41,7 +71,9 @@ public class WorkoutSessionResourceTest {
         when(userRepository.query(Mockito.any())).thenReturn(Collections.singletonList(workoutSession.getUser()));
 
         final WorkoutSessionValidator validator = new WorkoutSessionValidator(gson);
-        final AuthBasicAuthenticator authenticator = new AuthBasicAuthenticator();
+        final PasswordHashUtil passwordHashUtilMock = Mockito.mock(PasswordHashUtil.class);
+        when(passwordHashUtilMock.validatePassword(any(String.class), any(String.class))).thenReturn(true);
+        final AuthBasicAuthenticator authenticator = new AuthBasicAuthenticator(passwordHashUtilMock);
         workoutSessionResource = new WorkoutSessionResource(workoutSessionRepository, userRepository, gson, validator,
                 authenticator);
     }
@@ -102,6 +134,23 @@ public class WorkoutSessionResourceTest {
     }
 
     @Test
+    public void shouldAddWorkoutSessionByGpxFile() throws Exception {
+        // Given
+        InputStream inputStream = new ByteArrayInputStream(gpx.getBytes("UTF-8"));
+        WorkoutSession workoutSession = createWorkoutSession();
+        String json = gson.toJson(workoutSession);
+
+        // When
+        final Response response = workoutSessionResource.createWorkoutSessionByGpxFile(inputStream, json,
+                AuthBasicUtil.HEADER_TEST_123);
+
+        // Then
+        assertThat(response.getStatus(), is(200));
+        verify(workoutSessionRepository).add(any(WorkoutSession.class));
+        verifyNoMoreInteractions(workoutSessionRepository);
+    }
+
+    @Test
     public void shouldNotAddWhenInvalidWorkoutSession() throws Exception {
         // Given
         WorkoutSession workoutSession = createWorkoutSession();
@@ -130,6 +179,22 @@ public class WorkoutSessionResourceTest {
     }
 
     @Test
+    public void shouldNotAddWorkoutSessionByGpxFileWhenWrongAuthorization() throws Exception {
+        // Given
+        InputStream inputStream = new ByteArrayInputStream(gpx.getBytes("UTF-8"));
+        WorkoutSession workoutSession = createWorkoutSession();
+        String json = gson.toJson(workoutSession);
+
+        // When
+        final Response response = workoutSessionResource.createWorkoutSessionByGpxFile(inputStream, json,
+                AuthBasicUtil.HEADER_DEFAULT);
+
+        // Then
+        assertThat(response.getStatus(), is(401));
+        verifyNoMoreInteractions(workoutSessionRepository);
+    }
+
+    @Test
     public void shouldNotAddWorkoutSessionWhenIllegalHeader() {
         // Given
         WorkoutSession workoutSession = createWorkoutSession();
@@ -140,6 +205,23 @@ public class WorkoutSessionResourceTest {
 
         // Then
         assertThat(response.getStatus(), is(401));
+        verifyNoMoreInteractions(workoutSessionRepository);
+    }
+
+    @Test
+    public void shouldNotAddWorkoutSessionByGpxFileWhenIllegalGpx() throws Exception {
+        // Given
+        String illegalGpx = "illegal";
+        InputStream inputStream = new ByteArrayInputStream(illegalGpx.getBytes("UTF-8"));
+        WorkoutSession workoutSession = createWorkoutSession();
+        String json = gson.toJson(workoutSession);
+
+        // When
+        final Response response = workoutSessionResource.createWorkoutSessionByGpxFile(inputStream, json,
+                AuthBasicUtil.HEADER_TEST_123);
+
+        // Then
+        assertThat(response.getStatus(), is(400));
         verifyNoMoreInteractions(workoutSessionRepository);
     }
 

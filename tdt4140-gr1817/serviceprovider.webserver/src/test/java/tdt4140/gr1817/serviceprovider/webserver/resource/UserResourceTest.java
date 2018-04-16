@@ -7,7 +7,8 @@ import org.mockito.Mockito;
 import tdt4140.gr1817.ecosystem.persistence.Specification;
 import tdt4140.gr1817.ecosystem.persistence.data.User;
 import tdt4140.gr1817.ecosystem.persistence.repositories.UserRepository;
-import tdt4140.gr1817.serviceprovider.webserver.validation.AuthBasicAuthenticator;
+import tdt4140.gr1817.serviceprovider.webserver.security.AuthBasicAuthenticator;
+import tdt4140.gr1817.serviceprovider.webserver.security.PasswordHashUtil;
 import tdt4140.gr1817.serviceprovider.webserver.validation.UserValidator;
 import tdt4140.gr1817.serviceprovider.webserver.validation.util.AuthBasicUtil;
 
@@ -38,8 +39,10 @@ public class UserResourceTest {
         when(userRepository.query(Mockito.any())).thenReturn(Collections.singletonList(user));
 
         final UserValidator validator = new UserValidator(gson);
-        final AuthBasicAuthenticator authenticator = new AuthBasicAuthenticator();
-        userResource = new UserResource(userRepository, gson, validator, authenticator);
+        final PasswordHashUtil passwordHashUtilMock = Mockito.mock(PasswordHashUtil.class);
+        when(passwordHashUtilMock.validatePassword(any(String.class), any(String.class))).thenReturn(true);
+        final AuthBasicAuthenticator authenticator = new AuthBasicAuthenticator(passwordHashUtilMock);
+        userResource = new UserResource(userRepository, gson, validator, authenticator, passwordHashUtilMock);
     }
 
     @Test
@@ -95,7 +98,7 @@ public class UserResourceTest {
 
         // Then
         assertThat(response.getStatus(), is(200));
-        verify(userRepository).add(Mockito.eq(user));
+        verify(userRepository).add(any(User.class));
         verifyNoMoreInteractions(userRepository);
     }
 
@@ -118,7 +121,7 @@ public class UserResourceTest {
         // Given
         User user = createUser();
         String json = gson.toJson(user);
-        doThrow(new RuntimeException()).when(userRepository).add(user);
+        doThrow(new RuntimeException()).when(userRepository).add(any(User.class));
 
         // When
         final Response response = userResource.createUser(json);

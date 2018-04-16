@@ -11,7 +11,7 @@ import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.specification.Get
 import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.specification.GetRestingHeartRateByIdSpecification;
 import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.specification.GetUserByIdSpecification;
 import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.specification.GetUserByUsernameSpecification;
-import tdt4140.gr1817.serviceprovider.webserver.validation.AuthBasicAuthenticator;
+import tdt4140.gr1817.serviceprovider.webserver.security.AuthBasicAuthenticator;
 import tdt4140.gr1817.serviceprovider.webserver.validation.RestingHeartRateValidator;
 
 import javax.inject.Inject;

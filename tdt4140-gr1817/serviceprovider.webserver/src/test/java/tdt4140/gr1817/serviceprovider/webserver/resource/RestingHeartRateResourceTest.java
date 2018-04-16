@@ -9,7 +9,8 @@ import tdt4140.gr1817.ecosystem.persistence.data.RestingHeartRate;
 import tdt4140.gr1817.ecosystem.persistence.data.User;
 import tdt4140.gr1817.ecosystem.persistence.repositories.RestingHeartRateRepository;
 import tdt4140.gr1817.ecosystem.persistence.repositories.UserRepository;
-import tdt4140.gr1817.serviceprovider.webserver.validation.AuthBasicAuthenticator;
+import tdt4140.gr1817.serviceprovider.webserver.security.AuthBasicAuthenticator;
+import tdt4140.gr1817.serviceprovider.webserver.security.PasswordHashUtil;
 import tdt4140.gr1817.serviceprovider.webserver.validation.RestingHeartRateValidator;
 import tdt4140.gr1817.serviceprovider.webserver.validation.util.AuthBasicUtil;
 
@@ -43,7 +44,10 @@ public class RestingHeartRateResourceTest {
                 .thenReturn(Collections.singletonList(restingHeartRate.getMeasuredBy()));
 
         final RestingHeartRateValidator validator = new RestingHeartRateValidator(gson);
-        final AuthBasicAuthenticator authenticator = new AuthBasicAuthenticator();
+
+        final PasswordHashUtil passwordHashUtilMock = Mockito.mock(PasswordHashUtil.class);
+        when(passwordHashUtilMock.validatePassword(any(String.class), any(String.class))).thenReturn(true);
+        final AuthBasicAuthenticator authenticator = new AuthBasicAuthenticator(passwordHashUtilMock);
         restingHeartRateResource = new RestingHeartRateResource(restingHeartRateRepository, userRepository, gson,
                 validator, authenticator);
     }

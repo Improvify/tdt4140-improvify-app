@@ -13,7 +13,7 @@ import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.specification.Get
 import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.specification.improvify.GetAllWorkoutSessionForUserSpecification;
 import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.specification.improvify.GetWorkoutSessionByIdSpecification;
 import tdt4140.gr1817.improvify.gpx.GpsFileHandler;
-import tdt4140.gr1817.serviceprovider.webserver.validation.AuthBasicAuthenticator;
+import tdt4140.gr1817.serviceprovider.webserver.security.AuthBasicAuthenticator;
 import tdt4140.gr1817.serviceprovider.webserver.validation.WorkoutSessionValidator;
 
 import javax.inject.Inject;
