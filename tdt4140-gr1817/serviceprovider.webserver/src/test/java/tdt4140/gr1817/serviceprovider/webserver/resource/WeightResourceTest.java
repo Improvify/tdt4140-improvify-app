@@ -10,6 +10,7 @@ import tdt4140.gr1817.ecosystem.persistence.data.Weight;
 import tdt4140.gr1817.ecosystem.persistence.repositories.UserRepository;
 import tdt4140.gr1817.ecosystem.persistence.repositories.WeightRepository;
 import tdt4140.gr1817.serviceprovider.webserver.security.AuthBasicAuthenticator;
+import tdt4140.gr1817.serviceprovider.webserver.security.PasswordHashUtil;
 import tdt4140.gr1817.serviceprovider.webserver.validation.WeightValidator;
 import tdt4140.gr1817.serviceprovider.webserver.validation.util.AuthBasicUtil;
 
@@ -41,7 +42,9 @@ public class WeightResourceTest {
         when(userRepository.query(Mockito.any())).thenReturn(Collections.singletonList(weight.getUser()));
 
         final WeightValidator validator = new WeightValidator(gson);
-        final AuthBasicAuthenticator authenticator = new AuthBasicAuthenticator();
+        final PasswordHashUtil passwordHashUtilMock = Mockito.mock(PasswordHashUtil.class);
+        when(passwordHashUtilMock.validatePassword(any(String.class), any(String.class))).thenReturn(true);
+        final AuthBasicAuthenticator authenticator = new AuthBasicAuthenticator(passwordHashUtilMock);
         weightResource = new WeightResource(weightRepository, userRepository, gson, validator, authenticator);
     }
 

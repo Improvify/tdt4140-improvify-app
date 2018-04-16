@@ -10,6 +10,7 @@ import tdt4140.gr1817.ecosystem.persistence.data.WorkoutSession;
 import tdt4140.gr1817.ecosystem.persistence.repositories.UserRepository;
 import tdt4140.gr1817.ecosystem.persistence.repositories.WorkoutSessionRepository;
 import tdt4140.gr1817.serviceprovider.webserver.security.AuthBasicAuthenticator;
+import tdt4140.gr1817.serviceprovider.webserver.security.PasswordHashUtil;
 import tdt4140.gr1817.serviceprovider.webserver.validation.WorkoutSessionValidator;
 import tdt4140.gr1817.serviceprovider.webserver.validation.util.AuthBasicUtil;
 
@@ -70,7 +71,9 @@ public class WorkoutSessionResourceTest {
         when(userRepository.query(Mockito.any())).thenReturn(Collections.singletonList(workoutSession.getUser()));
 
         final WorkoutSessionValidator validator = new WorkoutSessionValidator(gson);
-        final AuthBasicAuthenticator authenticator = new AuthBasicAuthenticator();
+        final PasswordHashUtil passwordHashUtilMock = Mockito.mock(PasswordHashUtil.class);
+        when(passwordHashUtilMock.validatePassword(any(String.class), any(String.class))).thenReturn(true);
+        final AuthBasicAuthenticator authenticator = new AuthBasicAuthenticator(passwordHashUtilMock);
         workoutSessionResource = new WorkoutSessionResource(workoutSessionRepository, userRepository, gson, validator,
                 authenticator);
     }
