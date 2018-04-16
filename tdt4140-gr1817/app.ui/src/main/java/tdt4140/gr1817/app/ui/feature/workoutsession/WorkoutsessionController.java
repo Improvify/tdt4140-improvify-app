@@ -5,7 +5,6 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import tdt4140.gr1817.app.core.feature.user.UserSelectionService;
 import tdt4140.gr1817.app.core.feature.workoutsession.GetAllWorkoutSessions;
@@ -32,35 +31,20 @@ public class WorkoutsessionController {
 
     @FXML
     private TableView<SessionRow> workoutTable;
-
     @FXML
     private TableColumn<SessionRow, String> dateCol;
-
     @FXML
     private TableColumn<SessionRow, Integer> intensityCol;
-
     @FXML
     private TableColumn<SessionRow, Integer> kCalCol;
-
     @FXML
     private TableColumn<SessionRow, Integer> heartrateCol;
-
     @FXML
     private TableColumn<SessionRow, Integer> maxHeartRateCol;
-
     @FXML
     private TableColumn<SessionRow, Integer> distanceCol;
-
     @FXML
     private TableColumn<SessionRow, Integer> durationCol;
-
-    @FXML
-    private TextField date1;
-
-    @FXML
-    private TextField date2;
-
-
 
     @Inject
     public WorkoutsessionController(UserSelectionService userSelectionService,
@@ -88,7 +72,6 @@ public class WorkoutsessionController {
         }
         workoutTable.setItems(sessionRowList);
         loadWorkoutSessions();
-
     }
 
     public void loadWorkoutSessions() {
@@ -97,15 +80,8 @@ public class WorkoutsessionController {
                 .collect(Collectors.toList());
         sessionRowList.setAll(sessionRows);
     }
-
     @FXML
     public void goToViewUser() {
         navigator.navigate(Page.VIEW_USER);
     }
-
-    //@FXML
-    //public void loadWorkoutSessionsWithinDateRange() {
-        //final List<SessionRow> sessionRows = getAllWorkoutSessionsProvider.get().getByDate()
-    //}
-
 }

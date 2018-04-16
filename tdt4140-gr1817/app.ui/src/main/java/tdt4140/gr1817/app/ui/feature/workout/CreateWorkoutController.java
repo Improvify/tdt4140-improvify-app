@@ -78,6 +78,7 @@ public class CreateWorkoutController {
     @FXML
     private TableColumn<WorkoutRow, String> commentCol;
 
+
     @Inject
     public CreateWorkoutController(Provider<GetAllUsers> getAllUsersProvider,
                                    UserListItemAdapter userListItemAdapter,

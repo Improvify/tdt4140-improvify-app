@@ -4,7 +4,6 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
@@ -17,24 +16,21 @@
         </Label>
         <TableView fx:id="workoutTable" layoutX="75.0" layoutY="145.0" prefHeight="394.0" prefWidth="693.0">
             <columns>
-                <TableColumn fx:id="dateCol" prefWidth="115.0" sortable="false" text="Date" />
+                <TableColumn fx:id="dateCol" prefWidth="164.0" text="Date" />
 
-                <TableColumn fx:id="intensityCol" minWidth="0.0" prefWidth="94.0" sortable="false" text="Intensity" />
+                <TableColumn fx:id="intensityCol" minWidth="0.0" prefWidth="88.0" text="Intensity" />
 
-                <TableColumn fx:id="kCalCol" prefWidth="97.0" sortable="false" text="KCal" />
+                <TableColumn fx:id="kCalCol" prefWidth="71.0" text="KCal" />
 
-                <TableColumn fx:id="heartrateCol" prefWidth="102.0" sortable="false" text="HeartRate" />
+                <TableColumn fx:id="heartrateCol" prefWidth="85.0" text="HeartRate" />
 
-                <TableColumn fx:id="maxHeartRateCol" prefWidth="105.0" sortable="false" text="MaxHR" />
-                <TableColumn fx:id="distanceCol" prefWidth="89.0" sortable="false" text="Distance" />
-                <TableColumn fx:id="durationCol" prefWidth="92.0" sortable="false" text="Duration" />
+                <TableColumn fx:id="maxHeartRateCol" prefWidth="105.0" text="MaxHR" />
+                <TableColumn fx:id="distanceCol" prefWidth="89.0" text="Distance" />
+                <TableColumn fx:id="durationCol" prefWidth="92.0" text="Duration" />
             </columns>
         </TableView>
 
         <Button mnemonicParsing="false" onAction="#goToViewUser" text="Back" />
-      <Button layoutX="672.0" layoutY="604.0" mnemonicParsing="false" text="Select" />
-      <TextField fx:id="date1" layoutX="86.0" layoutY="604.0" prefHeight="31.0" prefWidth="253.0" promptText="From (Date format: yyyy-MM-dd)" />
-      <TextField fx:id="date2" layoutX="386.0" layoutY="604.0" prefHeight="31.0" prefWidth="229.0" promptText="To (Date format: yyyy-MM-dd)" />
 
     </children>
 
