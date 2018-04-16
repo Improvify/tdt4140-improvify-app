@@ -3,8 +3,11 @@ package tdt4140.gr1817.app.core.feature.user;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+import tdt4140.gr1817.ecosystem.persistence.data.ServiceProvider;
 import tdt4140.gr1817.ecosystem.persistence.data.User;
+import tdt4140.gr1817.ecosystem.persistence.repositories.ServiceProviderPermissionsRepository;
 import tdt4140.gr1817.ecosystem.persistence.repositories.UserRepository;
 
 import java.util.Collections;
@@ -24,10 +27,18 @@ public class GetUserWithIdTest {
 
 
     private UserRepository userRepositoryMock;
+    private HonorUserPermissions honorUserPermissionsMock;
+    private ServiceProvider serviceProviderMock;
+    private ServiceProviderPermissionsRepository serviceProviderPermissionsRepositoryMock;
 
     @Before
     public void setUp() throws Exception {
         userRepositoryMock = Mockito.mock(UserRepository.class);
+        honorUserPermissionsMock = Mockito.mock(HonorUserPermissions.class);
+        serviceProviderMock = Mockito.mock(ServiceProvider.class);
+        serviceProviderPermissionsRepositoryMock = Mockito.mock(ServiceProviderPermissionsRepository.class);
+
+
     }
 
     @Test
@@ -37,7 +48,7 @@ public class GetUserWithIdTest {
         when(userRepositoryMock.query(any()))
                 .thenReturn(Collections.singletonList(user));
 
-        GetUserWithId getUserWithId = new GetUserWithId(userRepositoryMock);
+        GetUserWithId getUserWithId = new GetUserWithId(userRepositoryMock,honorUserPermissionsMock, serviceProviderMock,serviceProviderPermissionsRepositoryMock);
 
         // When
         User result = getUserWithId.getUserWithId(5);
@@ -53,7 +64,7 @@ public class GetUserWithIdTest {
         when(userRepositoryMock.query(any()))
                 .thenReturn(Collections.emptyList());
 
-        GetUserWithId getUserWithId = new GetUserWithId(userRepositoryMock);
+        GetUserWithId getUserWithId = new GetUserWithId(userRepositoryMock,honorUserPermissionsMock, serviceProviderMock,serviceProviderPermissionsRepositoryMock);
 
         // When
         User result = getUserWithId.getUserWithId(-1);
