@@ -35,9 +35,10 @@ public class HonorUserPermissions {
         if (!spp.isEmail()) {
             newEmail = null;
         }
-
-        return new User(dishonoredUser.getId(), newFirstname, newLastname, newHeight, newBirthday, newUsername,
+        dishonoredUser = new User(dishonoredUser.getId(), newFirstname, newLastname, newHeight, newBirthday,
+                newUsername,
                 dishonoredUser.getPassword(), newEmail);
+        return dishonoredUser;
 
     }
 
