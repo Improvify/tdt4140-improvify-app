@@ -18,7 +18,7 @@ public class MainTest {
 
         // Then
         //FIXME: when it should start with something else than create workout, update this test
-        assertThat("Returns wrong page", initialPage, is(Page.CREATE_WORKOUT));
+        assertThat("Returns wrong page", initialPage, is(Page.SEE_USERS));
     }
 
 }

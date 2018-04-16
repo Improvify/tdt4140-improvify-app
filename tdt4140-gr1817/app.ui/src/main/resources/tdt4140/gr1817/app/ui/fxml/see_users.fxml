@@ -6,10 +6,10 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
-<AnchorPane fx:id="seeUsers" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tdt4140.gr1817.app.ui.feature.userlist.SeeUsersController">
+<AnchorPane fx:id="seeUsers" prefHeight="400.0" prefWidth="600.0" styleClass="im_background" stylesheets="@../stylesheets/stylesheet.css" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tdt4140.gr1817.app.ui.feature.userlist.SeeUsersController">
    <children>
-      <Button fx:id="globalStatistics" layoutX="78.0" layoutY="87.0" mnemonicParsing="false" onAction="#showGlobalStatistics" text="Global statistics 📈" />
-      <Label layoutX="249.0" layoutY="14.0" text="Users">
+      <Button fx:id="globalStatistics" layoutX="78.0" layoutY="87.0" mnemonicParsing="false" onAction="#showGlobalStatistics" styleClass="im_button" text="Global statistics 📈" />
+      <Label layoutX="249.0" layoutY="14.0" styleClass="im_title" text="Users">
          <font>
             <Font size="42.0" />
          </font>
@@ -25,6 +25,7 @@
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
          </columnResizePolicy>
       </TableView>
-      <Button fx:id="viewSelectedUser" layoutX="468.0" layoutY="345.0" mnemonicParsing="false" onAction="#showSelectedUser" text="View user" />
+      <Button fx:id="viewSelectedUser" layoutX="468.0" layoutY="345.0" mnemonicParsing="false" onAction="#showSelectedUser" styleClass="im_button" text="View user" />
+      <Button fx:id="createWorkoutButton" layoutX="78.0" layoutY="345.0" mnemonicParsing="false" onAction="#showWorkoutPage" styleClass="im_button" text="Create workoutplan" />
    </children>
 </AnchorPane>

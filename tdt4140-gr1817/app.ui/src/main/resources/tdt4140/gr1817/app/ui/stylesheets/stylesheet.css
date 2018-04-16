@@ -1,0 +1,52 @@
+/* Main screen */
+#main_title {
+    -fx-font-size: 50px;
+    -fx-font-family: "Arial";
+
+    -fx-text-fill: #DEDEDE;
+    -fx-text-alignment: center;
+}
+
+.main_buttons {
+    -fx-font-size: 25px;
+    -fx-text-fill: #DEDEDE;
+    -fx-background-color: rgb(30, 148, 148);
+}
+
+/* Other screens */
+
+.im_title {
+    -fx-font-size: 40px;
+    -fx-font-family: "Arial";
+    -fx-text-fill: #DEDEDE;
+    -fx-text-alignment: center;
+}
+
+.im_button {
+    -fx-font-size: 15px;
+    -fx-text-fill: #DEDEDE;
+    -fx-background-color: rgb(30, 148, 148);
+}
+
+.im_background {
+    -fx-background-color: #222222;
+}
+
+
+.im_text {
+    -fx-text-fill: #DEDEDE;
+    -fx-font-size: 14px;
+}
+
+.im_under_title {
+    -fx-font-size: 20px;
+    -fx-font-family: "Arial";
+    -fx-text-fill: #DEDEDE;
+    -fx-text-alignment: center;
+}
+
+/* Unused */
+
+.im_foreground {
+    -fx-background-color: #222222;
+}

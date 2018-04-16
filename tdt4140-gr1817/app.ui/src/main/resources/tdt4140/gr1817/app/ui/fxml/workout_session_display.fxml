@@ -6,10 +6,9 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
-
-<Pane prefHeight="750.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tdt4140.gr1817.app.ui.feature.workoutsession.WorkoutsessionController">
+<Pane prefHeight="750.0" prefWidth="800.0" styleClass="im_background" stylesheets="@../stylesheets/stylesheet.css" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tdt4140.gr1817.app.ui.feature.workoutsession.WorkoutsessionController">
     <children>
-        <Label layoutX="230.0" layoutY="31.0" text="Workout Session">
+        <Label layoutX="249.0" layoutY="31.0" styleClass="im_title" text="Workout Session">
             <font>
                 <Font size="42.0" />
             </font>
@@ -30,7 +29,7 @@
             </columns>
         </TableView>
 
-        <Button mnemonicParsing="false" onAction="#goToViewUser" text="Back" />
+        <Button mnemonicParsing="false" onAction="#goToViewUser" styleClass="im_button" text="Back" />
 
     </children>
 

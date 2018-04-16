@@ -72,6 +72,8 @@ public class CreateWorkoutController {
     @FXML
     private Button deleteButton;
     @FXML
+    private Button cancelButton;
+    @FXML
     private Button saveButton;
     @FXML
     private TextField titleField;
@@ -358,6 +360,11 @@ public class CreateWorkoutController {
             persistenceRowList.add(wRow);
         }
         return persistenceRowList;
+    }
+
+    @FXML
+    public void showSeeUsersPage() {
+        navigator.navigate(Page.SEE_USERS);
     }
 
     public void handleExportToPdf() {
