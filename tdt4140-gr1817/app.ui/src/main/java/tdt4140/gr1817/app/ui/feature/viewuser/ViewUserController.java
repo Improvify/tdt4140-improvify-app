@@ -98,4 +98,9 @@ public class ViewUserController {
     public void goToSeeUsers() {
         navigator.navigate(Page.SEE_USERS);
     }
+
+    @FXML
+    public void goToSeeWorkoutSession() {
+        navigator.navigate(Page.WORKOUT_SESSION_DISPLAY);
+    }
 }

@@ -7,6 +7,7 @@ import java.util.ResourceBundle;
  */
 public enum Page {
 
+    WORKOUT_SESSION_DISPLAY("workout_session_display.fxml", "Workout_Session.title"),
     CREATE_WORKOUT("create_workout.fxml", "create_workout.title"),
     SEE_USERS("see_users.fxml", "see_users.title"),
     GLOBAL_STATISTICS("global_statistics.fxml", "global_statistics.title"),
