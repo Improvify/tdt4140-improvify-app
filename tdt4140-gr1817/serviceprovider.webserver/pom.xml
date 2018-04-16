@@ -94,7 +94,7 @@
         </dependency>
         <dependency>
             <groupId>tdt4140-gr1817</groupId>
-            <artifactId>test-utils</artifactId>
+            <artifactId>tdt4140-gr1817.testutils</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
         </dependency>

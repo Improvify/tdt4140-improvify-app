@@ -10,24 +10,24 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>tdt4140-gr1817.ecosystem.persistence</artifactId>
-    <packaging>pom</packaging>
+    <packaging>jar</packaging>
     <name>Ecosystem persistence</name>
     <description>Saving and reading ecosystem data from persistence providers</description>
-    <modules>
-        <module>test-utils</module>
-    </modules>
 
     <dependencies>
         <dependency>
             <groupId>com.google.inject</groupId>
             <artifactId>guice</artifactId>
         </dependency>
-
-
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>5.1.6</version>
+        </dependency>
+        <dependency>
+            <groupId>tdt4140-gr1817</groupId>
+            <artifactId>tdt4140-gr1817.improvify.gpx</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
         <!-- Test dependencies -->
@@ -51,13 +51,8 @@
         </dependency>
         <dependency>
             <groupId>tdt4140-gr1817</groupId>
-            <artifactId>tdt4140-gr1817.improvify.gpx</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>tdt4140-gr1817</groupId>
-            <artifactId>test-utils</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <artifactId>tdt4140-gr1817.testutils</artifactId>
+            <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
 
