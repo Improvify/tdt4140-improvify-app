@@ -37,12 +37,11 @@ public class WorkoutplanToMarkdownConverter {
 
     public String createMarkdownStringFromWorkoutPlanRows(List<WorkoutPlanRow> rows) {
         StringBuilder markdown = new StringBuilder();
-        markdown.append("# Viktig tekst\n");
-        markdown.append("|Description|Duration|Intensity|Comment|\n");
-        markdown.append("|-----------|--------|---------|---------------|\n");
+        markdown.append("Description|Duration|Intensity|Comment\n");
+        markdown.append("-----------|--------|---------|-------\n");
 
         for (WorkoutPlanRow row : rows) {
-            markdown.append(String.format("|%s | %s | %s | %s |\n", row.getDescription(), row.getDurationSeconds(),
+            markdown.append(String.format("%s | %s | %s | %s \n", row.getDescription(), row.getDurationSeconds(),
                     row.getIntensity(), row.getComment()));
         }
 
