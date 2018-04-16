@@ -5,8 +5,7 @@ import tdt4140.gr1817.ecosystem.persistence.data.ServiceProviderPermissions;
 import tdt4140.gr1817.ecosystem.persistence.data.User;
 import tdt4140.gr1817.ecosystem.persistence.repositories.ServiceProviderPermissionsRepository;
 import tdt4140.gr1817.ecosystem.persistence.repositories.UserRepository;
-import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.specification
-        .GetServiceProviderPermissionByUserAndServiceProviderSpecification;
+import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.specification.GetServiceProviderPermissionByIdSpecification;
 import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.specification.GetUserByIdSpecification;
 
 import javax.inject.Inject;
@@ -50,7 +49,7 @@ public class GetUserWithId {
         User dishonoredUser = result.get(0);
 
         ServiceProviderPermissions permissions = serviceProviderPermissionsRepository.query(new
-                GetServiceProviderPermissionByUserAndServiceProviderSpecification(id, improvifyServiceProvider.getId()
+                GetServiceProviderPermissionByIdSpecification(id, improvifyServiceProvider.getId()
         )).get(0);
         return honorUserPermissions.honorUserPermissions(dishonoredUser, permissions);
     }

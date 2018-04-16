@@ -9,16 +9,15 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
-
-<Pane prefHeight="750.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tdt4140.gr1817.app.ui.feature.workout.CreateWorkoutController">
+<Pane prefHeight="750.0" prefWidth="800.0" styleClass="im_background" stylesheets="@../stylesheets/stylesheet.css" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tdt4140.gr1817.app.ui.feature.workout.CreateWorkoutController">
    <children>
-      <Label layoutX="230.0" layoutY="31.0" text="New workout plan">
+      <Label layoutX="230.0" layoutY="31.0" styleClass="im_title" text="New workout plan">
          <font>
             <Font size="42.0" />
          </font></Label>
       <ChoiceBox layoutX="118.0" layoutY="220.0" prefWidth="150.0" />
-      <Label layoutX="118.0" layoutY="128.0" text="User" />
-      <Label layoutX="118.0" layoutY="193.0" text="Template" />
+      <Label layoutX="118.0" layoutY="128.0" styleClass="im_text" text="User" />
+      <Label layoutX="118.0" layoutY="193.0" styleClass="im_text" text="Template" />
       <TableView fx:id="workoutTable" layoutX="118.0" layoutY="343.0" prefHeight="254.0" prefWidth="550.0">
         <columns>
           <TableColumn fx:id="whatCol" onEditCommit="#changeWhatEvent" prefWidth="152.0" sortable="false" text="What" />
@@ -28,22 +27,22 @@
         </columns>
       </TableView>
       <TextField fx:id="titleField" layoutX="118.0" layoutY="292.0" promptText="Enter workout plan title" />
-      <Button fx:id="addButton" layoutX="527.0" layoutY="287.0" mnemonicParsing="false" text="+" textAlignment="CENTER">
+      <Button fx:id="addButton" layoutX="527.0" layoutY="287.0" mnemonicParsing="false" prefHeight="44.0" prefWidth="44.0" styleClass="im_button" text="+" textAlignment="CENTER">
          <font>
             <Font name="System Bold" size="20.0" />
          </font>
       </Button>
-      <Button fx:id="deleteButton" layoutX="617.0" layoutY="287.0" mnemonicParsing="false" prefHeight="44.0" prefWidth="44.0" text="-" textAlignment="CENTER">
+      <Button fx:id="deleteButton" layoutX="617.0" layoutY="287.0" mnemonicParsing="false" prefHeight="44.0" prefWidth="44.0" styleClass="im_button" text="-" textAlignment="CENTER">
          <font>
             <Font name="System Bold" size="20.0" />
          </font>
       </Button>
-      <Label layoutX="514.0" layoutY="254.0" text="Add row" />
-      <Label layoutX="596.0" layoutY="254.0" text="Delete row" />
-      <Button layoutX="590.0" layoutY="610.0" mnemonicParsing="false" text="Cancel" />
-      <Button layoutX="342.0" layoutY="610.0" mnemonicParsing="false" text="Save as template" />
-      <Button fx:id="saveButton" layoutX="517.0" layoutY="610.0" mnemonicParsing="false" text="Save" />
-      <Button layoutX="192.0" layoutY="610.0" mnemonicParsing="false" text="Export to PDF" fx:id="exportButton" onAction="#handleExportToPdf" />
+      <Label layoutX="514.0" layoutY="254.0" styleClass="im_text" text="Add row" />
+      <Button fx:id="cancelButton" layoutX="585.0" layoutY="607.0" mnemonicParsing="false" onAction="#showSeeUsersPage" styleClass="im_button" text="Cancel" />
+      <Label layoutX="596.0" layoutY="254.0" styleClass="im_text" text="Delete row" />
+      <Button layoutX="323.0" layoutY="607.0" mnemonicParsing="false" styleClass="im_button" text="Save as template" />
+      <Button fx:id="saveButton" layoutX="501.0" layoutY="607.0" mnemonicParsing="false" styleClass="im_button" text="Save" />
+      <Button layoutX="120.0" layoutY="607.0" mnemonicParsing="false" styleClass="im_button" text="Export to PDF" fx:id="exportButton" onAction="#handleExportToPdf" />
       <ComboBox fx:id="userDropdown" layoutX="117.0" layoutY="155.0" prefWidth="150.0" />
    </children>
 </Pane>

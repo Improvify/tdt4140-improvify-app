@@ -37,6 +37,8 @@ public class SeeUsersController {
     @FXML
     private Button viewSelectedUser;
     @FXML
+    private Button createWorkoutButton;
+    @FXML
     private TableView<UserItem> userTable;
     @FXML
     private TableColumn<UserItem, String> firstnameColumn;
@@ -100,6 +102,11 @@ public class SeeUsersController {
         }
 
         navigator.navigate(Page.VIEW_USER);
+    }
+
+    @FXML
+    public void showWorkoutPage() {
+        navigator.navigate(Page.CREATE_WORKOUT);
     }
 
     @FXML

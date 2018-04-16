@@ -71,7 +71,7 @@ public class Main extends Application {
             log.info("Overriding initial page: {}", initialPage);
             return getPageFromProperty(initialPage);
         }
-        return Page.CREATE_WORKOUT;
+        return Page.SEE_USERS;
     }
 
     protected static Page getPageFromProperty(String startPageValue) {
