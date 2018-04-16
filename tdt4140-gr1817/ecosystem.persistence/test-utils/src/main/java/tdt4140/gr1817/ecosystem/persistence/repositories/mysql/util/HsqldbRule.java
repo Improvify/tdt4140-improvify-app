@@ -7,6 +7,7 @@ import org.junit.Rule;
 import org.junit.rules.ExternalResource;
 
 import java.io.BufferedReader;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -18,10 +19,10 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * Starts an in-memory {@link Server} using JUnit {@link Rule}
+ * Starts an in-memory {@link Server} using JUnit {@link Rule}.
  * <p>
  * <p>
- * Add to a test using rule annotation: <br/>
+ * Add to a test using {@link Rule} annotation: <br/>
  * {@code @Rule public HsqldbRule hsqldb = new HsqldbRule(); }
  * </p>
  * <p>
@@ -30,6 +31,7 @@ import java.util.stream.Stream;
  * </p>
  * <p>
  * <p>For more info about HSQLDB, see <a href="http://www.hsqldb.org">http://www.hsqldb.org</a></p>
+ * @see Rule
  */
 @Slf4j
 public class HsqldbRule extends ExternalResource {
@@ -52,14 +54,14 @@ public class HsqldbRule extends ExternalResource {
     private final boolean logStatements;
 
     /**
-     * Creates a new rule with logging disabled
+     * Creates a new rule with logging disabled.
      */
     public HsqldbRule() {
         this(false);
     }
 
     /**
-     * Create a new rule
+     * Create a new rule.
      *
      * @param logStatements log statements to console. Creates a lot of spam when <code>true</code>
      */
@@ -111,7 +113,7 @@ public class HsqldbRule extends ExternalResource {
     private static String[] statementCache = null;
 
     /**
-     * Loads the databse schema into the database
+     * Loads the databse schema into the database.
      */
     private void loadSchema() {
         try (
@@ -134,7 +136,7 @@ public class HsqldbRule extends ExternalResource {
     }
 
     /**
-     * Reads the database schema from file
+     * Reads the database schema from file.
      *
      * @return A String containing all statements in the sql file
      */
@@ -142,8 +144,9 @@ public class HsqldbRule extends ExternalResource {
         final String sqlFile = "/mainDB create ecosystem.sql";
 
         try (
-                BufferedReader reader = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream
-                        (sqlFile), "utf-8"))
+                InputStream resourceStream = getClass().getResourceAsStream(sqlFile);
+                InputStreamReader streamReader = new InputStreamReader(resourceStream, "utf-8");
+                BufferedReader reader = new BufferedReader(streamReader)
         ) {
             Stream<String> lineStream = reader.lines();
             lineStream = convertMysqlToHsqlSchema(lineStream);
@@ -162,7 +165,7 @@ public class HsqldbRule extends ExternalResource {
     }
 
     /**
-     * Removes or changes statements that are valid in MySQL but not HSQLDB
+     * Removes or changes statements that are valid in MySQL but not HSQLDB.
      *
      * @param sqlStream stream of lines with statements
      * @return Altered stream

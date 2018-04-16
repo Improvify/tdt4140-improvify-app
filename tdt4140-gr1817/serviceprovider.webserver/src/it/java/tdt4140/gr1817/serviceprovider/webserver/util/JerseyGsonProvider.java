@@ -18,6 +18,7 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
+
 /**
  * Converts objects to json and json to objects using gson.
  *
@@ -37,7 +38,7 @@ public class JerseyGsonProvider<T> implements MessageBodyReader<T>, MessageBodyW
 
     public JerseyGsonProvider() {
         GsonBuilder builder = new GsonBuilder()
-                .serializeNulls()
+                .setDateFormat("yyyy-MM-dd'T'HH:mm:ssX")
                 .enableComplexMapKeySerialization();
 
         this.gson = builder.create();
