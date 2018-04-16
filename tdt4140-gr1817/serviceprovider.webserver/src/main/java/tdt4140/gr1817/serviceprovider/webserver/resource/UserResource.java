@@ -8,6 +8,7 @@ import tdt4140.gr1817.ecosystem.persistence.repositories.UserRepository;
 import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.specification.GetUserByIdSpecification;
 import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.specification.GetUserByUsernameSpecification;
 import tdt4140.gr1817.serviceprovider.webserver.security.AuthBasicAuthenticator;
+import tdt4140.gr1817.serviceprovider.webserver.security.PasswordHashUtil;
 import tdt4140.gr1817.serviceprovider.webserver.validation.UserValidator;
 
 import javax.inject.Inject;
@@ -31,14 +32,16 @@ public class UserResource {
     private final UserRepository repository;
     private final UserValidator validator;
     private final AuthBasicAuthenticator authenticator;
+    private final PasswordHashUtil passwordHashUtil;
 
     @Inject
     public UserResource(UserRepository repository, Gson gson, UserValidator validator,
-                        AuthBasicAuthenticator authenticator) {
+                        AuthBasicAuthenticator authenticator, PasswordHashUtil passwordHashUtil) {
         this.repository = repository;
         this.gson = gson;
         this.validator = validator;
         this.authenticator = authenticator;
+        this.passwordHashUtil = passwordHashUtil;
     }
 
     @GET
@@ -64,6 +67,8 @@ public class UserResource {
     public Response createUser(String json) {
         if (validator.validate(json)) {
             User user = gson.fromJson(json, User.class);
+            // Hash the password
+            user.setPassword(passwordHashUtil.hashPassword(user.getPassword()));
             try {
                 repository.add(user);
                 return Response.status(200).entity("{\"message\":\"User added\"}").build();
