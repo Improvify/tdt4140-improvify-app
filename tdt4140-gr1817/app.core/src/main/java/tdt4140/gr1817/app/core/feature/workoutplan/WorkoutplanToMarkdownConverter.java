@@ -9,6 +9,7 @@ import tdt4140.gr1817.ecosystem.persistence.repositories.improvify.WorkoutPlanRo
 import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.specification
         .GetAllWorkoutplanRowsForWorkoutplanByIDSpecification;
 
+import javax.inject.Inject;
 import java.util.List;
 
 @Data
@@ -19,6 +20,7 @@ public class WorkoutplanToMarkdownConverter {
 
     private WorkoutPlanRowRepository workoutPlanRowRepository;
 
+    @Inject
     public WorkoutplanToMarkdownConverter(@NonNull WorkoutPlanRowRepository workoutPlanRowRepository) {
         this.workoutPlanRowRepository = workoutPlanRowRepository;
     }
@@ -29,6 +31,11 @@ public class WorkoutplanToMarkdownConverter {
                 GetAllWorkoutplanRowsForWorkoutplanByIDSpecification(id);
         List<WorkoutPlanRow> rows = workoutPlanRowRepository.query(specification);
 
+        return createMarkdownStringFromWorkoutPlanRows(rows);
+
+    }
+
+    public String createMarkdownStringFromWorkoutPlanRows(List<WorkoutPlanRow> rows) {
         StringBuilder markdown = new StringBuilder();
         markdown.append("Description|Duration|Intensity|Comment\n");
         markdown.append("-----------|--------|---------|-------\n");

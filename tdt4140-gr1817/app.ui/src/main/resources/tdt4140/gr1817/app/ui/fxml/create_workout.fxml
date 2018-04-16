@@ -43,7 +43,7 @@
       <Button layoutX="590.0" layoutY="610.0" mnemonicParsing="false" text="Cancel" />
       <Button layoutX="342.0" layoutY="610.0" mnemonicParsing="false" text="Save as template" />
       <Button fx:id="saveButton" layoutX="517.0" layoutY="610.0" mnemonicParsing="false" text="Save" />
-      <Button layoutX="192.0" layoutY="610.0" mnemonicParsing="false" text="Export to PDF" />
+      <Button layoutX="192.0" layoutY="610.0" mnemonicParsing="false" text="Export to PDF" fx:id="exportButton" onAction="#handleExportToPdf" />
       <ComboBox fx:id="userDropdown" layoutX="117.0" layoutY="155.0" prefWidth="150.0" />
    </children>
 </Pane>
