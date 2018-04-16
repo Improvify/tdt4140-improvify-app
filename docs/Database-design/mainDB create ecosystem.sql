@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS `UserAccount` (
   `height` FLOAT(5,2) NOT NULL COMMENT 'given in centimeters, allows decimals',
   `birthdate` DATE NOT NULL,
   `username` VARCHAR(255) NOT NULL,
-  `password` VARCHAR(255) NOT NULL COMMENT 'needs to be cryptated',
+  `password` VARCHAR(500) NOT NULL COMMENT 'Given on the form $hash_type_id$iterations$salt$hash',
   `email` VARCHAR(255) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `username_UNIQUE` (`username` ASC))
