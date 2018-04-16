@@ -26,9 +26,13 @@ import javafx.scene.input.TransferMode;
 import javafx.util.StringConverter;
 import javafx.util.converter.IntegerStringConverter;
 import tdt4140.gr1817.app.core.feature.user.GetAllUsers;
+import tdt4140.gr1817.app.core.feature.user.GetUserWithId;
+import tdt4140.gr1817.app.core.feature.workoutplan.ConvertMarkdownToPdf;
 import tdt4140.gr1817.app.core.feature.workoutplan.SaveWorkoutPlan;
+import tdt4140.gr1817.app.core.feature.workoutplan.WorkoutplanToMarkdownConverter;
 import tdt4140.gr1817.app.ui.javafx.Navigator;
 import tdt4140.gr1817.app.ui.javafx.Page;
+import tdt4140.gr1817.ecosystem.persistence.data.User;
 import tdt4140.gr1817.ecosystem.persistence.data.improvify.WorkoutPlanRow;
 
 import javax.inject.Inject;
@@ -54,8 +58,13 @@ public class CreateWorkoutController {
     private final ObservableList<WorkoutRow> workoutRowList = FXCollections.observableArrayList();
     private final ObservableList<UserListItem> userListItems = FXCollections.observableArrayList();
     private Provider<GetAllUsers> getAllUsersProvider;
+    private final GetUserWithId getUserWithId;
+    private final WorkoutplanToMarkdownConverter converter;
     private UserListItemAdapter userListItemAdapter;
     private SaveWorkoutPlan saveWorkoutPlan;
+
+    @FXML
+    private Button exportButton;
 
     @FXML
     private ComboBox<UserListItem> userDropdown;
@@ -83,11 +92,15 @@ public class CreateWorkoutController {
     public CreateWorkoutController(Provider<GetAllUsers> getAllUsersProvider,
                                    UserListItemAdapter userListItemAdapter,
                                    SaveWorkoutPlan saveWorkoutPlan,
-                                   Navigator navigator) {
+                                   Navigator navigator,
+                                   GetUserWithId getUserWithId,
+                                   WorkoutplanToMarkdownConverter converter) {
         this.getAllUsersProvider = getAllUsersProvider;
         this.userListItemAdapter = userListItemAdapter;
         this.saveWorkoutPlan = saveWorkoutPlan;
         this.navigator = navigator;
+        this.getUserWithId = getUserWithId;
+        this.converter = converter;
     }
 
     public void changeWhatEvent(TableColumn.CellEditEvent editedCell) {
@@ -346,5 +359,15 @@ public class CreateWorkoutController {
             persistenceRowList.add(wRow);
         }
         return persistenceRowList;
+    }
+
+    public void handleExportToPdf() {
+        List<WorkoutPlanRow> rows = workoutRowToPersistenceRow(workoutRowList);
+        String text = titleField.getText();
+
+        String s = converter.createMarkdownStringFromWorkoutPlanRows(rows);
+        ConvertMarkdownToPdf pdf = new ConvertMarkdownToPdf();
+        System.out.println(s);
+        pdf.createPdfFromString(s);
     }
 }

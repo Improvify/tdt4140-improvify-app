@@ -54,13 +54,11 @@ public class WorkoutplanToMarkdownConverterTest {
         // When
         final String markdownString = workoutplanToMarkdownConverter.createMarkdownString(workoutPlan);
 
-        assertThat(markdownString, is("Created for Test Person\n" +
-                "Test plan\n" +
+        assertThat(markdownString, is(
                 "Description|Duration|Intensity|Comment\n" +
                 "-----------|--------|---------|-------\n" +
                 "Desc | 60 | 80% 1RM | Do you even lift bro \n" +
-                "Løp i ring | 1337 | >9000 | Ingefær er bedre enn bringebær \n"));
-
+                "Løp i ring | 1337 | >9000 | Ingefær er bedre enn bringebær \n" ));
     }
 
 
