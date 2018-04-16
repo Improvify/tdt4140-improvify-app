@@ -26,4 +26,8 @@ public class GetAllWorkoutSessions {
         }
         return allWorkoutSessions;
     }
+
+    //public List<WorkoutSession> getByDate(String startDate, String stopDate) {
+        //List<WorkoutSession> workoutSessions = workoutSessionRepository.query(new GetWorkout)
+    //}
 }

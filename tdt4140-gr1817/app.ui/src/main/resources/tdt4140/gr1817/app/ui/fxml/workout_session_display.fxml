@@ -33,8 +33,8 @@
 
         <Button mnemonicParsing="false" onAction="#goToViewUser" text="Back" />
       <Button layoutX="672.0" layoutY="604.0" mnemonicParsing="false" text="Select" />
-      <TextField layoutX="86.0" layoutY="604.0" prefHeight="31.0" prefWidth="253.0" promptText="From (Date format: yyyy-MM-dd)" />
-      <TextField layoutX="386.0" layoutY="604.0" prefHeight="31.0" prefWidth="229.0" promptText="To (Date format: yyyy-MM-dd)" />
+      <TextField fx:id="date1" layoutX="86.0" layoutY="604.0" prefHeight="31.0" prefWidth="253.0" promptText="From (Date format: yyyy-MM-dd)" />
+      <TextField fx:id="date2" layoutX="386.0" layoutY="604.0" prefHeight="31.0" prefWidth="229.0" promptText="To (Date format: yyyy-MM-dd)" />
 
     </children>
 
