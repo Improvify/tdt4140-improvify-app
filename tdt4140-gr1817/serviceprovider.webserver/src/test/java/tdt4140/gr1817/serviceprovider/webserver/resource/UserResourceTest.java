@@ -42,7 +42,7 @@ public class UserResourceTest {
         final PasswordHashUtil passwordHashUtilMock = Mockito.mock(PasswordHashUtil.class);
         when(passwordHashUtilMock.validatePassword(any(String.class), any(String.class))).thenReturn(true);
         final AuthBasicAuthenticator authenticator = new AuthBasicAuthenticator(passwordHashUtilMock);
-        userResource = new UserResource(userRepository, gson, validator, authenticator);
+        userResource = new UserResource(userRepository, gson, validator, authenticator, passwordHashUtilMock);
     }
 
     @Test
@@ -98,7 +98,7 @@ public class UserResourceTest {
 
         // Then
         assertThat(response.getStatus(), is(200));
-        verify(userRepository).add(Mockito.eq(user));
+        verify(userRepository).add(any(User.class));
         verifyNoMoreInteractions(userRepository);
     }
 
@@ -121,7 +121,7 @@ public class UserResourceTest {
         // Given
         User user = createUser();
         String json = gson.toJson(user);
-        doThrow(new RuntimeException()).when(userRepository).add(user);
+        doThrow(new RuntimeException()).when(userRepository).add(any(User.class));
 
         // When
         final Response response = userResource.createUser(json);

@@ -81,8 +81,8 @@ public class PasswordHashUtil {
     public boolean validatePassword(final String password, final String dbEntry) {
         try {
             String[] dbPasswordStrings = dbEntry.split("\\$");
-            byte[] salt = dbPasswordStrings[3].getBytes();
-            byte[] hash = dbPasswordStrings[4].getBytes();
+            byte[] salt = decodeFromBase64(dbPasswordStrings[3].getBytes());
+            byte[] hash = decodeFromBase64(dbPasswordStrings[4].getBytes());
             return validatePassword(password, hash, salt);
 
         } catch (ArrayIndexOutOfBoundsException | NullPointerException e) {
@@ -114,7 +114,7 @@ public class PasswordHashUtil {
      *
      * @param hash the hash to be stringified.
      * @param salt the salt used for creating the hash.
-     * @return the
+     * @return the stringified version off the hash.
      */
     private String stringifyHash(byte[] hash, byte[] salt) {
         final Base64.Encoder encoder = Base64.getEncoder();
@@ -122,6 +122,11 @@ public class PasswordHashUtil {
         String saltString = encoder.encodeToString(salt);
         return String.format("$%s$%s$%s$%s", config.getModularCryptFormatIdentifier(), config.getIterations(),
                 saltString, hashString);
+    }
+
+    private byte[] decodeFromBase64(byte[] bytes) {
+        final Base64.Decoder decoder = Base64.getDecoder();
+        return decoder.decode(bytes);
     }
 
     /**
