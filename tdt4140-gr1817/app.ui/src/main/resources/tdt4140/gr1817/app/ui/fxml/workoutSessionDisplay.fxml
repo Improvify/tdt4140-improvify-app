@@ -13,23 +13,23 @@
         </Label>
         <TableView fx:id="workoutTable" layoutX="104.0" layoutY="143.0" prefHeight="394.0" prefWidth="600.0">
             <columns>
-                <TableColumn fx:id="dateCol" onEditCommit="#changeDateEvent" prefWidth="78.0" sortable="false"
+                <TableColumn fx:id="dateCol" prefWidth="78.0" sortable="false"
                              text="Date"/>
 
-                <TableColumn fx:id="intensityCol" minWidth="0.0" onEditCommit="#changeIntensityEvent" prefWidth="92.0"
+                <TableColumn fx:id="intensityCol" minWidth="0.0" prefWidth="92.0"
                              sortable="false" text="Intensity"/>
 
-                <TableColumn fx:id="kCalCol" onEditCommit="#changeKCalEvent" prefWidth="62.0" sortable="false"
+                <TableColumn fx:id="kCalCol" prefWidth="62.0" sortable="false"
                              text="KCal"/>
 
-                <TableColumn fx:id="heartrateCol" onEditCommit="#changeHeartrateEvent" prefWidth="102.0"
+                <TableColumn fx:id="heartrateCol" prefWidth="102.0"
                              sortable="false" text="HeartRate"/>
 
-                <TableColumn fx:id="maxHRCol" onEditCommit="#changemaxHREvent" prefWidth="82.0" sortable="false"
+                <TableColumn fx:id="maxHRCol" prefWidth="82.0" sortable="false"
                              text="maxHR"/>
-                <TableColumn fx:id="distanceCol" onEditCommit="#changeDistanceEvent" prefWidth="88.0" sortable="false"
+                <TableColumn fx:id="distanceCol" prefWidth="88.0" sortable="false"
                              text="Distance"/>
-                <TableColumn fx:id="durationCol" onEditCommit="#changeDurationEvent" prefWidth="102.0" sortable="false"
+                <TableColumn fx:id="durationCol" prefWidth="102.0" sortable="false"
                              text="Duration"/>
             </columns>
         </TableView>
