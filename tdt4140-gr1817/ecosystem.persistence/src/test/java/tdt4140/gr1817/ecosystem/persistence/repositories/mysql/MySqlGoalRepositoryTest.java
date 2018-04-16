@@ -23,6 +23,7 @@ public class MySqlGoalRepositoryTest {
 
     @Rule
     public HsqldbRule hsqldbRule = new HsqldbRule();
+
     private MySqlGoalRepository repository;
     private Goal.GoalBuilder goalBuilder;
     private User user;
