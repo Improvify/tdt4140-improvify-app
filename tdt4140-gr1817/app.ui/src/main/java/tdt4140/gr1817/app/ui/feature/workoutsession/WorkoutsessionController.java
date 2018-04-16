@@ -19,13 +19,11 @@ import java.util.stream.Collectors;
 
 public class WorkoutsessionController {
 
-    private int loggedBy;final ObservableList<SessionRow> sessionRowList = FXCollections
-            .observableArrayList();
+    private int loggedBy;
+    final ObservableList<SessionRow> sessionRowList = FXCollections.observableArrayList();
     private final UserSelectionService userSelectionService;
     private final Navigator navigator;
     private final Optional<UserSelectionService.UserId> selectedUser;
-    private final ObservableList<WorkoutsessionController.SessionRow> sessionRowList = FXCollections.observableArrayList();
-    private final Navigator navigator;
     private final Provider<GetAllWorkoutSessions> getAllWorkoutSessionsProvider;
     private final WorkoutSessionAdapter workoutSessionAdapter;
 
@@ -80,6 +78,7 @@ public class WorkoutsessionController {
                 .collect(Collectors.toList());
         sessionRowList.setAll(sessionRows);
     }
+
     @FXML
     public void goToViewUser() {
         navigator.navigate(Page.VIEW_USER);
