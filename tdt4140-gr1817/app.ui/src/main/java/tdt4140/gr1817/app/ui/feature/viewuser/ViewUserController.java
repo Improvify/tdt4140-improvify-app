@@ -70,7 +70,7 @@ public class ViewUserController {
             loadUserData(userId);
             displayUser();
         } else {
-            log.warn("No user selected");
+            log.warn("No user selected! Can not diplay any data", new IllegalStateException("No user selected!"));
             // Either show a warning in UI, or navigate to user selection screen
         }
     }
