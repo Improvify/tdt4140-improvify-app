@@ -1,7 +1,6 @@
 package tdt4140.gr1817.app.ui.feature.workoutsession;
 
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -13,9 +12,18 @@ import tdt4140.gr1817.app.core.feature.user.UserSelectionService;
 import tdt4140.gr1817.app.ui.javafx.Navigator;
 import tdt4140.gr1817.app.ui.javafx.Page;
 
+import javax.inject.Provider;
+import java.sql.Connection;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Optional;
 
+//import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.
+// specification.improvify.GetWorkoutSessionByLoggedBySpecification;
 //import java.sql.ResultSet;
+//import java.sql.SQLException;
+//import java.util.logging.Level;
+//import java.util.logging.Logger;
 
 public class WorkoutsessionController {
 
@@ -28,6 +36,7 @@ private final ObservableList<WorkoutsessionController.SessionRow> sessionRowList
     private final Optional<UserSelectionService.UserId> selectedUser;    private final ObservableList<WorkoutsessionController.SessionRow> sessionRowList = FXCollections.observableArrayList();private final UserSelectionService userSelectionService;
     private final Navigator navigator;
     private final Optional<UserSelectionService.UserId> selectedUser;
+    private final Provider<Connection> connection;
 
     @FXML
     private TableView<WorkoutsessionController.SessionRow> workoutTable;
@@ -56,10 +65,13 @@ private final ObservableList<WorkoutsessionController.SessionRow> sessionRowList
     @FXML
     private TableColumn<WorkoutsessionController.SessionRow, Integer> durationCol;
 
-    public WorkoutsessionController(UserSelectionService userSelectionService, Navigator navigator) {
+    public WorkoutsessionController(UserSelectionService userSelectionService,
+                                    Navigator navigator, Provider<Connection> connection) {
         this.userSelectionService = userSelectionService;
         this.navigator = navigator;
         selectedUser = userSelectionService.getSelectedUserId();
+        this.connection = connection;
+
     }
 
     @FXML
@@ -72,16 +84,25 @@ private final ObservableList<WorkoutsessionController.SessionRow> sessionRowList
         maxHRCol.setCellValueFactory(new PropertyValueFactory<>("MaxHR"));
         distanceCol.setCellValueFactory(new PropertyValueFactory<>("Distance"));
         durationCol.setCellValueFactory(new PropertyValueFactory<>("Duration"));
-        /*GetWorkoutSessionByLoggedBySpecification loggedBySpecification = new GetWorkoutSessionByLoggedBySpecification(
-                selectedUser);
-        ResultSet rs = loggedBySpecification.toStatement();
-        while (rs.next()) {
-            sessionRowList.add(new SessionRow(rs.getDate("date"), rs.getInt("id"),
-                    rs.getInt("intensity"), rs.getInt("kCal"), rs.getInt("heartrate"),
-                    rs.getInt("maxHR"), rs.getInt("duration"), rs.getInt("distance")));
-        }
-        workoutTable.setItems(sessionRowList);*/
+        //int loggedBy = selectedUser.get().getId();
 
+
+        /*try {
+            GetWorkoutSessionByLoggedBySpecification loggedBySpecification =
+                    new GetWorkoutSessionByLoggedBySpecification(loggedBy);
+            ResultSet rs = loggedBySpecification.toStatement(this.connection);
+            while (rs.next()) {
+                sessionRowList.add(new SessionRow(rs.getDate("date"), rs.getInt("id"),
+                        rs.getInt("intensity"), rs.getInt("kCal"),
+                        rs.getInt("heartrate"),
+                        rs.getInt("maxHR"),
+                        rs.getInt("duration"),
+                        rs.getInt("distance")));
+            }
+            workoutTable.setItems(sessionRowList);
+        } catch (SQLException e) {
+            Logger.getLogger(WorkoutsessionController.class.getName()).log(Level.SEVERE, null, e);
+        }*/
     }
 
     @FXML
@@ -131,7 +152,7 @@ private final ObservableList<WorkoutsessionController.SessionRow> sessionRowList
 
 
     public static class SessionRow {
-        private SimpleStringProperty date;
+        private SimpleDateFormat date;
         private SimpleIntegerProperty id;
         private SimpleIntegerProperty intensity;
         private SimpleIntegerProperty kCal;
@@ -140,9 +161,9 @@ private final ObservableList<WorkoutsessionController.SessionRow> sessionRowList
         private SimpleIntegerProperty distance;
         private SimpleIntegerProperty duration;
 
-        public SessionRow(String date, int id, int intensity, int kCal, int heartrate, int maxHR, int distance,
+        public SessionRow(Date date, int id, int intensity, int kCal, int heartrate, int maxHR, int distance,
                           int duration) {
-            this.date = new SimpleStringProperty(date);
+            //this.date = new SimpleDateFormat("").format(date);
             this.id = new SimpleIntegerProperty(id);
             this.intensity = new SimpleIntegerProperty(intensity);
             this.kCal = new SimpleIntegerProperty(kCal);
@@ -154,14 +175,14 @@ private final ObservableList<WorkoutsessionController.SessionRow> sessionRowList
 
         //date
         public void setDate(String w) {
-            this.date = new SimpleStringProperty(w);
+            this.date = new SimpleDateFormat(w);
         }
 
-        public String getDate() {
-            return date.get();
-        }
+        /*public Date getDate() {
+            return date;
+        }*/
 
-        public SimpleStringProperty dateProperty() {
+        public SimpleDateFormat dateProperty() {
             return date;
         }
 
