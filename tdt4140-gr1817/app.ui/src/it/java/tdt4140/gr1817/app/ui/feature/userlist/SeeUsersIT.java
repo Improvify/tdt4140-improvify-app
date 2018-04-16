@@ -1,5 +1,6 @@
 package tdt4140.gr1817.app.ui.feature.userlist;
 
+import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import javafx.scene.Node;
@@ -17,7 +18,9 @@ import tdt4140.gr1817.app.ui.javafx.JavaFxModule;
 import tdt4140.gr1817.app.ui.javafx.Navigator;
 import tdt4140.gr1817.app.ui.javafx.Page;
 import tdt4140.gr1817.ecosystem.persistence.data.User;
+import tdt4140.gr1817.ecosystem.persistence.repositories.RestingHeartRateRepository;
 import tdt4140.gr1817.ecosystem.persistence.repositories.UserRepository;
+import tdt4140.gr1817.ecosystem.persistence.repositories.WeightRepository;
 
 import java.util.Arrays;
 import java.util.Calendar;
@@ -37,8 +40,11 @@ import static org.testfx.api.FxAssert.verifyThat;
  */
 public class SeeUsersIT extends ApplicationTest {
 
-    private Navigator navigatorSpy;
     private SeeUsersPage seeUsersPage = new SeeUsersPage(this);
+
+    private Navigator navigatorSpy;
+    private WeightRepository weightRepositoryMock;
+    private RestingHeartRateRepository restingHeartRateRepository;
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -51,9 +57,21 @@ public class SeeUsersIT extends ApplicationTest {
         UserRepository userRepositoryMock = mockedUserRepositoryModule.getUserRepositoryMock();
         Mockito.when(userRepositoryMock.query(Mockito.any())).thenReturn(usersList);
 
-        final Injector injector = Guice.createInjector(new JavaFxModule(stage),
+        weightRepositoryMock = Mockito.mock(WeightRepository.class);
+        restingHeartRateRepository = Mockito.mock(RestingHeartRateRepository.class);
+
+        final Injector injector = Guice.createInjector(
+                new JavaFxModule(stage),
                 mockedUserRepositoryModule,
-                new NavigatorSpyModule());
+                new NavigatorSpyModule(),
+                new AbstractModule() {
+                    @Override
+                    protected void configure() {
+                        bind(WeightRepository.class).toInstance(weightRepositoryMock);
+                        bind(RestingHeartRateRepository.class).toInstance(restingHeartRateRepository);
+                    }
+                }
+                );
 
         navigatorSpy = injector.getInstance(Navigator.class);
         navigatorSpy.navigate(Page.SEE_USERS);
