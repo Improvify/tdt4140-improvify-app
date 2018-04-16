@@ -58,6 +58,8 @@ public class Main extends Application {
         switch (startPageValue.toUpperCase()) {
             case "SEE_USERS":
                 return Page.SEE_USERS;
+            case "WORKOUT_SESSION_DISPLAY":
+                return Page.WORKOUT_SESSION_DISPLAY;
             case "CREATE_WORKOUT":
                 return Page.CREATE_WORKOUT;
             case "GLOBAL_STATISTICS":
