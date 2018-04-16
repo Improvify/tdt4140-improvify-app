@@ -46,7 +46,6 @@ public class WebserverIT {
     public static void setUpServer() throws Exception {
         ((Logger) LoggerFactory.getLogger("org.eclipse.jetty")).setLevel(Level.WARN);
 
-        // TODO: Set up HSQLDB using HsqldbRule from ecosystem.persistence.
         PropertyConnectionConfigurationSource conf = new PropertyConnectionConfigurationSource();
         injector = Guice.createInjector(
                 new HsqldbConnectionModule(hsqldbRule),
