@@ -19,7 +19,11 @@ import tdt4140.gr1817.ecosystem.persistence.Specification;
 import tdt4140.gr1817.ecosystem.persistence.data.ServiceProvider;
 import tdt4140.gr1817.ecosystem.persistence.data.ServiceProviderPermissions;
 import tdt4140.gr1817.ecosystem.persistence.data.User;
-import tdt4140.gr1817.ecosystem.persistence.repositories.*;
+import tdt4140.gr1817.ecosystem.persistence.repositories.RestingHeartRateRepository;
+import tdt4140.gr1817.ecosystem.persistence.repositories.ServiceProviderPermissionsRepository;
+import tdt4140.gr1817.ecosystem.persistence.repositories.ServiceProviderRepository;
+import tdt4140.gr1817.ecosystem.persistence.repositories.UserRepository;
+import tdt4140.gr1817.ecosystem.persistence.repositories.WeightRepository;
 import tdt4140.gr1817.ecosystem.persistence.repositories.mysql.specification.GetServiceProviderByNameSpecification;
 
 import java.util.Calendar;
@@ -74,6 +78,10 @@ public class ViewUserControllerIT extends ApplicationTest {
                 .thenReturn(Collections.singletonList(new ServiceProvider(1, "improvify")));
         permissionsRepository = Mockito.mock(ServiceProviderPermissionsRepository.class);
         when(permissionsRepository.query(any())).thenReturn(Collections.singletonList(providerPermissions));
+
+        when(userRepositoryMock.query(any()))
+                .thenReturn(Collections.singletonList(user));
+
 
         Injector injector = Guice.createInjector(
                 new JavaFxModule(stage),
