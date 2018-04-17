@@ -74,7 +74,7 @@ public class MySqlServiceProviderPermissionsRepository implements ServiceProvide
     @Override
     public void update(ServiceProviderPermissions serviceProviderPermissions) {
         final String sql = "UPDATE serviceproviderpermissions SET Weight=?,"
-                + "Height=?, Email=?, Name=?, Username=?, RestingHeartRate=?, WorkoutSession=?, Birthdate=?"
+                + "Height=?, Email=?, Name=?, Username=?, RestingHeartRate=?, WorkoutSession=?, Birthdate=? "
                 + "WHERE UserAccount_id=? AND ServiceProvider_id=?";
 
         try (
