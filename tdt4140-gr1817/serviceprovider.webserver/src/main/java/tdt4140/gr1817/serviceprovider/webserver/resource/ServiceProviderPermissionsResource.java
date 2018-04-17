@@ -115,6 +115,7 @@ public class ServiceProviderPermissionsResource {
                 }
                 return Response.status(401).entity("{\"message\":\"Authorization failed\"}").build();
             } catch (RuntimeException e) {
+                log.error("PUT failed", e);
                 return Response.status(401).entity("{\"message\":\"Authorization failed\"}").build();
             }
         }
