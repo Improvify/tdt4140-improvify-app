@@ -43,7 +43,7 @@ public class HonorUserPermissionsTest {
     public void shouldSetAllFieldsToNull() throws Exception {
         // Given
         User user = new User(5, "Navn", "Navnesen", 5f, new Date(), "Navniboi",
-                "sikkertpassord", "navn@navnesen.no");
+                "sikkertpassord", "navn@example.com");
         HonorUserPermissions honorUserPermissions = new HonorUserPermissions();
         serviceProviderPermissions = new ServiceProviderPermissions(user, serviceProviderMock, false,
                 false, false,
